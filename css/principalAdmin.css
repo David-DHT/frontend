@@ -1,0 +1,153 @@
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 130px; 
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+main {
+    padding-bottom: 40px;
+    /* Aseguramos que el contenido principal ocupe espacio si hay poco contenido */
+    flex: 1; 
+}
+
+/* --- Banner de Bienvenida --- */
+.welcome-banner {
+    background-color: #8b6f47; /* Tono marrón del sketch */
+    padding: 15px 40px;
+    text-align: center;
+    border-bottom: 2px solid #4a3c2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+}
+
+.welcome-image {
+    max-width: 100%;
+    height: auto;
+    max-height: 120px; 
+    display: block;
+}
+
+/* --- Título del Dashboard --- */
+.dashboard-title {
+    text-align: center;
+    font-size: 28px;
+    color: #333;
+    margin: 40px 0;
+    font-weight: 400;
+}
+
+/* --- Grid de Tarjetas (Escritorio: 4 columnas) --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+/* --- Estilo de cada Tarjeta --- */
+.dashboard-card {
+    background-color: #f3ebe4;
+    border: 2px solid #d6c0af;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #4a3c2e;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 180px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    line-height: 1;
+}
+
+.dashboard-card span {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+@media (max-width: 992px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr); /* Pasamos a 2 columnas */
+        gap: 20px;
+        padding: 0 30px;
+    }
+    
+    .dashboard-title {
+        font-size: 26px;
+        margin: 30px 0;
+    }
+}
+
+/* --- MÓVILES (Menos de 600px) --- */
+@media (max-width: 600px) {
+    
+    /* 1. Grid en 1 sola columna para que sea fácil tocar */
+    .dashboard-grid {
+        grid-template-columns: 1fr; 
+        gap: 20px;
+        padding: 0 20px; /* Menos padding lateral para ganar espacio */
+    }
+
+    /* 2. Tarjetas más compactas pero cómodas */
+    .dashboard-card {
+        min-height: 140px; /* Un poco menos altas */
+        padding: 15px;
+        flex-direction: row; /* OPCIONAL: Icono a la izquierda, texto a la derecha */
+        gap: 20px; /* Separación entre icono y texto */
+        text-align: left; /* Alineación a la izquierda */
+    }
+
+    /* 3. Ajuste de icono y texto para el diseño horizontal */
+    .card-icon {
+        font-size: 36px;
+        margin-bottom: 0; /* Quitamos margen inferior porque ahora está al lado */
+    }
+
+    .dashboard-card span {
+        font-size: 18px; /* Texto un poco más grande para leer mejor */
+    }
+
+    /* 4. Banner más pequeño */
+    .welcome-banner {
+        padding: 10px 15px;
+        min-height: 80px;
+    }
+
+    .welcome-image {
+        max-height: 80px; /* Imagen más pequeña */
+    }
+
+    .dashboard-title {
+        font-size: 22px;
+        margin: 25px 0;
+    }
+}

@@ -1,0 +1,209 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 130px; 
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+/* --- ESTILOS PARA EL BOTÓN REGRESAR --- */
+.back-container {
+    width: 100%; 
+    /* El max-width depende de qué tan ancho sea tu contenedor de perfil. 
+       800px o 1000px suele ser estándar, ajústalo si lo ves muy a la orilla */
+    max-width: 900px; 
+    margin: 20px auto 10px auto; 
+    display: flex;
+    justify-content: flex-start; 
+    padding: 0 20px;
+}
+
+.btn-regresar-unicafe {
+    text-decoration: none;
+    background-color: #4a3c2e; /* Marrón oscuro */
+    color: #ffffff;            
+    border: 1px solid #4a3c2e; 
+    font-weight: 600;        
+    padding: 8px 16px;        
+    border-radius: 6px;        
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;                  
+    box-shadow: 0 4px 6px rgba(74, 60, 46, 0.15); 
+    transition: all 0.3s ease;
+}
+
+.btn-regresar-unicafe:hover {
+    background-color: #7a5b45; /* Marrón más claro al pasar el mouse */
+    color: #ffffff;
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 12px rgba(74, 60, 46, 0.25);
+}
+
+.btn-regresar-unicafe i {
+    font-size: 1.1rem;
+}
+.profile-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Títulos */
+.page-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 2.2em;
+    font-weight: bold;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: #555;
+    margin: 35px 0 20px;
+    font-size: 1.6em;
+    font-weight: bold;
+}
+
+/* --- TARJETA SUPERIOR (RESUMEN) --- */
+.summary-card {
+    background-color: #e8dcc8; /* Color beige exacto de la imagen */
+    border: 1px solid #c0a894;
+    border-radius: 8px;
+    padding: 25px 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+}
+
+.summary-info p {
+    margin: 10px 0;
+    color: #4a3c2e;
+    font-size: 1.1em;
+}
+
+.summary-info strong {
+    color: #2c241b;
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+/* --- TARJETA INFERIOR (FORMULARIO) --- */
+.edit-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* Filas del formulario */
+.form-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee; /* Línea separadora gris tenue */
+    padding: 15px 0;
+}
+
+.form-row label {
+    width: 30%; /* La etiqueta ocupa el 30% del ancho */
+    color: #555;
+    font-weight: 600;
+    font-size: 1.05em;
+}
+
+.input-wrapper {
+    width: 70%; /* El input ocupa el 70% restante */
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilo de los inputs */
+.input-wrapper input {
+    width: 100%;
+    border: none;
+    padding: 8px 0;
+    font-size: 1.05em;
+    color: #333;
+    outline: none; /* Quita el borde azul al hacer clic */
+    background: transparent;
+    font-family: inherit;
+}
+
+/* Estilo especial para el input de solo lectura (Rol) */
+.input-readonly {
+    color: #777 !important; /* Color gris para indicar que no se edita */
+    background-color: transparent !important;
+}
+
+/* Icono del lápiz (naranja) */
+.icon-edit {
+    color: #ff7f50;
+    margin-left: 15px;
+    font-size: 1em;
+    cursor: pointer; /* Manito al pasar el mouse */
+}
+
+/* Icono del candado (gris) */
+.icon-locked {
+    color: #ccc;
+    margin-left: 15px;
+    font-size: 1em;
+}
+
+/* --- BOTÓN GUARDAR --- */
+.btn-container {
+    text-align: center;
+    margin-top: 35px;
+}
+
+.btn-guardar {
+    background-color: #8b6f47; /* Color café institucional */
+    color: white;
+    border: none;
+    padding: 12px 35px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.btn-guardar:hover {
+    background-color: #6d5436; /* Café más oscuro al pasar el mouse */
+}
+
+/* --- RESPONSIVO PARA CELULARES --- */
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 0;
+    }
+    .form-row label {
+        width: 100%;
+        margin-bottom: 5px;
+        font-size: 1em;
+    }
+    .input-wrapper {
+        width: 100%;
+        border-bottom: 1px solid #ddd; /* Línea de soporte en móvil */
+    }
+    .input-wrapper input {
+        padding: 10px 0;
+    }
+    .summary-card, .edit-card {
+        padding: 20px; /* Menos padding en celular */
+    }
+}

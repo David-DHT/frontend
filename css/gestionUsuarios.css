@@ -1,0 +1,308 @@
+:root {
+    --bg-page: #f9f6f2;
+    --primary-brown: #4a3c2e;
+    --secondary-brown: #7a5b45;
+    --accent-gold: #b08d55;
+    --border-color: #e0d9d0;
+    --white: #ffffff;
+    --action-blue: #4a6fa5;   /* Color extra por si lo usas */
+    --action-green: #5c7a45;  /* Color extra por si lo usas */
+}
+
+/* IMPORTANTE: Reset para evitar problemas de ancho */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-page);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.inventory-content {
+    flex: 1; 
+    padding: 30px 20px;
+    max-width: 1200px;
+    margin: 0 auto; 
+    width: 100%;
+}
+
+/* --- ESTILOS PARA EL BOTÓN REGRESAR --- */
+.back-container {
+    width: 100%; 
+    margin-bottom: 20px; 
+    display: flex;
+    justify-content: flex-start; 
+}
+
+.btn-regresar-unicafe {
+    text-decoration: none;
+    background-color: var(--primary-brown); 
+    color: #ffffff;            
+    border: 1px solid var(--primary-brown); 
+    font-weight: 600;         
+    padding: 8px 16px;        
+    border-radius: 6px;        
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;                  
+    box-shadow: 0 4px 6px rgba(74, 60, 46, 0.15); 
+    transition: all 0.3s ease;
+}
+
+.btn-regresar-unicafe:hover {
+    background-color: var(--secondary-brown); 
+    color: #ffffff;
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 12px rgba(74, 60, 46, 0.25);
+}
+
+.btn-regresar-unicafe i {
+    font-size: 1.1rem;
+}
+
+/* --- TÍTULOS --- */
+.header-text h2 {
+    color: var(--primary-brown);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.header-text p {
+    color: #665c52;
+    margin: 0;
+    padding-left: 15px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* --- BARRA DE HERRAMIENTAS --- */
+.toolbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--white);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    gap: 15px;
+    flex-wrap: wrap; 
+}
+
+/* Botón Regresar (Antiguo / Opcional) */
+.btn-back {
+    text-decoration: none;
+    color: #665c52;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.3s;
+    white-space: nowrap;
+}
+.btn-back:hover { color: var(--primary-brown); }
+.btn-back i { font-size: 1.2rem; }
+
+/* Buscador */
+.search-wrapper {
+    position: relative;
+    flex-grow: 1;
+    max-width: 500px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 10px 10px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    background-color: #fcfcfb;
+    transition: all 0.3s;
+}
+
+.search-input:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(176, 141, 85, 0.1);
+    background-color: var(--white);
+}
+
+/* Botón Historial (Secundario) */
+.btn-history {
+    text-decoration: none;
+    background-color: transparent;
+    color: var(--primary-brown);
+    padding: 8px 16px;
+    border: 1px solid var(--primary-brown);
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.btn-history:hover {
+    background-color: var(--primary-brown);
+    color: white;
+}
+
+/* --- TABLA CON SCROLL --- */
+.inventory-table-container {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    overflow-x: auto; 
+    width: 100%;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.styled-table thead tr {
+    background-color: var(--secondary-brown);
+    color: var(--white);
+    text-align: left;
+}
+
+.styled-table th, .styled-table td { 
+    padding: 16px 20px; 
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.styled-table td:nth-child(2), 
+.styled-table td:nth-child(3) {
+    white-space: normal;
+    min-width: 150px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+.styled-table tbody tr:nth-of-type(even) { background-color: #faf8f5; }
+.styled-table tbody tr:hover { background-color: #efebe4; }
+
+
+/* =======================================================
+   --- BOTONES DE ACCIÓN (ESTILO CUADRADO ICONOS) ---
+   ======================================================= */
+   
+.action-buttons-text {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilo base cuadrado para los iconos */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;  /* Ancho fijo */
+    height: 40px; /* Alto fijo */
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+/* Botón Editar (Beige con icono café) */
+.btn-edit {
+    background-color: #f3f0ec; 
+    color: #8b6f47;
+}
+
+.btn-edit:hover {
+    background-color: #e6dfd5;
+    border: 1px solid #8b6f47;
+    transform: translateY(-2px);
+}
+
+/* Botón Eliminar (Rojo pastel con icono rojo) */
+.btn-delete {
+    background-color: #ffe6e6; 
+    color: #dc3545;
+}
+
+.btn-delete:hover {
+    background-color: #fadbd8;
+    border: 1px solid #dc3545;
+    transform: translateY(-2px);
+}
+
+/* =======================================================
+   --- RESPONSIVE ---
+   ======================================================= */
+@media (max-width: 768px) {
+    .inventory-content {
+        padding: 20px 15px;
+    }
+
+    .toolbar-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .back-container {
+        margin-bottom: 15px;
+    }
+
+    .btn-back {
+        align-self: flex-start;
+        margin-bottom: 5px;
+    }
+
+    .search-wrapper {
+        max-width: 100%;
+        width: 100%;
+        order: 1;
+    }
+
+    .btn-history {
+        width: 100%;
+        order: 2;
+    }
+
+    .inventory-table-container {
+        border-radius: 8px;
+    }
+    
+    .styled-table th, .styled-table td {
+        padding: 12px 15px;
+    }
+    
+    .header-text h2 {
+        font-size: 1.5rem;
+    }
+}

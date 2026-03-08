@@ -1,0 +1,84 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 130px; 
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+main {
+  max-width: 900px;
+  margin: 40px auto; /* Centra la tarjeta en la página */
+  padding: 30px 40px;
+  background-color: #ffffff; /* Fondo blanco */
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  border-top: 5px solid #8b7355; /* Detalle de color café */
+}
+
+/* 2. Estilos para el título y subtítulo */
+main h3 {
+  font-size: 36px;
+  color: #4a3c2e;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Seleccionamos el <p> que es hijo directo de <main> */
+main > p {
+  font-size: 1.1em;
+  color: #555;
+  text-align: center;
+  margin-bottom: 40px; /* Más espacio antes de las tarjetas */
+}
+
+/* 3. Contenedor de las tarjetas de redes */
+.redes-container {
+  display: flex;
+  justify-content: center; /* Centra las tarjetas */
+  gap: 30px; /* Espacio entre tarjetas */
+  flex-wrap: wrap; /* Para que se ajusten en móviles */
+}
+
+/* 4. Estilo de cada tarjeta (.red) */
+.red {
+  background-color: #f9f9f9; /* Un fondo muy claro */
+  border: 1px solid #eee;
+  padding: 25px;
+  border-radius: 12px;
+  width: 200px; /* Ancho fijo para cada tarjeta */
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.red:hover {
+  transform: translateY(-8px); /* Efecto de "levantarse" */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 5. Imagen dentro de la tarjeta */
+.red img {
+  width: 90px; /* Tamaño de los logos */
+  height: 90px;
+  margin-bottom: 20px;
+  border-radius: 50%; /* Hace los logos redondos */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 6. Texto (@usuario) dentro de la tarjeta */
+.red p {
+  font-size: 1.1em;
+  color: #333;
+  font-weight: 600;
+  word-break: break-all; /* Evita que el texto se desborde */
+}

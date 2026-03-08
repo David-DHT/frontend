@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UNICAFE | Bienvenido</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Montserrat:wght@400;600;800;900&family=Special+Elite&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <link rel="stylesheet" href="../css/header.css" />
+    <link rel="stylesheet" href="../css/footer.css" />
+    <link rel="stylesheet" href="../css/login.css" />
+  </head>
+
+  <body>
+    <header>
+      <div class="logo-section">
+        <a
+          href="../index.html"
+          style="text-decoration: none; display: flex; align-items: center"
+        >
+          <h1 class="brand-name" id="brandName">
+            <span id="logoIcon">☕</span> UNICAFE
+          </h1>
+        </a>
+      </div>
+
+      <div class="header-menu-container" id="mobileMenu">
+        <nav>
+          <a href="../index.html">Menu</a>
+          <a href="politicas.html">Políticas</a>
+          <a href="contactos.html">Contactos</a>
+        </nav>
+
+        <div class="user-actions" id="userActions"></div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Bienvenido a <span>UNICAFE</span></h1>
+        <p>
+          Si quieres realizar compras en la cafeteria de la Universidad
+          Tecnologica de la Huasteca Hidalguense registrate!!.
+        </p>
+        <a href="registro.html" class="btn-cta">Registrate</a>
+      </div>
+
+      <form class="Registro-form" id="loginForm">
+        <h1 for="">Login</h1>
+        <br />
+
+        <div
+          id="mensajeError"
+          style="
+            display: none;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+          "
+        ></div>
+
+        <label for="email">Email:</label>
+        <br />
+        <input
+          class="form-input"
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Ingresa tu correo"
+          required
+        />
+        <br />
+
+        <label for="password">Contraseña:</label>
+        <br />
+
+        <div style="position: relative; width: 100%">
+          <input
+            class="form-input"
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Password"
+            minlength="8"
+            pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*]).+$"
+            required
+            style="padding-right: 40px; box-sizing: border-box; width: 100%"
+          />
+
+          <i
+            class="bi bi-eye-slash-fill"
+            id="togglePassword"
+            style="
+              position: absolute;
+              right: 10px;
+              top: 40%;
+              transform: translateY(-50%);
+              cursor: pointer;
+              color: #333;
+              font-size: 1.2rem;
+            "
+          >
+          </i>
+        </div>
+        <br>
+        <a href="principalAdmin.html">Menu principal del administrador</a>
+        <div class="button-group">
+          <button type="submit" class="btn-aceptar">Aceptar</button>
+          <button type="reset" class="btn-limpiar">Limpiar</button>
+        </div>
+      </form>
+      <img
+        src="../uploads/imgLogin.jpg"
+        alt="Café artesanal"
+        class="hero-image"
+      />
+    </section>
+
+    <section class="about">
+      <div class="about-text">
+        <h2>Energía para tus estudios</h2>
+        <p>
+          En <strong>UNICAFE</strong> somos tu aliado en la universidad. Te
+          ofrecemos el café y los snacks perfectos para recargar energía entre
+          clases o para esas largas noches de estudio. ¡Calidad y sabor para tu
+          día a día!
+        </p>
+      </div>
+      <img
+        src="../uploads/Bienvenido.png"
+        alt="Barista sirviendo café"
+        class="about-image"
+      />
+    </section>
+
+    <section class="gallery">
+      <h2>Productos recomendados</h2>
+      <div class="gallery-grid">
+        <img src="../uploads/hot-dog.png " alt="Interior de la cafetería" />
+        <img src="../uploads/combo-mini.png" alt="Café con arte latte" />
+        <img src="../uploads/torta.png" alt="Granos de café" />
+        <img
+          src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=800"
+          alt="Postres"
+        />
+        <img
+          src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?q=80&w=800"
+          alt="Café frío"
+        />
+        <img src="../uploads/cho.png" alt="Ambiente acogedor" />
+      </div>
+    </section>
+
+    <section class="dato">
+      <h3>Sabias que?...</h3>
+      <div class="dato-contenido">
+        <div class="dato-texto">
+          <h2>
+            Sabías que la Coca-Cola es la bebida más vendida en todo el país
+          </h2>
+        </div>
+        <div class="dato-visuales">
+          <img
+            src="../uploads/Coca.png"
+            alt="Lata de Coca-Cola"
+            class="dato-imagen"
+          />
+          <img src="../uploads/Grafica.png" alt="Código QR" class="dato-qr" />
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-links">
+        <a href="ubicacion.html">📍 Horarios y ubicación</a>
+        <a href="redes.html">📱 Redes Sociales</a>
+        <a href="Nosotros-Somos.html">👥 Acerca de</a>
+        <a href="opiniones.html">📝 Opiniones</a>
+        <a href="mapaDeSitioPublic.html">🗺️ Mapa de sitio</a>
+      </div>
+      <hr class="footer-divider" />
+      <div class="footer-bottom">
+        <p class="footer-text">ÚNETE A NUESTRA COMUNIDAD • @UTHH</p>
+        <p class="footer-text">
+          © 2025 UNICAFE. Todos los derechos reservados.
+        </p>
+      </div>
+    </footer>
+
+    <script src="../js/header.js"></script>
+
+    <script>
+      const togglePassword = document.querySelector("#togglePassword");
+      const password = document.querySelector("#password");
+
+      togglePassword.addEventListener("click", function (e) {
+        // Alternar el tipo de atributo
+        const type =
+          password.getAttribute("type") === "password" ? "text" : "password";
+        password.setAttribute("type", type);
+
+        // Alternar el icono
+        this.classList.toggle("bi-eye-fill");
+        this.classList.toggle("bi-eye-slash-fill");
+      });
+    </script>
+  </body>
+</html>

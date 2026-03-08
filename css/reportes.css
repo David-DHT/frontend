@@ -1,0 +1,244 @@
+:root {
+    --bg-page: #f9f6f2;
+    --primary-brown: #4a3c2e;
+    --secondary-brown: #7a5b45;
+    --accent-gold: #b08d55;
+    --border-color: #e0d9d0;
+    --white: #ffffff;
+    
+    /* Variables adicionales para las estadísticas */
+    --primary: #8b6f47;
+    --primary-dark: #5c472f;
+    --text-main: #333333;
+    --text-light: #666666;
+    --border: #e2e8f0;
+}
+
+/* IMPORTANTE: Reset para evitar problemas de ancho */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-page);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.report-dashboard-container {
+    flex: 1; 
+    padding: 30px 20px;
+    max-width: 1200px; /* Un poco más ancho para los reportes */
+    margin: 0 auto; 
+    width: 100%;
+}
+
+.report-content {
+    background-color: transparent; /* Quitamos el fondo para que herede del body */
+}
+
+/* --- ESTILOS PARA EL BOTÓN REGRESAR --- */
+.back-container {
+    width: 100%; 
+    max-width: 1200px;
+    margin: 30px auto 0 auto; /* Centrado con el contenedor principal */
+    display: flex;
+    justify-content: flex-start; 
+    padding: 0 20px;
+}
+
+.btn-regresar-unicafe {
+    text-decoration: none;
+    background-color: var(--primary-brown); 
+    color: var(--white);            
+    border: 1px solid var(--primary-brown); 
+    font-weight: 600;        
+    padding: 8px 16px;        
+    border-radius: 6px;        
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;                  
+    box-shadow: 0 4px 6px rgba(74, 60, 46, 0.15); 
+    transition: all 0.3s ease;
+}
+
+.btn-regresar-unicafe:hover {
+    background-color: var(--secondary-brown); 
+    color: var(--white);
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 12px rgba(74, 60, 46, 0.25);
+}
+
+.btn-regresar-unicafe i {
+    font-size: 1.1rem;
+}
+
+/* --- ESTILOS DE REPORTES (Adaptados al nuevo diseño) --- */
+
+.h2.m-0 {
+    color: var(--primary-brown);
+    font-weight: 700;
+}
+
+/* Botón Historial de compras */
+.btn-historial {
+    background-color: var(--secondary-brown);
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(74, 60, 46, 0.2);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-historial:hover {
+    background-color: var(--primary-brown);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(74, 60, 46, 0.3);
+}
+
+/* Estilo para las Tarjetas contenedoras */
+.report-card {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03); 
+    height: 100%;
+}
+
+.card-title-secondary {
+    color: var(--secondary-brown);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* === TARJETAS DE ESTADÍSTICAS (Las de los números grandes) === */
+.stat-card {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Barra de color superior decorativa */
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: var(--accent-gold); /* Usamos el dorado de tu paleta */
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-color: var(--accent-gold);
+}
+
+.stat-card .value {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-brown); /* Usamos el marrón oscuro */
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.stat-card .label {
+    font-size: 1.1rem;
+    color: var(--text-main);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-card .description {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 10px;
+}
+
+/* Estilo de Tabla de Reporte (Opiniones) */
+.table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.report-table {
+    margin-bottom: 0;
+}
+
+.report-table th {
+    background-color: var(--secondary-brown) !important; 
+    color: var(--white);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 16px 20px;
+    border-bottom: none;
+}
+
+.report-table td {
+    color: #5f5248;
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 20px;
+    vertical-align: middle;
+}
+
+.report-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.report-table tbody tr:nth-of-type(even) { 
+    background-color: #faf8f5; 
+}
+
+.report-table tbody tr:hover { 
+    background-color: #efebe4; 
+}
+
+
+/* Ajuste responsivo para móviles */
+@media (max-width: 768px) {
+    .report-dashboard-container {
+        padding: 20px 15px;
+    }
+    
+    .back-container {
+        padding: 0 15px;
+        margin-top: 20px;
+    }
+
+    .btn-historial {
+        width: 100%;
+        margin-top: 15px;
+    }
+    
+    .row.align-items-center {
+        text-align: center;
+    }
+    
+    .col-sm-6.text-sm-end {
+        text-align: center !important;
+    }
+}

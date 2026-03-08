@@ -1,0 +1,189 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 130px; 
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+.menu {
+  display: flex;
+  gap: 20px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.menu a:hover {
+  text-decoration: underline;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+}
+
+.banner-bienvenido {
+  width:100%;
+  display: block;
+}
+
+main {
+  padding: 30px 20px;
+}
+
+main h3 {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+main p {
+  font-size: 1em;
+  color: #444;
+}
+
+.redes-container {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 25px;
+}
+
+.red {
+  background-color: #f9e7aefc;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100px;
+  text-align: center;
+}
+
+.red img {
+  width: 80px;
+  height: 80px;
+}
+
+.red p {
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+.ubicacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.ubicacion .texto {
+  max-width: 400px;
+  text-align: left;
+}
+
+.mapa img {
+   width: 300px;
+  height: 300px;
+  border-radius: 10px;
+}
+/* --- ESTILOS MEJORADOS PARA EL MAIN --- */
+
+/* Hacemos que 'main' sea un contenedor flex para centrar nuestra tarjeta */
+main {
+  padding: 40px 20px; /* Damos más espacio vertical */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0; /* Usamos el color de fondo que ya tenías */
+}
+
+/* 1. Esta es la nueva "tarjeta" que contiene todo */
+.main-container {
+  background-color: #ffffff; /* Fondo blanco */
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  padding: 30px 40px;
+  max-width: 900px;
+  width: 100%;
+  text-align: center; /* Centramos todo el texto por defecto */
+  border-top: 5px solid #8b7355; /* Detalle de color café (tomado de tu footer) */
+}
+
+/* 2. Estilos para el título principal */
+main h3 {
+  font-size: 36px; /* Un poco más elegante que 40px */
+  color: #4a3c2e; /* Color café oscuro (tomado de tu footer) */
+  margin-bottom: 25px;
+}
+
+/* 3. Contenedor para el horario */
+.horario {
+  background-color: #f5ebe0; /* Un fondo sutil (tomado de tu header original) */
+  border-radius: 8px;
+  padding: 15px 25px;
+  margin-bottom: 30px;
+  display: inline-block; /* Para que no ocupe todo el ancho */
+}
+
+.horario p {
+  font-size: 1.1em;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* 4. Estilos para la sección de ubicación */
+.ubicacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap; /* Mantenemos el wrap para móviles */
+  margin-top: 20px;
+}
+
+/* 5. Estilos para el texto de la ubicación */
+.ubicacion .texto {
+  flex: 1; /* Ocupa el espacio disponible */
+  min-width: 280px;
+  text-align: center; /* Centramos este texto también */
+}
+
+.ubicacion .texto p {
+  font-size: 1.1em;
+  color: #444;
+  line-height: 1.7;
+}
+
+.ubicacion .texto p strong {
+  color: #7a5b45; /* Color café */
+  font-size: 1.2em; /* Hacemos "Nos encontramos en:" más visible */
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* 6. Estilos para el mapa */
+.mapa {
+  flex: 1; /* Ocupa el espacio disponible */
+  min-width: 280px;
+}
+
+.mapa img {
+  width: 100%; /* Hacemos la imagen responsive */
+  max-width: 350px; /* Límite de tamaño */
+  height: auto; /* Mantenemos la proporción */
+  border-radius: 10px;
+  border: 2px solid #d9c9b3; /* Borde sutil (de tu footer) */
+}

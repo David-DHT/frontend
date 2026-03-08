@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UNICAFE - Registrate</title>
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <link rel="stylesheet" href="../css/unete.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo-section">
+        <a href="../index.html" style="text-decoration:none; display: flex; align-items: center;">
+            <h1 class="brand-name" id="brandName">
+              <span id="logoIcon">☕</span> UNICAFE
+            </h1>
+        </a>
+      </div>
+
+      <div class="header-menu-container" id="mobileMenu">
+          <nav>
+            <a href="../index.html">Menu</a>
+            <a href="politicas.html">Políticas</a>
+            <a href="contactos.html">Contactos</a>
+          </nav>
+          
+          <div class="user-actions" id="userActions">
+              </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="form-container">
+        <h2 class="form-title">Registrate</h2>
+
+        <div id="mensajeAlerta" style="display: none; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center;">
+            </div>
+
+        <form id="registroForm">
+          
+          <div class="form-group">
+              <label for="nombre">Nombre:</label>
+              <input type="text" id="nombre" name="nombre" 
+                     required maxlength="50" 
+                     pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" 
+                     title="Solo se permiten letras y espacios." />
+          </div>
+
+          <div class="form-group">
+              <label for="a_paterno">Ap. Paterno:</label>
+              <input type="text" id="a_paterno" name="a_paterno" 
+                     required maxlength="50" 
+                     pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" 
+                     title="Solo se permiten letras." />
+          </div>
+
+          <div class="form-group">
+              <label for="a_materno">Ap. Materno:</label>
+              <input type="text" id="a_materno" name="a_materno" 
+                     required maxlength="50" 
+                     pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" 
+                     title="Solo se permiten letras." />
+          </div>
+
+          <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" 
+                     required maxlength="100" 
+                     title="Ingresa un correo válido" />
+          </div>
+
+          <div class="form-group">
+              <label for="telefono">Teléfono:</label>
+              <input type="tel" id="telefono" name="telefono" 
+                     required maxlength="10" 
+                     pattern="[0-9]{10}" 
+                     title="Debe contener 10 dígitos numéricos sin espacios ni guiones." 
+                     oninput="this.value = this.value.replace(/[^0-9]/g, '')" /> 
+          </div>
+
+          <div class="form-group">
+              <label for="perfil">Perfil:</label>
+              <select id="perfil" name="perfil" required>
+                  <option value="">Selecciona un perfil</option>
+                  <option value="2">Cliente</option>
+                  <option value="3">Estudiante</option>
+                  <option value="4">Docente</option>
+              </select>
+          </div>
+
+          <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" id="password" name="password" 
+                     required maxlength="20"
+                     pattern="(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}" 
+                     title="Mínimo 8 caracteres, una mayúscula y un carácter especial (!@#$%^&*)" />
+          </div>
+
+          <div class="button-group">
+              <button type="button" class="btn btn-limpiar" onclick="document.getElementById('registroForm').reset();">
+                  Limpiar
+              </button>
+              <button type="submit" class="btn btn-guardar">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="ubicacion.html">📍 Horarios y ubicación</a>
+        <a href="redes.html">📱 Redes Sociales</a>
+        <a href="Nosotros-Somos.html">👥 Acerca de</a>
+        <a href="opiniones.html">📝 Opiniones</a>
+        <a href="mapaDeSitioPublic.html">🗺️ Mapa de sitio</a>
+      </div>
+      <hr class="footer-divider">
+      <div class="footer-bottom">
+        <p class="footer-text">ÚNETE A NUESTRA COMUNIDAD • @UTHH</p>
+        <p class="footer-text">© 2025 UNICAFE. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <script src="../js/header.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,326 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 130px; 
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #e8ded1;
+  padding: 60px 80px;
+  gap: 40px;
+}
+.hero p{
+  font-size: 20px;
+}
+.hero-content {
+  max-width: 520px;
+}
+
+.hero-content h1 {
+  font-family: "Abril Fatface", serif;
+  font-size: 52px;
+  color: #4a3c2e;
+  margin-bottom: 10px;
+  font-weight: normal; /* <-- Peso de fuente ajustado */
+}
+
+.hero-content h1 span {
+  color: #7a5b45;
+}
+
+.hero-content p {
+  color: #5f5248;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.btn-cta {
+  display: inline-block;
+  padding: 12px 26px;
+  background-color: #7a5b45;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: backgroung 0.3s;
+}
+
+.btn-cta:hover {
+  background-color: #5b4636;
+}
+
+.hero-image {
+  width: 25%;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  object-fit: cover; /* Añadido para que la imagen se vea bien */
+}
+
+
+.about {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 60px;
+  gap: 40px;
+  background: #fff;
+}
+
+.about-text {
+  max-width: 480px;
+}
+
+.about-text h2 {
+  font-size: 32px;
+  color: #4a3c2e;
+  margin-bottom: 12px;
+}
+
+.about-text p {
+  color: #6b625a;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.about-image {
+  width: 45%;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+.gallery {
+  text-align: center;
+  padding: 80px 40px;
+  background-color: #f3ebe4;
+}
+
+.gallery h2 {
+  font-size: 32px;
+  color: #4a3c2e;
+  margin-bottom: 40px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.gallery-grid img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dato {
+    /* Fondo claro similar al de la imagen */
+    background-color: #f1ede8; 
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.dato h3 {
+    font-family: 'Abril Fatface', serif; /* Usando una fuente de tu cabecera */
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.dato-contenido {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #f7f6f4; /* Un fondo un poco más claro para el contenido */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dato-texto h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 1.8rem;
+    color: #000;
+    margin-bottom: 30px;
+    line-height: 1.3;
+}
+
+.dato-visuales {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap; /* Para que se adapte en pantallas pequeñas */
+}
+
+.dato-imagen,
+.dato-qr {
+    max-width: 40%; /* Controla el tamaño para que quepan dos elementos */
+    height: auto;
+    border-radius: 5px;
+    /* Ajuste para que la imagen se vea bien */
+    max-height: 250px; 
+    object-fit: contain;
+}
+
+/* Media query para pantallas más pequeñas (opcional, pero recomendado) */
+@media (max-width: 600px) {
+    .dato-visuales {
+        flex-direction: column;
+    }
+    .dato-imagen,
+    .dato-qr {
+        max-width: 80%; /* Ocupan más espacio en el móvil */
+    }
+    .dato-texto h2 {
+        font-size: 1.5rem;
+    }
+}
+
+
+.Registro-form {
+  width: 25%; /* <-- MISMO TAMAÑO (ANCHO) QUE .hero-image */
+  flex-shrink: 0; /* Para que no se encoja */
+  background-color: #fff;
+  /* border: 3px solid #000; */ /* Borde original */
+  border: 1px solid #d6c0af; /* Borde más suave */
+
+  /* padding: 80px 60px; */ /* Padding original, muy grande para 25% */
+  padding: 40px 30px; /* Padding reducido y uniforme */
+
+  border-radius: 20px; /* <-- MISMO border-radius QUE .hero-image */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* <-- MISMA SOMBRA QUE .hero-image */
+
+  text-align: left; /* Mejor para formularios */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Registro-form h1 {
+  font-family: "Abril Fatface", serif; /* Misma fuente que el título hero */
+  color: #4a3c2e;
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: normal; /* <-- Peso de fuente ajustado */
+}
+
+/* Nuevo 'form-group' para agrupar label + input */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.Registro-form label {
+  font-size: 18px;
+  color: #5f5248;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.form-input {
+  /* Se quitan márgenes, ahora los maneja .form-group */
+  padding: 12px;
+  border: 2px solid #d6c0af; /* Borde más suave */
+  background-color: white;
+  font-size: 15px;
+  outline: none;
+  border-radius: 8px; /* Inputs redondeados */
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-input:focus {
+  border-color: #7a5b45;
+  box-shadow: 0 0 0 3px rgba(122, 91, 69, 0.2);
+}
+
+.button-group {
+
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 80px; /* Margen superior ajustado */
+}
+.Registro-form button {
+  justify-content: center;
+  padding: 10px 25px;
+  border-radius: 8px; /* Redondeado como los inputs */
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none; /* Quitar borde por defecto */
+  font-weight: 600;
+}
+.btn-limpiar {
+  background-color: #a67c52;
+  color: white;
+}
+.btn-limpiar:hover {
+  background-color: #8b6840;
+}
+.btn-aceptar {
+  background-color: #8b6f47;
+  color: white;
+}
+.btn-aceptar:hover {
+  background-color: #6d5436;
+}
+
+/* ==== RESPONSIVE ==== */
+@media (max-width: 1300px) {
+  .hero {
+    flex-direction: column;
+    padding: 50px 30px;
+    text-align: center;
+  }
+
+  .hero-image {
+    width: 30%;
+    order: -1; /* Mover imagen arriba en móvil */
+  }
+
+  /* Regla responsiva añadida para el formulario */
+  .Registro-form {
+    width: 90%; /* Ancho completo en móvil */
+    max-width: 400px; /* Pero con un máximo */
+    margin-top: 30px;
+    padding: 30px 25px;
+  }
+
+  .about {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .about-image {
+    width: 90%;
+  }
+
+  .search-bar {
+    width: 100%;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

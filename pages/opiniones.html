@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UNICAFE - Opiniones y Sugerencias</title>
+    <link rel="stylesheet" href="../css/opiniones.css" />
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/footer.css">
+  </head>
+  <body>
+ <header>
+      <div class="logo-section">
+        <a href="index.html" style="text-decoration:none; display: flex; align-items: center;">
+            <h1 class="brand-name" id="brandName">
+              <span id="logoIcon">☕</span> UNICAFE
+            </h1>
+        </a>
+      </div>
+      <div class="header-menu-container" id="mobileMenu">
+          <nav>
+            <a href="../index.html">Menu</a>
+            <a href="politicas.html">Políticas</a>
+            <a href="contactos.html">Contactos</a>
+          </nav>
+          
+          <div class="user-actions" id="userActions">
+              </div>
+      </div>
+</header>
+    <main>
+      <div class="form-container">
+        <h2 class="form-title">opiniones/sugerencias</h2>
+        <p class="form-description">
+          Nos encantaría conocer tu opinión.<br />
+          Déjanos tu sugerencia para mejorar
+        </p>
+
+        <form action="../php/inserOpinion.php" method="POST" id="opinionForm" >
+          <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required />
+          </div>
+
+          <div class="form-group">
+            <label for="mensaje">Mensaje:</label>
+            <textarea id="mensaje" name="mensaje" required></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">Enviar</button>
+        </form>
+      </div>
+    </main>
+     <footer>
+      <div class="footer-links">
+        <a href="ubicacion.html">📍 Horarios y ubicación</a>
+        <a href="redes.html">📱 Redes Sociales</a>
+        <a href="Nosotros-Somos.html">👥 Acerca de</a>
+        <a href="opiniones.html">📝 Opiniones</a>
+        <a href="mapaDeSitioPublic.html">🗺️ Mapa de sitio</a>
+      </div>
+      <hr class="footer-divider" />
+      <div class="footer-bottom">
+        <p class="footer-text">ÚNETE A NUESTRA COMUNIDAD • @UTHH</p>
+        <p class="footer-text">
+          © 2025 UNICAFE. Todos los derechos reservados.
+        </p>
+      </div>
+    </footer>
+    <script src="../js/header.js"></script>
+  </body>
+</html>

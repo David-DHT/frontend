@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="pageTitle">Agregar Categoría - UNICAFE</title>
+    <link rel="stylesheet" href="../css/agregarCategoria.css" />
+  </head>
+  <body>
+    <header
+      style="
+        background-color: #333;
+        color: white;
+        padding: 10px;
+        text-align: center;
+      "
+    >
+      <h4>Mi Sistema - Header</h4>
+    </header>
+
+    <main>
+      <h1 class="page-title" id="mainTitle">Agregar Categoría</h1>
+
+      <div class="form-container-admin">
+        <form id="formCategoria">
+          <input type="hidden" id="id_categoria" name="id_categoria" value="" />
+
+          <div class="form-group-admin">
+            <label for="nombre_categoria">Nombre:</label>
+            <input
+              type="text"
+              id="nombre_categoria"
+              name="nombre_categoria"
+              value=""
+              required
+              maxlength="40"
+              pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+              title="Solo se permiten letras"
+              placeholder="Ej. Bebidas Calientes"
+              oninput="
+                this.setCustomValidity('');
+                soloLetras(event);
+              "
+              oninvalid="
+                this.setCustomValidity('El campo Nombre es obligatorio.')
+              "
+            />
+          </div>
+
+          <div class="form-group-admin">
+            <label for="descripcion">Descripción:</label>
+            <input
+              type="text"
+              id="descripcion"
+              name="descripcion"
+              value=""
+              required
+              maxlength="100"
+              pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+              placeholder="Breve descripción de la categoría"
+              oninput="
+                this.setCustomValidity('');
+                soloLetras(event);
+              "
+              oninvalid="
+                this.setCustomValidity('El campo Descripción es obligatorio.')
+              "
+            />
+          </div>
+
+          <div class="button-group-admin">
+            <a
+              href="gestionCategorias.html"
+              class="btn btn-cancel"
+              id="btnCancelar"
+              >Cancelar</a
+            >
+            <button type="submit" class="btn btn-save">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer
+      style="
+        background-color: #f1f1f1;
+        padding: 10px;
+        text-align: center;
+        margin-top: auto;
+      "
+    >
+      <small>Mi Sistema - Footer</small>
+    </footer>
+
+    <script src="../js/agregarCategoria.js"></script>
+  </body>
+</html>

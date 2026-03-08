@@ -1,0 +1,71 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 130px; 
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+.welcome-banner {
+  background-color: #8b6f47; /* Tono marrón del sketch */
+  padding: 15px 40px; /* Reduje el padding vertical */
+  text-align: center;
+  border-bottom: 2px solid #4a3c2e;
+  display: flex; /* Para centrar la imagen si es más pequeña */
+  justify-content: center;
+  align-items: center;
+  min-height: 100px; /* Altura mínima para que no sea muy pequeño en móvil */
+}
+
+.welcome-image {
+  max-width: 100%; /* Asegura que la imagen no se desborde */
+  height: auto; /* Mantiene la proporción */
+  max-height: 120px; /* Limita la altura de la imagen para que no sea tan grande */
+  display: block; /* Elimina espacio extra debajo de la imagen */
+}
+
+.politicas {
+  text-align: center;
+  margin: 40px auto;
+  width: 80%;
+}
+
+.politicas h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.caja {
+  background-color: #f5e9de;
+  border: 2px solid #3a2d20;
+  padding: 25px;
+  text-align: left;
+  border-radius: 5px;
+  line-height: 1.6;
+}
+
+.caja ol {
+  margin-left: 20px;
+}
+
+.caja li {
+  margin-bottom: 10px;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  /* Se eliminó la basura del navbar antiguo. Solo queda el ajuste de la caja de políticas */
+  .politicas {
+    width: 90%;
+  }
+}
