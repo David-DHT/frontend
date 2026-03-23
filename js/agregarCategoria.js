@@ -42,12 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            let url = 'http://localhost:3000/api/categorias';
+            let url = 'https://backend-liard-alpha-37.vercel.app/api/categorias';
             let metodo = 'POST'; // Por defecto, asumimos que es crear
 
             // Si hay un ID en el input oculto, cambiamos a modo ACTUALIZAR (PUT)
             if (inputId.value) {
-                url = `http://localhost:3000/api/categorias/${inputId.value}`;
+                url = `https://backend-liard-alpha-37.vercel.app/api/categorias/${inputId.value}`;
                 metodo = 'PUT';
             }
 
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Función para obtener los datos si estamos editando
     async function cargarDatosCategoria(id) {
         try {
-            const respuesta = await fetch(`http://localhost:3000/api/categorias/${id}`);
+            const respuesta = await fetch(`https://backend-liard-alpha-37.vercel.app/api/categorias/${id}`);
             if (!respuesta.ok) throw new Error('No se pudo cargar la categoría');
             
             const categoria = await respuesta.json();
