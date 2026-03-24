@@ -1,0 +1,235 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f1ef;
+    color: #4b3527;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    padding: 50px 20px 60px;
+    background: #ddd3c5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.form-container {
+    width: 100%;
+    max-width: 620px;
+    background: #f8f8f8;
+    border: 1px solid #d8c5b0;
+    border-radius: 22px;
+    padding: 36px 34px;
+    box-shadow: 0 8px 24px rgba(91, 64, 42, 0.12);
+}
+
+/* TÍTULO */
+.form-title {
+    text-align: center;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #4b3527;
+    margin-bottom: 28px;
+}
+
+/* ALERTA */
+#mensajeAlerta {
+    display: none;
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+    text-align: center;
+    font-size: 0.96rem;
+    line-height: 1.5;
+    border: 1px solid transparent;
+}
+
+/* FORMULARIO */
+#registroForm {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #5a3f2b;
+    margin-bottom: 8px;
+}
+
+/* INPUTS */
+.form-group input,
+.form-group select {
+    width: 100%;
+    height: 46px;
+    border: 1.5px solid #d1b8a0;
+    border-radius: 8px;
+    padding: 0 14px;
+    font-size: 0.98rem;
+    color: #4b3527;
+    background: #ffffff;
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+.form-group input::placeholder {
+    color: #9b8572;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #9a744e;
+    box-shadow: 0 0 0 3px rgba(154, 116, 78, 0.14);
+}
+
+.form-group input:hover,
+.form-group select:hover {
+    border-color: #b38961;
+}
+
+/* SELECT */
+.form-group select {
+    appearance: none;
+    cursor: pointer;
+    background-image:
+        linear-gradient(45deg, transparent 50%, #7d5b3d 50%),
+        linear-gradient(135deg, #7d5b3d 50%, transparent 50%);
+    background-position:
+        calc(100% - 18px) calc(50% - 3px),
+        calc(100% - 12px) calc(50% - 3px);
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 42px;
+}
+
+/* VALIDACIONES */
+.form-group input:invalid:focus,
+.form-group select:invalid:focus {
+    border-color: #c85656;
+    box-shadow: 0 0 0 3px rgba(200, 86, 86, 0.13);
+}
+
+/* BOTONES */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    min-width: 150px;
+    height: 44px;
+    border: none;
+    border-radius: 9px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.22s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-limpiar {
+    background: #a67c52;
+    color: #ffffff;
+}
+
+.btn-limpiar:hover {
+    background: #8d6845;
+}
+
+.btn-guardar {
+    background: #a67c52;
+    color: #ffffff;
+}
+
+.btn-guardar:hover {
+    background: #8d6845;
+}
+
+/* EFECTO GENERAL */
+.form-container:hover {
+    box-shadow: 0 12px 28px rgba(91, 64, 42, 0.15);
+}
+
+/* AUTOCOMPLETADO */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #4b3527;
+    -webkit-box-shadow: 0 0 0px 1000px #ffffff inset;
+    transition: background-color 9999s ease-out 0s;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    main {
+        padding: 30px 14px 40px;
+        align-items: flex-start;
+    }
+
+    .form-container {
+        padding: 28px 20px;
+        border-radius: 18px;
+    }
+
+    .form-title {
+        font-size: 1.9rem;
+        margin-bottom: 22px;
+    }
+
+    .button-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 22px 16px;
+    }
+
+    .form-title {
+        font-size: 1.6rem;
+    }
+
+    .form-group label {
+        font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        height: 44px;
+        font-size: 0.95rem;
+    }
+}

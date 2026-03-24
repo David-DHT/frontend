@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -7,7 +6,7 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 130px; 
+    scroll-padding-top: 130px;
 }
 
 body {
@@ -20,24 +19,157 @@ body {
 .layout {
     display: flex;
     align-items: flex-start;
-    min-height: 60vh; 
-    padding-bottom: 0px; 
+    min-height: 60vh;
+    padding-bottom: 0px;
     margin-bottom: 0px;
 }
 
-.sidebar {
-    width: 250px;
-    background-color: #d8bca7;
-    padding: 0;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+header {
     position: sticky;
-    top: 86px; 
-    height: calc(100vh - 100px); 
-    overflow-y: auto;
-    flex-shrink: 0;
-    z-index: 900;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.header-categorias {
+    width: 100%;
+    background: #d8bca7;
+    overflow-x: auto;
+}
+
+.header-categorias .menu-list {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px 20px;
+    list-style: none;
+    overflow-x: auto;
+}
+
+.header-categorias .menu-list a {
+    flex: 0 0 auto;
+    text-decoration: none;
+    background: #c0a894;
+    color: #4a3b32;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: 0.3s;
+}
+
+.header-categorias .menu-list a:hover {
+    background: #8b6f47;
+    color: white;
+}
+
+.hero-carousel-section {
+    width: 100%;
+    padding: 20px 40px 0;
+}
+
+.hero-carousel {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    height: 380px;
+    margin: 0 auto 20px;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #ddd;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.hero-slides {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-slide {
+    position: absolute;
+    inset: 0;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.hero-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.hero-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 28px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.70), rgba(0, 0, 0, 0.15), transparent);
+    color: #fff;
+}
+
+.hero-overlay h2 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.hero-overlay p {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.hero-badge {
+    display: inline-block;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(3px);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.hero-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 22px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.45);
+    transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.hero-btn:hover {
+    background: rgba(0, 0, 0, 0.68);
+    transform: translateY(-50%) scale(1.05);
+}
+
+.hero-btn.prev {
+    left: 16px;
+}
+
+.hero-btn.next {
+    right: 16px;
 }
 
 .menu-list {
@@ -50,7 +182,7 @@ body {
 
 .menu-list a {
     display: block;
-    color: #4a3b32; 
+    color: #4a3b32;
     text-decoration: none;
     padding: 15px 20px;
     font-size: 16px;
@@ -61,7 +193,7 @@ body {
 
 .menu-list a:hover {
     background-color: #c0a894;
-    padding-left: 25px; 
+    padding-left: 25px;
     color: #fff;
 }
 
@@ -80,7 +212,7 @@ body {
 .section-title {
     font-size: 30px;
     font-weight: bold;
-    border-bottom: 3px solid #8b6f47; 
+    border-bottom: 3px solid #8b6f47;
     padding-bottom: 5px;
     margin-bottom: 20px;
     text-transform: uppercase;
@@ -97,12 +229,12 @@ body {
 .menu-item {
     position: relative;
     text-align: center;
-    flex: 1 1 250px; 
+    flex: 1 1 250px;
     max-width: 300px;
     min-width: 240px;
     border: 1px solid #e0e0e0;
     padding: 10px;
-    border-radius: 8px; 
+    border-radius: 8px;
     cursor: pointer;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
@@ -137,7 +269,7 @@ body {
     border-radius: 20px;
     font-weight: bold;
     font-size: 14px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     z-index: 2;
 }
 
@@ -159,61 +291,85 @@ body {
     .layout {
         flex-direction: column;
     }
+
     .sidebar {
         width: 100%;
         height: auto;
-        position: sticky; 
-        top: 60px; 
+        position: sticky;
+        top: 60px;
         z-index: 950;
-        background-color: #fff; 
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        background-color: #fff;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         overflow: visible;
         padding: 10px 0;
         border-bottom: 1px solid #eee;
     }
+
     .menu-list {
         flex-direction: row;
-        flex-wrap: nowrap; 
-        overflow-x: auto; 
-        -webkit-overflow-scrolling: touch; 
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
         gap: 10px;
-        padding: 0 15px; 
-        scrollbar-width: none; 
-        -ms-overflow-style: none;  
+        padding: 0 15px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
     }
-    .menu-list::-webkit-scrollbar { 
-        display: none; 
+
+    .menu-list::-webkit-scrollbar {
+        display: none;
     }
+
     .menu-list a {
-        flex: 0 0 auto; 
+        flex: 0 0 auto;
         border: none;
         background-color: #f4f4f4;
-        border-radius: 50px; 
+        border-radius: 50px;
         padding: 8px 18px;
         font-size: 14px;
         color: #555;
-        white-space: nowrap; 
+        white-space: nowrap;
         transition: all 0.2s;
-        margin-bottom: 5px; 
+        margin-bottom: 5px;
     }
-    .menu-list a:hover, 
-    .menu-list a:active, 
+
+    .menu-list a:hover,
+    .menu-list a:active,
     .menu-list a:focus {
-        background-color: #8b6f47; 
+        background-color: #8b6f47;
         color: white;
         transform: scale(1.05);
         box-shadow: 0 2px 5px rgba(139, 111, 71, 0.3);
     }
+
     .main-content {
         padding: 20px;
     }
+
     .items-container {
         justify-content: center;
         gap: 15px;
     }
+
     .menu-item {
-        min-width: 45%; 
+        min-width: 45%;
         max-width: 48%;
+    }
+
+        .hero-carousel-section {
+        padding: 16px 20px 0;
+    }
+
+    .hero-carousel {
+        height: 300px;
+    }
+
+    .hero-overlay h2 {
+        font-size: 24px;
+    }
+
+    .hero-overlay p {
+        font-size: 18px;
     }
 }
 
@@ -224,15 +380,51 @@ body {
         min-width: 0 !important;
         padding: 8px;
     }
+
     .menu-item img {
         height: 140px;
     }
+
     .item-name {
         font-size: 15px;
         margin-bottom: 5px;
     }
+
     .price-tag {
         font-size: 12px;
         padding: 4px 8px;
+    }
+
+        .hero-carousel-section {
+        padding: 12px 12px 0;
+    }
+
+    .hero-carousel {
+        height: 220px;
+        border-radius: 12px;
+    }
+
+    .hero-overlay {
+        padding: 16px;
+    }
+
+    .hero-overlay h2 {
+        font-size: 20px;
+        margin-bottom: 6px;
+    }
+
+    .hero-overlay p {
+        font-size: 16px;
+    }
+
+    .hero-badge {
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+
+    .hero-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 18px;
     }
 }
