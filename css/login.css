@@ -1,326 +1,489 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+:root {
+  --bg-principal: #e8dfd2;
+  --blanco-suave: #f7f7f7;
+  --cafe-oscuro: #5a4432;
+  --cafe-medio: #8a6647;
+  --cafe-boton: #9c7748;
+  --cafe-boton-hover: #85633b;
+  --texto-oscuro: #4e4338;
+  --borde-input: #d3bda8;
+  --sombra: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 130px; 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
+  font-family: "Montserrat", Arial, sans-serif;
+  background: var(--bg-principal);
+  color: var(--texto-oscuro);
 }
-.hero {
-  position: relative;
+
+/* HEADER */
+header {
+  width: 100%;
+  min-height: 64px;
+  background: #ffffff;
+  border-bottom: 2px solid #1e1e1e;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #e8ded1;
-  padding: 60px 80px;
-  gap: 40px;
+  padding: 0 38px;
 }
-.hero p{
-  font-size: 20px;
+
+.logo-section {
+  display: flex;
+  align-items: center;
 }
+
+.logo-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.brand-name {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.1rem;
+  font-style: italic;
+  font-weight: 800;
+  color: #3f3f3f;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-menu-container {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.header-menu-container nav {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+}
+
+.header-menu-container nav a {
+  text-decoration: none;
+  color: #444;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.btn-login,
+.btn-unete {
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.98rem;
+}
+
+.btn-login {
+  color: #444;
+  background: transparent;
+}
+
+.btn-unete {
+  background: var(--cafe-boton);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 22px;
+  transition: 0.25s ease;
+}
+
+.btn-unete:hover {
+  background: var(--cafe-boton-hover);
+}
+
+/* HERO PRINCIPAL */
+.hero {
+  width: 100%;
+  min-height: calc(100vh - 64px);
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 0.8fr;
+  align-items: center;
+  gap: 38px;
+  padding: 34px 80px 50px;
+  background: #e7dfd3;
+}
+
+/* BLOQUE IZQUIERDO */
 .hero-content {
   max-width: 520px;
+  padding-right: 10px;
 }
 
 .hero-content h1 {
   font-family: "Abril Fatface", serif;
-  font-size: 52px;
-  color: #4a3c2e;
-  margin-bottom: 10px;
-  font-weight: normal; /* <-- Peso de fuente ajustado */
+  font-size: 4rem;
+  line-height: 1.1;
+  color: var(--cafe-oscuro);
+  margin-bottom: 24px;
 }
 
 .hero-content h1 span {
-  color: #7a5b45;
+  display: block;
+  margin-top: 10px;
+  color: #8c6a4b;
 }
 
 .hero-content p {
-  color: #5f5248;
-  margin-bottom: 20px;
-  line-height: 1.6;
+  font-size: 1rem;
+  line-height: 1.8;
+  max-width: 500px;
+  margin-bottom: 28px;
+  color: #5c4b3c;
 }
 
 .btn-cta {
   display: inline-block;
-  padding: 12px 26px;
-  background-color: #7a5b45;
-  color: white;
   text-decoration: none;
-  font-weight: 600;
-  border-radius: 10px;
-  transition: backgroung 0.3s;
+  background: var(--cafe-medio);
+  color: white;
+  font-weight: 700;
+  padding: 14px 30px;
+  border-radius: 12px;
+  transition: 0.25s ease;
 }
 
 .btn-cta:hover {
-  background-color: #5b4636;
+  background: var(--cafe-oscuro);
 }
 
-.hero-image {
-  width: 25%;
-  border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  object-fit: cover; /* Añadido para que la imagen se vea bien */
-}
-
-
-.about {
+/* FORM LOGIN */
+.registro-form {
+  width: 100%;
+  max-width: 295px;
+  min-height: 520px;
+  background: #f9f9f9;
+  border-radius: 22px;
+  box-shadow: var(--sombra);
+  padding: 42px 24px 30px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  justify-self: center;
+}
+
+.registro-form h1 {
+  font-family: "Abril Fatface", serif;
+  font-size: 2.4rem;
+  text-align: center;
+  color: var(--cafe-oscuro);
+  margin-bottom: 42px;
+}
+
+.registro-form label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #4d4238;
+}
+
+.form-input {
+  width: 100%;
+  height: 45px;
+  border: 2px solid var(--borde-input);
+  border-radius: 10px;
+  background: white;
+  padding: 0 14px;
+  font-size: 0.95rem;
+  color: #444;
+  outline: none;
+  margin-bottom: 22px;
+}
+
+.form-input:focus {
+  border-color: var(--cafe-boton);
+}
+
+.password-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 28px;
+}
+
+.password-input {
+  padding-right: 42px;
+  margin-bottom: 0;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.15rem;
+  cursor: pointer;
+  color: #5a4432;
+}
+
+/* MENSAJE ERROR */
+.mensaje-error {
+  display: none;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  text-align: center;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  font-size: 0.92rem;
+}
+
+/* BOTONES */
+.button-group {
+  margin-top: auto;
+  display: flex;
   justify-content: center;
-  padding: 80px 60px;
-  gap: 40px;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.btn-aceptar,
+.btn-limpiar {
+  border: none;
+  background: #b0864f;
+  color: white;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.btn-aceptar:hover,
+.btn-limpiar:hover {
+  background: #946d3d;
+}
+
+/* IMAGEN DERECHA */
+.hero-image {
+  width: 100%;
+  max-width: 290px;
+  height: 430px;
+  object-fit: cover;
+  border-radius: 22px;
+  box-shadow: var(--sombra);
+  justify-self: start;
   background: #fff;
 }
 
-.about-text {
-  max-width: 480px;
+/* SECCIONES INFERIORES */
+.about,
+.gallery,
+.dato {
+  padding: 60px 80px;
+}
+
+.about {
+  background: #f5efe7;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 30px;
+  align-items: center;
 }
 
 .about-text h2 {
-  font-size: 32px;
-  color: #4a3c2e;
-  margin-bottom: 12px;
+  font-family: "Abril Fatface", serif;
+  font-size: 2.3rem;
+  color: var(--cafe-oscuro);
+  margin-bottom: 18px;
 }
 
 .about-text p {
-  color: #6b625a;
-  line-height: 1.6;
-  font-size: 16px;
+  line-height: 1.8;
+  font-size: 1rem;
 }
 
 .about-image {
-  width: 45%;
+  width: 100%;
+  max-width: 420px;
   border-radius: 20px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--sombra);
 }
 
-
 .gallery {
-  text-align: center;
-  padding: 80px 40px;
-  background-color: #f3ebe4;
+  background: #efe6dc;
 }
 
 .gallery h2 {
-  font-size: 32px;
-  color: #4a3c2e;
-  margin-bottom: 40px;
+  font-family: "Abril Fatface", serif;
+  font-size: 2rem;
+  margin-bottom: 24px;
+  color: var(--cafe-oscuro);
+  text-align: center;
 }
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 18px;
 }
 
 .gallery-grid img {
   width: 100%;
-  height: 180px;
+  height: 220px;
   object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 18px;
+  box-shadow: var(--sombra);
 }
 
 .dato {
-    /* Fondo claro similar al de la imagen */
-    background-color: #f1ede8; 
-    padding: 40px 20px;
-    text-align: center;
+  background: #f8f4ef;
 }
 
 .dato h3 {
-    font-family: 'Abril Fatface', serif; /* Usando una fuente de tu cabecera */
-    font-size: 2.5rem;
-    color: #333;
-    margin-bottom: 20px;
+  font-family: "Abril Fatface", serif;
+  font-size: 1.8rem;
+  margin-bottom: 24px;
+  color: var(--cafe-oscuro);
 }
 
 .dato-contenido {
-    max-width: 900px;
-    margin: 0 auto;
-    background-color: #f7f6f4; /* Un fondo un poco más claro para el contenido */
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
 }
 
 .dato-texto h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    font-size: 1.8rem;
-    color: #000;
-    margin-bottom: 30px;
-    line-height: 1.3;
+  font-size: 1.6rem;
+  color: #5a4432;
+  line-height: 1.4;
 }
 
 .dato-visuales {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 30px;
-    flex-wrap: wrap; /* Para que se adapte en pantallas pequeñas */
+  display: flex;
+  gap: 18px;
+  align-items: center;
 }
 
 .dato-imagen,
 .dato-qr {
-    max-width: 40%; /* Controla el tamaño para que quepan dos elementos */
-    height: auto;
-    border-radius: 5px;
-    /* Ajuste para que la imagen se vea bien */
-    max-height: 250px; 
-    object-fit: contain;
+  max-width: 180px;
+  border-radius: 16px;
+  box-shadow: var(--sombra);
 }
 
-/* Media query para pantallas más pequeñas (opcional, pero recomendado) */
-@media (max-width: 600px) {
-    .dato-visuales {
-        flex-direction: column;
-    }
-    .dato-imagen,
-    .dato-qr {
-        max-width: 80%; /* Ocupan más espacio en el móvil */
-    }
-    .dato-texto h2 {
-        font-size: 1.5rem;
-    }
+/* FOOTER */
+footer {
+  background: #ffffff;
+  padding: 28px 40px;
+  border-top: 1px solid #ddd;
 }
 
-
-.Registro-form {
-  width: 25%; /* <-- MISMO TAMAÑO (ANCHO) QUE .hero-image */
-  flex-shrink: 0; /* Para que no se encoja */
-  background-color: #fff;
-  /* border: 3px solid #000; */ /* Borde original */
-  border: 1px solid #d6c0af; /* Borde más suave */
-
-  /* padding: 80px 60px; */ /* Padding original, muy grande para 25% */
-  padding: 40px 30px; /* Padding reducido y uniforme */
-
-  border-radius: 20px; /* <-- MISMO border-radius QUE .hero-image */
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* <-- MISMA SOMBRA QUE .hero-image */
-
-  text-align: left; /* Mejor para formularios */
+.footer-links {
   display: flex;
-  flex-direction: column;
   justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
-.Registro-form h1 {
-  font-family: "Abril Fatface", serif; /* Misma fuente que el título hero */
-  color: #4a3c2e;
-  font-size: 32px;
-  text-align: center;
-  margin-bottom: 25px;
-  font-weight: normal; /* <-- Peso de fuente ajustado */
-}
-
-/* Nuevo 'form-group' para agrupar label + input */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
-}
-
-.Registro-form label {
-  font-size: 18px;
-  color: #5f5248;
-  margin-bottom: 5px;
+.footer-links a {
+  text-decoration: none;
+  color: #4f4337;
   font-weight: 600;
 }
 
-.form-input {
-  /* Se quitan márgenes, ahora los maneja .form-group */
-  padding: 12px;
-  border: 2px solid #d6c0af; /* Borde más suave */
-  background-color: white;
-  font-size: 15px;
-  outline: none;
-  border-radius: 8px; /* Inputs redondeados */
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.form-input:focus {
-  border-color: #7a5b45;
-  box-shadow: 0 0 0 3px rgba(122, 91, 69, 0.2);
-}
-
-.button-group {
-
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  margin-top: 80px; /* Margen superior ajustado */
-}
-.Registro-form button {
-  justify-content: center;
-  padding: 10px 25px;
-  border-radius: 8px; /* Redondeado como los inputs */
-  font-size: 18px;
-  cursor: pointer;
-  transition: all 0.3s;
-  border: none; /* Quitar borde por defecto */
-  font-weight: 600;
-}
-.btn-limpiar {
-  background-color: #a67c52;
-  color: white;
-}
-.btn-limpiar:hover {
-  background-color: #8b6840;
-}
-.btn-aceptar {
-  background-color: #8b6f47;
-  color: white;
-}
-.btn-aceptar:hover {
-  background-color: #6d5436;
-}
-
-/* ==== RESPONSIVE ==== */
-@media (max-width: 1300px) {
+/* RESPONSIVE */
+@media (max-width: 1100px) {
   .hero {
-    flex-direction: column;
-    padding: 50px 30px;
+    grid-template-columns: 1fr;
+    justify-items: center;
     text-align: center;
+    padding: 35px 30px 50px;
+  }
+
+  .hero-content {
+    max-width: 700px;
+    padding-right: 0;
+  }
+
+  .hero-content p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .registro-form {
+    max-width: 360px;
   }
 
   .hero-image {
-    width: 30%;
-    order: -1; /* Mover imagen arriba en móvil */
-  }
-
-  /* Regla responsiva añadida para el formulario */
-  .Registro-form {
-    width: 90%; /* Ancho completo en móvil */
-    max-width: 400px; /* Pero con un máximo */
-    margin-top: 30px;
-    padding: 30px 25px;
+    justify-self: center;
   }
 
   .about {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    justify-items: center;
     text-align: center;
   }
 
-  .about-image {
-    width: 90%;
+  .dato-contenido {
+    grid-template-columns: 1fr;
+    text-align: center;
   }
 
-  .search-bar {
-    width: 100%;
+  .dato-visuales {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 14px 18px;
+    flex-direction: column;
+    gap: 12px;
   }
 
-  nav {
+  .header-menu-container {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .header-menu-container nav {
+    gap: 18px;
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  .hero {
+    padding: 25px 18px 40px;
+    gap: 26px;
+  }
+
+  .hero-content h1 {
+    font-size: 2.8rem;
+  }
+
+  .registro-form {
+    max-width: 100%;
+  }
+
+  .hero-image {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about,
+  .gallery,
+  .dato {
+    padding: 40px 18px;
   }
 }
