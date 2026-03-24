@@ -24,7 +24,7 @@ async function obtenerCategorias() {
     const tbody = document.getElementById('tablaResultados');
     
     try {
-        const respuesta = await fetch('http://localhost:3000/api/categorias');
+        const respuesta = await fetch('https://backend-liard-alpha-37.vercel.app/api/categorias');
         
         if (!respuesta.ok) throw new Error('Error en la respuesta del servidor');
 
