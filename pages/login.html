@@ -51,7 +51,7 @@
           Si quieres realizar compras en la cafeteria de la Universidad
           Tecnologica de la Huasteca Hidalguense registrate!!.
         </p>
-        <a href="registro.html" class="btn-cta">Registrate</a>
+        <a href="unete.html" class="btn-cta">Registrate</a>
       </div>
 
       <form class="Registro-form" id="loginForm">
@@ -203,21 +203,6 @@
     </footer>
 
     <script src="../js/header.js"></script>
-
-    <script>
-      const togglePassword = document.querySelector("#togglePassword");
-      const password = document.querySelector("#password");
-
-      togglePassword.addEventListener("click", function (e) {
-        // Alternar el tipo de atributo
-        const type =
-          password.getAttribute("type") === "password" ? "text" : "password";
-        password.setAttribute("type", type);
-
-        // Alternar el icono
-        this.classList.toggle("bi-eye-fill");
-        this.classList.toggle("bi-eye-slash-fill");
-      });
-    </script>
+    <script src="../js/login.js"></script>
   </body>
 </html>

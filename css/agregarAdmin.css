@@ -1,0 +1,184 @@
+/* === 1. VARIABLES Y RESET UNIVERSAL === */
+:root {
+    --bg-body: #f9f7f2;       
+    --card-bg: #ffffff;    
+    --primary: #8b6f47;      
+    --primary-dark: #6d5436;  
+    --accent: #d8bca7;       
+    --text-main: #3e322c;   
+    --text-light: #666;       
+    --border: #e0dcd5;        
+    --error: #e74c3c;
+    --success: #2ecc71;
+}
+
+/* Esta es la regla mágica que evita que los inputs rompan el grid */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: var(--bg-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* === 2. CONTENEDOR PRINCIPAL === */
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    background-image: radial-gradient(#e6ded5 1px, transparent 1px);
+    background-size: 20px 20px;
+    width: 100%;
+}
+
+.register-card {
+    background-color: var(--card-bg);
+    width: 100%;
+    max-width: 750px; /* Un poco más ajustado para que no se vea tan estirado */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(62, 50, 44, 0.08);
+    border-top: 5px solid var(--primary);
+}
+
+.form-header { 
+    text-align: center; 
+    margin-bottom: 30px; 
+}
+
+.form-header h2 { 
+    font-size: 26px; 
+    color: var(--text-main); 
+}
+
+/* === 3. GRID SYSTEM === */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px;
+}
+
+.full-width { 
+    grid-column: span 2; 
+}
+
+.form-group { 
+    display: flex; 
+    flex-direction: column; 
+}
+
+/* === 4. INPUTS Y LABELS === */
+label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+input, select {
+    padding: 12px 15px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--text-main);
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+    width: 100%; 
+}
+
+input:focus, select:focus {
+    border-color: var(--primary);
+    background-color: #fff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(139, 111, 71, 0.15);
+}
+
+/* Contenedor relativo para el ojito de la contraseña */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+.password-wrapper i:hover {
+    color: var(--primary);
+}
+
+.password-wrapper input {
+    padding-right: 45px; /* Espacio para que el texto no pise el ícono */
+}
+
+/* === 5. BOTONES === */
+.button-group {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+}
+
+.btn-guardar {
+    background-color: var(--primary);
+    color: white;
+}
+
+.btn-guardar:hover { 
+    background-color: var(--primary-dark); 
+    box-shadow: 0 5px 15px rgba(139, 111, 71, 0.3); 
+}
+
+.btn-limpiar {
+    background-color: transparent;
+    color: var(--text-light);
+    border: 2px solid var(--border);
+}
+
+.btn-limpiar:hover { 
+    background-color: #f0f0f0; 
+    color: var(--text-main); 
+}
+
+/* === 6. RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+    .form-grid { 
+        grid-template-columns: 1fr; 
+    } 
+    .full-width { 
+        grid-column: span 1; 
+    }
+    .register-card { 
+        padding: 25px 20px; 
+    }
+    .button-group {
+        flex-direction: column-reverse; /* En móvil, "Guardar" queda arriba y "Limpiar" abajo */
+    }
+}
