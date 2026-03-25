@@ -218,6 +218,61 @@ body {
     background-color: #faf8f5;
 }
 
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn-icon {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.2s;
+}
+
+.btn-edit {
+    color: var(--secondary-brown);
+    background-color: rgba(122, 91, 69, 0.1);
+}
+
+.btn-edit:hover {
+    background-color: var(--secondary-brown);
+    color: white;
+}
+
+.btn-delete {
+    color: #c62828;
+    background-color: rgba(198, 40, 40, 0.1);
+}
+
+.btn-delete:hover {
+    background-color: #c62828;
+    color: white;
+}
+
+.btn-guardar {
+    background-color: var(--primary-brown);
+    color: white;
+    border: none;
+}
+
+.btn-guardar:hover {
+    background-color: var(--secondary-brown);
+    color: white;
+}
+
+#mensajeModalProducto .alert {
+    margin-bottom: 0;
+}
+
 @media (max-width: 992px) {
     .inventory-content {
         padding: 20px 15px;
