@@ -49,7 +49,7 @@ async function obtenerProveedores() {
                 <td>${proveedor.correo}</td> 
                 <td class="text-center">
                     <div class="action-buttons">
-                        <a href="agregarProveedores.html?id=${proveedor.idProveedor}" class="btn-icon btn-edit" title="Editar">
+                        <a href="agregarProveedor.html?id=${proveedor.idProveedor}" class="btn-icon btn-edit" title="Editar">
                             <i class="bi bi-pencil-square"></i>
                         </a>
                         <button onclick="eliminarProveedor(${proveedor.idProveedor})" class="btn-icon btn-delete" title="Eliminar">
