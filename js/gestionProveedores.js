@@ -1,7 +1,7 @@
 // Esperamos a que el HTML cargue completamente antes de ejecutar el script
 document.addEventListener('DOMContentLoaded', () => {
     
-    // 1. Llamamos a la API para traer las categorías al cargar la página
+    // 1. Llamamos a la API para traer los proveedores al cargar la página
     obtenerProveedores();
 
     // 2. Lógica del buscador
@@ -18,12 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-// Función para obtener los proveedores desde Node.js
+
+// Función para obtener los proveedores desde Node.js (Ruta pública)
 async function obtenerProveedores() {
     const tbody = document.getElementById('tablaResultados');
     
     try {
-        // CORRECCIÓN: 'proveedores' en plural como está en tu backend
         const respuesta = await fetch('https://backend-liard-alpha-37.vercel.app/api/proveedores');
         
         if (!respuesta.ok) throw new Error('Error en la respuesta del servidor');
@@ -67,10 +67,41 @@ async function obtenerProveedores() {
     }
 }
 
-// Función para eliminar (por ahora solo imprime en consola, luego la conectaremos al DELETE)
-function eliminarProveedor(id) {
+// Función para eliminar con validación de TOKEN
+async function eliminarProveedor(id) {
     if(confirm('¿Deseas eliminar el proveedor?')) {
-        console.log('Se enviará petición DELETE para el ID:', id);
-        // Aquí conectaremos con el endpoint DELETE de tu backend
+        
+        // 1. Recuperamos el token
+        const token = localStorage.getItem('token');
+
+        // Si no hay token, lo mandamos al login
+        if (!token) {
+            alert('No tienes permiso. Por favor, inicia sesión de nuevo.');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        try {
+            // 2. Hacemos la petición DELETE enviando el token en los headers
+            const respuesta = await fetch(`https://backend-liard-alpha-37.vercel.app/api/proveedor/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!respuesta.ok) {
+                throw new Error('Error al eliminar el proveedor');
+            }
+
+            alert('Proveedor eliminado con éxito');
+            
+            // 3. Volvemos a cargar la tabla para ver los cambios
+            obtenerProveedores();
+
+        } catch (error) {
+            console.error('Error al eliminar:', error);
+            alert('Hubo un problema al eliminar el proveedor. Verifica los permisos o la conexión.');
+        }
     }
 }

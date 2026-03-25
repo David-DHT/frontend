@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Función para obtener las categorías desde Node.js
+// Función para obtener las categorías desde Node.js (Ruta pública, no necesita token)
 async function obtenerCategorias() {
     const tbody = document.getElementById('tablaResultados');
     
@@ -65,10 +65,42 @@ async function obtenerCategorias() {
     }
 }
 
-// Función para eliminar (por ahora solo imprime en consola, luego la conectaremos al DELETE)
-function eliminarCategoria(id) {
+// Función para eliminar con validación de TOKEN
+async function eliminarCategoria(id) {
     if(confirm('¿Deseas eliminar esta categoría?')) {
-        console.log('Se enviará petición DELETE para el ID:', id);
-        // Aquí conectaremos con el endpoint DELETE de tu backend
+        
+        // 1. Recuperamos el token guardado en el login
+        const token = localStorage.getItem('token');
+
+        // Si por alguna razón no hay token, no lo dejamos intentar
+        if (!token) {
+            alert('No tienes permiso. Por favor, inicia sesión de nuevo.');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        try {
+            // 2. Hacemos la petición DELETE al backend
+            const respuesta = await fetch(`https://backend-liard-alpha-37.vercel.app/api/categorias/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    // 3. Enviamos el token en los headers para que el backend nos dé permiso
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!respuesta.ok) {
+                throw new Error('Error al eliminar la categoría');
+            }
+
+            alert('Categoría eliminada con éxito');
+            
+            // 4. Volvemos a cargar las categorías para que desaparezca de la tabla inmediatamente
+            obtenerCategorias();
+
+        } catch (error) {
+            console.error('Error al eliminar:', error);
+            alert('Hubo un problema al eliminar la categoría. Verifica los permisos.');
+        }
     }
 }

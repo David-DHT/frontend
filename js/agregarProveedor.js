@@ -29,6 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        // NUEVO: Recuperamos el token de la bóveda
+        const token = localStorage.getItem('token');
+
+        // NUEVO: Si no hay token, lo mandamos al login porque no tiene permiso
+        if (!token) {
+            alert('Tu sesión ha expirado o no tienes permiso. Por favor, inicia sesión de nuevo.');
+            window.location.href = 'login.html';
+            return;
+        }
+
         // Creamos el objeto con la estructura que espera tu backend
         const datos = {
             nombre: inputNombre.value,
@@ -50,7 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const respuesta = await fetch(url, {
                 method: metodo,
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // NUEVO: Enviamos la llave al backend
+                },
                 body: JSON.stringify(datos)
             });
 
@@ -61,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error:', error);
-            alert('Hubo un fallo al guardar los datos. Revisa la conexión.');
+            alert('Hubo un fallo al guardar los datos. Revisa la conexión o tus permisos.');
         }
     });
 
