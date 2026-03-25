@@ -23,20 +23,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await respuesta.json();
+            console.log("Respuesta login:", data);
 
             if (!respuesta.ok) {
-                throw new Error(data.message || 'No se pudo iniciar sesión');
+                throw new Error(data.message || 'Error al iniciar sesión');
             }
 
+            if (!data.token) {
+                throw new Error('No se recibió token del servidor');
+            }
+
+            // Guardar token
             localStorage.setItem('token', data.token);
-            localStorage.setItem('usuario', JSON.stringify(data.usuario));
 
-            // Redirección según perfil
-            if (data.usuario.idPerfil === 1) {
-                window.location.href = 'principalAdmin.html';
-            } else {
-                window.location.href = '../index.html';
-            }
+            // Redirigir directamente (sin usuario aún)
+            window.location.href = 'principalAdmin.html';
 
         } catch (error) {
             mensajeError.style.display = 'block';
