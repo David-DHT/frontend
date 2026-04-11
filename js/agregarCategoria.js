@@ -2,7 +2,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     // 1. Obtener el ID de la URL (si existe)
-    // Ejemplo de URL: agregarCategoria.html?id=5
     const urlParams = new URLSearchParams(window.location.search);
     const idCategoria = urlParams.get('id');
 

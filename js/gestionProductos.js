@@ -42,6 +42,8 @@ async function obtenerProductos() {
             throw new Error('Error en la respuesta del servidor');
         }
 
+
+
         const resultado = await respuesta.json();
         const productos = resultado.data || [];
 
@@ -161,8 +163,7 @@ async function abrirModalEditarProducto(id) {
         document.getElementById('editPrecio').value = producto.precio || '';
         document.getElementById('editCategoria').value = producto.categoria || '';
         document.getElementById('editEstado').value = producto.estado || 'activo';
-
-        // IMPORTANTE: un input file solo se limpia, no se le asigna URL
+        document.getElementById('editImagenActual').value = producto.imagen || '';
         document.getElementById('editImagen').value = '';
 
         document.getElementById('mensajeModalProducto').innerHTML = '';
@@ -189,8 +190,12 @@ async function actualizarProducto(e) {
     formData.append('categoria', document.getElementById('editCategoria').value);
     formData.append('estado', document.getElementById('editEstado').value);
 
+    // Mantener imagen actual por defecto
+    formData.append('imagenActual', document.getElementById('editImagenActual').value);
+
     const imagenInput = document.getElementById('editImagen');
 
+    // Si el usuario selecciona una nueva imagen, esa reemplaza la actual
     if (imagenInput.files && imagenInput.files[0]) {
         formData.append('imagen', imagenInput.files[0]);
     }

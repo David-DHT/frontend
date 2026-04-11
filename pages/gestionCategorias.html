@@ -19,7 +19,7 @@
 
   <body>
     <header class="p-3 bg-dark text-white text-center">
-      <h4>Prueba de Gestión de Categorías</h4>
+      <h4 class="mb-0">Prueba de Gestión de Categorías</h4>
     </header>
 
     <main class="inventory-content">
@@ -39,29 +39,30 @@
           <i class="bi bi-search search-icon"></i>
           <input
             type="text"
-            id="searchInput"
+            id="inputBuscarCategoria"
             class="search-input"
             placeholder="Buscar categoría..."
           />
         </div>
 
-        <a href="agregarCategoria.html" class="btn-add-provider">
+        <button type="button" class="btn-add-provider" id="btnNuevaCategoria">
           <i class="bi bi-plus-lg"></i> Agregar
-        </a>
+        </button>
       </div>
 
       <section class="inventory-table-container">
         <table class="styled-table">
           <thead>
             <tr>
+              <th style="width: 70px">#</th>
               <th>Nombre de categoría</th>
               <th>Descripción</th>
               <th class="text-center">Acciones</th>
             </tr>
           </thead>
-          <tbody id="tablaResultados">
+          <tbody id="tablaCategorias">
             <tr>
-              <td colspan="3" class="text-center p-4">
+              <td colspan="4" class="text-center p-4">
                 Cargando categorías...
               </td>
             </tr>
@@ -72,8 +73,78 @@
 
     <footer class="p-3 bg-light text-center mt-auto">DESARROLLOOO</footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- MODAL AGREGAR / EDITAR -->
+    <div
+      class="modal fade"
+      id="modalCategoria"
+      tabindex="-1"
+      aria-labelledby="tituloModalCategoria"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form id="formCategoria">
+            <div class="modal-header">
+              <h5 class="modal-title" id="tituloModalCategoria">
+                Agregar categoría
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Cerrar"
+              ></button>
+            </div>
 
-    <script src="../js/gestionCategorias.js" defer></script>
+            <div class="modal-body">
+              <div id="mensajeCategoria"></div>
+
+              <input type="hidden" id="categoriaId" />
+
+              <div class="mb-3">
+                <label for="nombreCategoria" class="form-label">
+                  Nombre de la categoría
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nombreCategoria"
+                  placeholder="Ingresa el nombre de la categoría"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="descripcionCategoria" class="form-label">
+                  Descripción
+                </label>
+                <textarea
+                  class="form-control"
+                  id="descripcionCategoria"
+                  rows="3"
+                  placeholder="Ingresa una descripción"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-success" id="btnGuardarCategoria">
+                <i class="bi bi-check-circle"></i> Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/gestionCategorias.js"></script>
   </body>
 </html>
