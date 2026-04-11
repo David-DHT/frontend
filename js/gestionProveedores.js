@@ -94,7 +94,6 @@ async function obtenerProveedores() {
                     </div>
                 </td>
             `;
-
             tbody.appendChild(tr);
         });
 

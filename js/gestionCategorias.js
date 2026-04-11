@@ -1,11 +1,9 @@
 const API_CATEGORIAS = "https://backend-liard-alpha-37.vercel.app/api/categorias";
 
-// ====== ESTADO ======
 let categorias = [];
 let modoEdicion = false;
 let modalCategoria = null;
 
-// ====== ELEMENTOS DOM ======
 const tablaCategorias = document.getElementById("tablaCategorias");
 const inputBuscarCategoria = document.getElementById("inputBuscarCategoria");
 const btnNuevaCategoria = document.getElementById("btnNuevaCategoria");
@@ -18,12 +16,10 @@ const categoriaId = document.getElementById("categoriaId");
 const nombreCategoria = document.getElementById("nombreCategoria");
 const descripcionCategoria = document.getElementById("descripcionCategoria");
 
-// ====== TOKEN ======
 function obtenerToken() {
     return localStorage.getItem("token") || sessionStorage.getItem("token");
 }
 
-// ====== HEADERS ======
 function obtenerHeaders(json = true) {
     const token = obtenerToken();
 
@@ -34,7 +30,6 @@ function obtenerHeaders(json = true) {
     return headers;
 }
 
-// ====== MENSAJES ======
 function mostrarMensaje(mensaje, tipo = "success") {
     if (!mensajeCategoria) return;
 
@@ -49,7 +44,6 @@ function limpiarMensaje() {
     if (mensajeCategoria) mensajeCategoria.innerHTML = "";
 }
 
-// ====== MODAL ======
 function inicializarModal() {
     const modalElement = document.getElementById("modalCategoria");
     if (modalElement) {
@@ -92,7 +86,6 @@ function limpiarFormulario() {
     descripcionCategoria.value = "";
 }
 
-// ====== LISTAR ======
 async function cargarCategorias() {
     try {
         const response = await fetch(API_CATEGORIAS, {
@@ -124,7 +117,6 @@ async function cargarCategorias() {
     }
 }
 
-// ====== RENDER ======
 function renderizarCategorias(lista) {
     if (!tablaCategorias) return;
 
@@ -160,7 +152,6 @@ function renderizarCategorias(lista) {
     }).join("");
 }
 
-// ====== BUSCAR ======
 function filtrarCategorias() {
     const texto = inputBuscarCategoria.value.trim().toLowerCase();
 
@@ -174,7 +165,6 @@ function filtrarCategorias() {
     renderizarCategorias(filtradas);
 }
 
-// ====== AGREGAR ======
 async function agregarCategoria() {
     const payload = {
         nombre: nombreCategoria.value.trim(),
@@ -215,7 +205,6 @@ async function agregarCategoria() {
     }
 }
 
-// ====== ACTUALIZAR ======
 async function actualizarCategoria() {
     const id = categoriaId.value.trim();
 
@@ -263,7 +252,6 @@ async function actualizarCategoria() {
     }
 }
 
-// ====== ELIMINAR ======
 async function eliminarCategoria(id) {
     const confirmacion = confirm("¿Deseas eliminar esta categoría?");
     if (!confirmacion) return;
@@ -289,7 +277,6 @@ async function eliminarCategoria(id) {
     }
 }
 
-// ====== EDITAR DESDE TABLA ======
 window.editarCategoria = function (id) {
     const categoria = categorias.find(cat =>
         String(cat.idCategoria || cat.id) === String(id)
@@ -303,7 +290,6 @@ window.editarCategoria = function (id) {
     abrirModalEditar(categoria);
 };
 
-// ====== ENVÍO DEL FORM ======
 async function manejarSubmitCategoria(e) {
     e.preventDefault();
 
@@ -314,7 +300,6 @@ async function manejarSubmitCategoria(e) {
     }
 }
 
-// ====== UTILIDAD ======
 function escapeHTML(texto) {
     return String(texto)
         .replaceAll("&", "&amp;")
@@ -324,7 +309,6 @@ function escapeHTML(texto) {
         .replaceAll("'", "&#039;");
 }
 
-// ====== EVENTOS ======
 document.addEventListener("DOMContentLoaded", () => {
     inicializarModal();
     cargarCategorias();

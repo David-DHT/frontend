@@ -1,108 +1,25 @@
-:root {
-  --bg-principal: #e8dfd2;
-  --blanco-suave: #f7f7f7;
-  --cafe-oscuro: #5a4432;
-  --cafe-medio: #8a6647;
-  --cafe-boton: #9c7748;
-  --cafe-boton-hover: #85633b;
-  --texto-oscuro: #4e4338;
-  --borde-input: #d3bda8;
-  --sombra: 0 10px 25px rgba(0, 0, 0, 0.08);
+ 
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 130px; 
 }
 
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
 body {
   font-family: "Montserrat", Arial, sans-serif;
   background: var(--bg-principal);
   color: var(--texto-oscuro);
-}
-
-/* HEADER */
-header {
-  width: 100%;
-  min-height: 64px;
-  background: #ffffff;
-  border-bottom: 2px solid #1e1e1e;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 38px;
-}
-
-.logo-section {
-  display: flex;
-  align-items: center;
-}
-
-.logo-link {
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-}
-
-.brand-name {
-  font-family: "Montserrat", sans-serif;
-  font-size: 2.1rem;
-  font-style: italic;
-  font-weight: 800;
-  color: #3f3f3f;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.header-menu-container {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-
-.header-menu-container nav {
-  display: flex;
-  align-items: center;
-  gap: 34px;
-}
-
-.header-menu-container nav a {
-  text-decoration: none;
-  color: #444;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-.user-actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.btn-login,
-.btn-unete {
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 0.98rem;
-}
-
-.btn-login {
-  color: #444;
-  background: transparent;
-}
-
-.btn-unete {
-  background: var(--cafe-boton);
-  color: #fff;
-  padding: 12px 22px;
-  border-radius: 22px;
-  transition: 0.25s ease;
-}
-
-.btn-unete:hover {
-  background: var(--cafe-boton-hover);
 }
 
 /* HERO PRINCIPAL */
@@ -145,29 +62,31 @@ header {
   color: #5c4b3c;
 }
 
+/* BOTÓN DE REGÍSTRATE */
 .btn-cta {
   display: inline-block;
   text-decoration: none;
-  background: var(--cafe-medio);
+  background: #b0864f; /* Color café directo, sin usar variables */
   color: white;
   font-weight: 700;
   padding: 14px 30px;
   border-radius: 12px;
   transition: 0.25s ease;
+  margin-top: 15px; 
 }
 
 .btn-cta:hover {
-  background: var(--cafe-oscuro);
+  background: #4a3b32; /* Color café oscuro al pasar el mouse */
 }
 
-/* FORM LOGIN */
+/* FORMULARIO LOGIN */
 .registro-form {
   width: 100%;
-  max-width: 295px;
-  min-height: 520px;
+  max-width: 320px; 
+  /* min-height eliminado para que no quede estirado */
   background: #f9f9f9;
   border-radius: 22px;
-  box-shadow: var(--sombra);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1); /* Sombra directa */
   padding: 42px 24px 30px;
   display: flex;
   flex-direction: column;
@@ -175,14 +94,14 @@ header {
   justify-self: center;
 }
 
+/* TÍTULO DEL LOGIN */
 .registro-form h1 {
   font-family: "Abril Fatface", serif;
   font-size: 2.4rem;
   text-align: center;
-  color: var(--cafe-oscuro);
+  color: #4a3b32; /* Color café oscuro directo */
   margin-bottom: 42px;
 }
-
 .registro-form label {
   font-size: 0.95rem;
   font-weight: 700;
@@ -202,9 +121,9 @@ header {
   outline: none;
   margin-bottom: 22px;
 }
-
+/* INPUT AL HACER CLIC */
 .form-input:focus {
-  border-color: var(--cafe-boton);
+  border-color: #b0864f; /* Color café directo */
 }
 
 .password-container {
@@ -241,9 +160,9 @@ header {
   font-size: 0.92rem;
 }
 
-/* BOTONES */
+/* GRUPO DE BOTONES (Aceptar y Limpiar) */
 .button-group {
-  margin-top: auto;
+  margin-top: 25px; /* Quita el espacio gigante */
   display: flex;
   justify-content: center;
   gap: 14px;
@@ -279,7 +198,17 @@ header {
   justify-self: start;
   background: #fff;
 }
-
+/* MENSAJE DE ÉXITO */
+.mensaje-exito {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  text-align: center;
+  background-color: #d4edda; /* Fondo verde clarito */
+  color: #155724; /* Texto verde oscuro */
+  border: 1px solid #c3e6cb;
+  font-size: 0.92rem;
+}
 /* SECCIONES INFERIORES */
 .about,
 .gallery,

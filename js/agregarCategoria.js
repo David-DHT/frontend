@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     
     // 1. Obtener el ID de la URL (si existe)
@@ -34,6 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault(); // Evita que la página se recargue
 
+        // NUEVO: Recuperamos el token de la bóveda
+        const token = localStorage.getItem('token');
+
+        // NUEVO: Si no hay token, lo mandamos al login porque no tiene permiso
+        if (!token) {
+            alert('Tu sesión ha expirado o no tienes permiso. Por favor, inicia sesión de nuevo.');
+            window.location.href = 'login.html';
+            return;
+        }
+
         // Preparamos los datos a enviar
         const datos = {
             nombre: inputNombre.value,
@@ -50,11 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 metodo = 'PUT';
             }
 
-            // Hacemos la petición a la API
+            // Hacemos la petición a la API con el Token
             const respuesta = await fetch(url, {
                 method: metodo,
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // NUEVO: Enviamos la llave al backend
                 },
                 body: JSON.stringify(datos)
             });
@@ -73,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Función para obtener los datos si estamos editando
+    // Función para obtener los datos si estamos editando (Esta es GET, no necesita token según tu backend)
     async function cargarDatosCategoria(id) {
         try {
             const respuesta = await fetch(`https://backend-liard-alpha-37.vercel.app/api/categorias/${id}`);
@@ -82,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const categoria = await respuesta.json();
             
             // Llenamos los inputs con la información traída de la API
-            // Nota: Ajusta 'categoria.nombre' y 'categoria.descripcion' según cómo lo devuelva tu API
             inputNombre.value = categoria.nombre;
             inputDescripcion.value = categoria.descripcion;
 
@@ -94,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Función de validación (la que ya tenías) mantenida global para el oninput del HTML
+// Función de validación mantenida global para el oninput del HTML
 function soloLetras(e) {
     e.target.value = e.target.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ ]/g, "");
 }
