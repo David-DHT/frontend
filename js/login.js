@@ -1,62 +1,58 @@
+const API_URL = 'https://backend-liard-alpha-37.vercel.app/api/auth/login';
+
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // Mostrar/ocultar contraseña
-    const togglePassword = document.querySelector("#togglePassword");
-    const passwordInput = document.querySelector("#password");
-
-    if (togglePassword && passwordInput) {
-        togglePassword.addEventListener("click", function () {
-           
-            const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-            passwordInput.setAttribute("type", type);
-            this.classList.toggle("bi-eye-fill");
-            this.classList.toggle("bi-eye-slash-fill");
-        });
-    }
-
-    // INICIO DE SESIÓN
-    const loginForm = document.getElementById('loginForm');
+    const form = document.getElementById('loginForm');
     const mensajeError = document.getElementById('mensajeError');
+    const mensajeExito = document.getElementById('mensajeExito'); // NUEVO: Seleccionamos el div de éxito
 
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            // Evitamos que la página se recargue por defecto
-            e.preventDefault(); 
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-            // Ocultamos el mensaje de error si estaba visible
-            mensajeError.style.display = 'none';
+        // Ocultamos ambos mensajes al intentar de nuevo
+        mensajeError.style.display = 'none';
+        mensajeError.textContent = '';
+        if (mensajeExito) {
+            mensajeExito.style.display = 'none';
+            mensajeExito.textContent = '';
+        }
 
-            // Obtenemos los valores de los inputs
-            const correo = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+        const correo = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
 
-            try {
-                const response = await fetch('https://backend-liard-alpha-37.vercel.app/api/auth/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ correo, password }) 
-                });
+        try {
+            const respuesta = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ correo, password })
+            });
 
-                const data = await response.json();
+            const data = await respuesta.json();
+            console.log("Respuesta login:", data);
 
-                if (response.ok) {
-                    // Guardamos el token en el LocalStorage
-                    localStorage.setItem('token', data.token);
-                    alert('¡Inicio de sesión exitoso!');
-                    window.location.href = '../pages/principalAdmin.html'; 
-                    
-                } else {
-                    mensajeError.textContent = data.message || 'Correo o contraseña incorrectos';
-                    mensajeError.style.display = 'block';
-                }
-
-            } catch (error) {
-                console.error('Error en la petición:', error);
-                mensajeError.textContent = 'Hubo un problema al conectar con el servidor. Intenta de nuevo más tarde.';
-                mensajeError.style.display = 'block';
+            if (!respuesta.ok) {
+                throw new Error(data.message || 'Error al iniciar sesión');
             }
-        });
-    }
+
+            if (!data.token) {
+                throw new Error('No se recibió token del servidor');
+            }
+
+            // Guardar token
+            localStorage.setItem('token', data.token);
+            if (mensajeExito) {
+                mensajeExito.textContent = '¡Inicio de sesión exitoso!';
+                mensajeExito.style.display = 'block';
+            }
+
+            setTimeout(() => {
+                window.location.href = 'principalAdmin.html';
+            }, 500);
+
+        } catch (error) {
+            mensajeError.style.display = 'block';
+            mensajeError.textContent = error.message;
+        }
+    });
 });

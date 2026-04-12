@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="pageTitle">Agregar Proveedor - UNICAFE</title>
+    <link rel="stylesheet" href="/css/agregarPeoveedor.css" />
+  </head>
+  <body>
+    <header
+      style="
+        background-color: #333;
+        color: white;
+        padding: 10px;
+        text-align: center;
+      "
+    >
+      <h4>Mi Sistema - Header</h4>
+    </header>
+
+    <main>
+      <h1 class="page-title" id="mainTitle">Agregar Proveedor</h1>
+
+      <div class="form-container-admin">
+        <form id="formProveedor">
+          <input type="hidden" id="id_proveedor" name="id_proveedor" value="" />
+
+          <div class="form-group-admin">
+            <label for="nombre_Proveedor">Nombre:</label>
+            <input
+              type="text"
+              id="nombre_Proveedor"
+              name="nombre_Proveedor"
+              value=""
+              required
+              maxlength="40"
+              pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+              title="Solo se permiten letras"
+              placeholder="Ej. Yolanda"
+              oninput="
+                this.setCustomValidity('');
+                soloLetras(event);
+              "
+              oninvalid="
+                this.setCustomValidity('El campo Nombre es obligatorio.')
+              "
+            />
+          </div>
+
+           <div class="form-group-admin">
+            <label for="ApellidoP_Proveedor">Apellido Paterno:</label>
+            <input
+              type="text"
+              id="ApellidoP_Proveedor"
+              name="ApellidoP_Proveedor"
+              value=""
+              required
+              maxlength="40"
+              pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+              title="Solo se permiten letras"
+              placeholder="Ej. Hernandez"
+              oninput="
+                this.setCustomValidity('');
+                soloLetras(event);
+              "
+              oninvalid="
+                this.setCustomValidity('El campo Apellido Paterno es obligatorio.')
+              "
+            />
+          </div>
+
+            <div class="form-group-admin">
+            <label for="ApellidoM_Proveedor">Apellido Materno:</label>
+            <input
+              type="text"
+              id="ApellidoM_Proveedor"
+              name="ApellidoM_Proveedor"
+              value=""
+              required
+              maxlength="40"
+              pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+              title="Solo se permiten letras"
+              placeholder="Ej. Garcia"
+              oninput="
+                this.setCustomValidity('');
+                soloLetras(event);
+              "
+              oninvalid="
+                this.setCustomValidity('El campo Apellido Materno es obligatorio.')
+              "
+            />
+          </div>
+
+           <div class="form-group-admin">
+           <label for="telefono_Proveedor">Teléfono:</label>
+           <input 
+                type="tel" 
+                id="telefono_Proveedor" 
+                name="telefono_Proveedor" 
+                value="" 
+                required 
+                maxlength="10" 
+                pattern="[0-9]+" 
+                title="Solo se permiten números" 
+                placeholder="Ej. 7711234567"
+                oninput="
+                this.setCustomValidity(''); 
+                soloNumeros(event);
+                "
+                oninvalid="this.setCustomValidity('El campo Teléfono es obligatorio.')" 
+            />
+            </div>
+
+            <div class="form-group-admin">
+            <label for="correo_Proveedor">Correo Electrónico:</label>
+            <input 
+                type="email" 
+                id="correo_Proveedor" 
+                name="correo_Proveedor" 
+                value="" 
+                required 
+                placeholder="Yolanda@gmail.com"
+                oninput="this.setCustomValidity('')"
+                oninvalid="this.setCustomValidity('Por favor, ingresa un correo electrónico válido.')" 
+            />
+            </div>
+
+          <div class="button-group-admin">
+            <a
+              href="gestionProveedores.html"
+              class="btn btn-cancel"
+              id="btnCancelar"
+              >Cancelar</a
+            >
+            <button type="submit" class="btn btn-save">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer
+      style="
+        background-color: #f1f1f1;
+        padding: 10px;
+        text-align: center;
+        margin-top: auto;
+      "
+    >
+      <small>Mi Sistema - Footer</small>
+    </footer>
+
+    <script src="/js/agregarProveedor.js"></script>
+  </body>
+</html>

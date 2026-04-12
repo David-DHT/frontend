@@ -1,79 +1,165 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestión de Inventario</title>
 
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Inventario</title>
 
-    <link rel="stylesheet" href="../css/gestionInventario.css" />
-  </head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
-  <body>
-    <header class="p-3 bg-dark text-white text-center">
-      <h4>Prueba de Gestión de Inventario</h4>
-    </header>
+  <link rel="stylesheet" href="../css/gestionInventario.css" />
+</head>
 
-    <main class="inventory-content">
-      <div class="back-container">
-        <a href="principalAdmin.html" class="btn-regresar-unicafe">
-          <i class="bi bi-arrow-left"></i> Regresar
-        </a>
-      </div>
+<body>
+  <header class="p-3 bg-dark text-white text-center">
+    <h4 class="mb-0">Gestión de Inventario</h4>
+  </header>
 
-      <div class="header-text">
-        <h2>Gestión de Inventario</h2>
-        <p>Stock actual de los productos.</p>
-      </div>
+  <main class="inventory-content">
+    <div class="back-container">
+      <a href="principalAdmin.html" class="btn-regresar-unicafe">
+        <i class="bi bi-arrow-left"></i> Regresar
+      </a>
+    </div>
 
-      <div class="toolbar-container">
+    <div class="header-text">
+      <h2>Inventario</h2>
+      <p>Consulta existencias y registra compras para actualizar el stock.</p>
+    </div>
+
+    <div class="toolbar-container d-flex flex-wrap gap-3 align-items-center justify-content-between">
+      <div class="d-flex flex-wrap gap-3 align-items-center flex-grow-1">
         <div class="search-wrapper">
           <i class="bi bi-search search-icon"></i>
-          <input
-            type="text"
-            id="searchInput"
-            class="search-input"
-            placeholder="Buscar producto..."
-          />
+          <input type="text" id="searchInput" class="search-input" placeholder="Buscar producto o categoría..." />
         </div>
 
-        <a href="compra.html" class="btn-add-provider">
-          <i class="bi bi-plus-lg"></i> Realizar pedido
-        </a>
+        <select id="filtroCategoria" class="search-input" style="max-width: 260px;">
+          <option value="">Todas las categorías</option>
+        </select>
       </div>
 
-      <section class="inventory-table-container">
-        <table class="styled-table">
-          <thead>
-            <tr>
-              <th>Nombre de producto</th>
-              <th>Categoría</th>
-              <th>Stock actual</th>
-            </tr>
-          </thead>
-          <tbody id="tablaResultados">
-            <tr>
-              <td colspan="3" class="text-center p-4">
-                Cargando inventario...
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-    </main>
+      <button type="button" class="btn-add-provider" id="btnAbrirModalCompra">
+        <i class="bi bi-plus-lg"></i> Realizar pedido
+      </button>
+    </div>
 
-    <footer class="p-3 bg-light text-center mt-auto">DESARROLLOOO</footer>
+    <section class="inventory-table-container">
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Stock actual</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tablaResultados">
+          <tr>
+            <td colspan="4" class="text-center p-4">Cargando inventario...</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <footer class="p-3 bg-light text-center mt-auto">UNICAFÉ</footer>
 
-    <script src="../js/inventario.js" defer></script>
-  </body>
+  <!-- MODAL REGISTRAR COMPRA -->
+  <div class="modal fade" id="modalCompra" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <form id="formCompra">
+          <div class="modal-header">
+            <h5 class="modal-title">Registrar compra</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+
+          <div class="modal-body">
+            <div id="mensajeModalCompra"></div>
+
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label for="compraProveedor" class="form-label">Proveedor</label>
+                <select id="compraProveedor" class="form-select" required>
+                  <option value="">Selecciona un proveedor</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="compraFecha" class="form-label">Fecha</label>
+                <input type="date" id="compraFecha" class="form-control" readonly />
+              </div>
+            </div>
+
+            <div class="row g-3 align-items-end mb-3">
+              <div class="col-md-5">
+                <label for="compraProducto" class="form-label">Producto</label>
+                <select id="compraProducto" class="form-select">
+                  <option value="">Selecciona un producto</option>
+                </select>
+              </div>
+
+              <div class="col-md-2">
+                <label for="compraCantidad" class="form-label">Cantidad</label>
+                <input type="number" id="compraCantidad" class="form-control" min="1" placeholder="0" />
+              </div>
+
+              <div class="col-md-3">
+                <label for="compraPrecio" class="form-label">Precio de compra</label>
+                <input type="number" id="compraPrecio" class="form-control" min="0" step="0.01" placeholder="0.00" />
+              </div>
+
+              <div class="col-md-2">
+                <button type="button" class="btn btn-success w-100" id="btnAgregarDetalle">
+                  <i class="bi bi-plus-circle"></i> Agregar
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio unitario</th>
+                    <th>Subtotal</th>
+                    <th class="text-center">Acción</th>
+                  </tr>
+                </thead>
+                <tbody id="tablaDetalleCompra">
+                  <tr>
+                    <td colspan="5" class="text-center p-3">
+                      No hay productos agregados.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="text-end fw-bold fs-5">
+              Total: <span id="totalCompra">$0.00</span>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Guardar compra
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/gestionInventario.js" defer></script>
+</body>
+
 </html>
