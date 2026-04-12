@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    
-      <body>
+    <div id="header-dinamico"></div>
     <div class="back-container">
       <a href="principalAdmin.html" class="btn-regresar-unicafe">
         <i class="fas fa-arrow-left"></i> Regresar
@@ -22,26 +21,25 @@
 
         <div class="summary-card">
             <div class="summary-info">
-                <p><strong>Nombre:</strong> Juan Pérez López</p>
-                <p><strong>Correo:</strong> admin@unicafe.com</p>
-                <p><strong>Teléfono:</strong> 7712345678</p>
-                <p><strong>Rol:</strong> Administrador</p>
-                <p><strong>Password:</strong> **********</p>
+                <p><strong>Nombre:</strong> <span id="resumen-nombre">Cargando...</span></p>
+                <p><strong>Correo:</strong> <span id="resumen-correo">Cargando...</span></p>
+                <p><strong>Teléfono:</strong> <span id="resumen-telefono">Cargando...</span></p>
+                <p><strong>Rol:</strong> <span id="resumen-rol">Cargando...</span></p>
             </div>
         </div>
 
         <h2 class="section-subtitle">Información Personal</h2>
 
         <div class="edit-card">
-            <form action="#" method="POST">
+            <form action="#" method="POST" id="formPerfil">
 
-                <input type="hidden" name="idUsuario" value="1">
+                <input type="hidden" id="inputIdUsuario" name="idUsuario" value="">
                 
                 <div class="form-row">
                     <label for="nombre">Nombre:</label>
                     <div class="input-wrapper">
                         <input type="text" id="nombre" name="nombre" 
-                               value="Juan" 
+                               value="" 
                                required maxlength="50" 
                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" 
                                title="Solo letras y espacios"
@@ -55,7 +53,7 @@
                     <label for="apellidop">Apellido Paterno:</label>
                     <div class="input-wrapper">
                         <input type="text" id="apellidop" name="aPaterno" 
-                               value="Pérez" 
+                               value="" 
                                required maxlength="50" 
                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" 
                                title="Solo letras"
@@ -69,7 +67,7 @@
                     <label for="apellidom">Apellido Materno:</label>
                     <div class="input-wrapper">
                         <input type="text" id="apellidom" name="aMaterno" 
-                               value="López" 
+                               value="" 
                                required maxlength="50" 
                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" 
                                title="Solo letras"
@@ -83,7 +81,7 @@
                     <label for="correo">Correo electrónico:</label>
                     <div class="input-wrapper">
                         <input type="email" id="correo" name="email" 
-                               value="admin@unicafe.com" 
+                               value="" 
                                required maxlength="100"
                                oninvalid="this.setCustomValidity('El correo es obligatorio')"
                                oninput="this.setCustomValidity('')">
@@ -95,7 +93,7 @@
                     <label for="telefono">Teléfono:</label>
                     <div class="input-wrapper">
                         <input type="tel" id="telefono" name="telefono" 
-                               value="7712345678" 
+                               value="" 
                                required maxlength="10" 
                                pattern="[0-9]{10}" 
                                title="10 dígitos numéricos"
@@ -108,7 +106,7 @@
                 <div class="form-row">
                     <label>Rol del Usuario:</label>
                     <div class="input-wrapper">
-                        <input type="text" value="Administrador" readonly class="input-readonly" style="background-color: #e9ecef; cursor: not-allowed;">
+                        <input type="text" id="rolInput" value="Cargando..." readonly class="input-readonly" style="background-color: #e9ecef; cursor: not-allowed;">
                         <i class="fas fa-lock icon-locked" style="color: #6c757d;"></i>
                     </div>
                 </div>
@@ -136,35 +134,11 @@
         </div>
 
     </div>
-    
-    <script>
-        // 1. Función para el lápiz (poner foco y mover cursor al final)
-        function editarCampo(idInput) {
-            var input = document.getElementById(idInput);
-            if(input) {
-                input.focus();
-                var valor = input.value;
-                input.value = '';
-                input.value = valor;
-            }
-        }
-
-        // 2. Función para el ojito (Ver/Ocultar contraseña)
-        const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#password');
-
-        if(togglePassword && password) {
-            togglePassword.addEventListener('click', function (e) {
-                // Alternar tipo input
-                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                password.setAttribute('type', type);
-                
-                // Alternar clase del icono (fa-eye / fa-eye-slash)
-                this.classList.toggle('fa-eye');
-                this.classList.toggle('fa-eye-slash');
-            });
-        }
-    </script>
-
+    <!-- Footer -->
+    <div id="footer-dinamico"></div>
+    <script src="../js/footer.js"></script>
+    <script src="../js/perfil.js"></script>
+    <script src="../js/editarPerfil.js"></script>
+    <script src="../js/headers.js"></script>
 </body>
 </html>

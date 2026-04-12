@@ -3,12 +3,11 @@ const API_URL = 'https://backend-liard-alpha-37.vercel.app/api/auth/login';
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     const mensajeError = document.getElementById('mensajeError');
-    const mensajeExito = document.getElementById('mensajeExito'); // NUEVO: Seleccionamos el div de éxito
+    const mensajeExito = document.getElementById('mensajeExito');
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Ocultamos ambos mensajes al intentar de nuevo
         mensajeError.style.display = 'none';
         mensajeError.textContent = '';
         if (mensajeExito) {
@@ -29,28 +28,48 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await respuesta.json();
-            console.log("Respuesta login:", data);
 
             if (!respuesta.ok) {
                 throw new Error(data.message || 'Error al iniciar sesión');
             }
 
-            if (!data.token) {
-                throw new Error('No se recibió token del servidor');
-            }
+            // --- VALIDACIÓN DE PERFIL ---
+            // Convertimos a número por seguridad en la comparación
+            const perfil = Number(data.idPerfil); 
 
-            // Guardar token
-            localStorage.setItem('token', data.token);
-            if (mensajeExito) {
-                mensajeExito.textContent = '¡Inicio de sesión exitoso!';
-                mensajeExito.style.display = 'block';
-            }
+            if (perfil === 3) {
+                // ES ADMINISTRADOR: Guardamos datos y redirigimos
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('idPerfil', data.idPerfil);
+                localStorage.setItem('idUsuario', data.id);
 
-            setTimeout(() => {
-                window.location.href = 'principalAdmin.html';
-            }, 500);
+                if (mensajeExito) {
+                    mensajeExito.textContent = '¡Bienvenido Administrador!';
+                    mensajeExito.style.display = 'block';
+                }
+
+                setTimeout(() => {
+                    window.location.href = 'principalAdmin.html';
+                }, 1000);
+
+            } else {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('idPerfil', data.idPerfil);
+                localStorage.setItem('idUsuario', data.id);
+
+                if (mensajeExito) {
+                    mensajeExito.textContent = '¡Inicio de sesión exitoso!';
+                    mensajeExito.style.display = 'block';
+                }
+
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 1000);
+            }
 
         } catch (error) {
+            // Limpiamos localStorage por si acaso quedó algo de un intento previo
+            localStorage.clear(); 
             mensajeError.style.display = 'block';
             mensajeError.textContent = error.message;
         }

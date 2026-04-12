@@ -36,7 +36,7 @@ const mostrarUsuarios = (usuarios) => {
             <td>${user.perfil}</td>
             <td class="text-center">
                 <div class="action-buttons">
-                    <a href="usuariosMovimiento.html?id=${user.idUsuario}" class="btn-icon btn-edit" title="Editar">
+                    <a href="" class="btn-icon btn-edit" title="Editar">
                         <i class="bi bi-pencil-square"></i>
                     </a>
                     <button class="btn-icon btn-delete" onclick="eliminarCategoria(${user.idUsuario})" title="Eliminar">

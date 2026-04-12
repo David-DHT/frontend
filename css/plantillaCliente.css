@@ -1,0 +1,339 @@
+/* =========================================
+   ESTILOS GENERALES CLIENTE
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: white;
+    padding: 10px 30px;
+    border-bottom: 2px solid #000;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    
+    /* Flexbox: Separa Logo (Izq) de ContenedorMenú (Der) */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; 
+}
+
+/* --- LOGO --- */
+.logo-section {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    z-index: 1001;
+}
+
+.header-logo-img {
+    height: 65px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.brand-name {
+    font-size: 32px; 
+    font-weight: bold;
+    font-style: italic;
+    color: #333;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+}
+
+/* --- BOTÓN HAMBURGUESA (Oculto en PC) --- */
+.hamburger-btn {
+    display: none; 
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #333;
+    padding: 5px;
+}
+
+/* --- CONTENEDOR DEL MENÚ (Nav + Botones) --- */
+.header-menu-container {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+/* --- NAVEGACIÓN --- */
+nav {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #8b6f47;
+}
+
+/* --- ACCIONES DE USUARIO (LOGUEADO) --- */
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Botones específicos de Cliente/Admin */
+.btn-config {
+    text-decoration: none;
+    font-size: 24px;
+    color: #555;
+    padding: 5px;
+    display: flex;
+    transition: transform 0.3s;
+}
+.btn-config:hover {
+    transform: rotate(90deg);
+    cursor: pointer;
+}
+
+.btn-logout {
+    text-decoration: none;
+    background-color: #d32f2f;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+.btn-logout:hover {
+    background-color: #b71c1c;
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   FOOTER COMPACTO (Corregido)
+   ========================================= */
+footer {
+    background-color: #d9c9b3;
+    padding: 30px 20px;
+    border-top: 4px solid #8b7355;
+    text-align: center;
+    color: #4a3c2e;
+    margin-top: auto; /* Empuja el footer al fondo si hay poco contenido */
+}
+
+/* Contenedor de los enlaces principales */
+.footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+/* Estilo de los enlaces principales */
+.footer-links a {
+    text-decoration: none;
+    color: #4a3c2e;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+/* Efecto Hover */
+.footer-links a:hover {
+    color: #fff;
+    background-color: #8b6f47;
+    transform: translateY(-2px);
+}
+
+/* Línea divisora */
+.footer-divider {
+    border: 0;
+    height: 1px;
+    background: rgba(74, 60, 46, 0.2);
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+}
+
+/* Sección inferior */
+.footer-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.sitemap-link {
+    font-size: 14px;
+    color: #5f5248;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-bottom: 5px;
+}
+.sitemap-link:hover {
+    color: #8b6f47;
+}
+
+.footer-text {
+    font-size: 13px;
+    color: #5f5248;
+    font-weight: 500;
+    margin: 0;
+}
+/* ========== ESTILOS DEL CARRITO ========== */
+.cart-icon-container {
+    position: relative;
+    text-decoration: none;
+    font-size: 24px; /* Tamaño del icono */
+    cursor: pointer;
+    color: #333;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.cart-icon-container:hover {
+    transform: scale(1.1);
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background-color: #e53e3e; /* Rojo para destacar y llamar a la acción */
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50%;
+    min-width: 15px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+/* --- RESPONSIVE PARA EL FOOTER --- */
+@media (max-width: 600px) {
+    .footer-links {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .footer-links a {
+        width: 100%;
+    }
+}
+
+/* =========================================
+   RESPONSIVE HEADER (MÓVIL)
+   ========================================= */
+@media (max-width: 900px) {
+    header {
+        padding: 10px 20px;
+    }
+
+    /* 1. Ajuste de Logo */
+    .header-logo-img {
+        height: 50px;
+        margin-right: 10px;
+    }
+    .brand-name {
+        font-size: 24px;
+    }
+
+    /* 2. Mostrar Botón Hamburguesa */
+    .hamburger-btn {
+        display: block;
+    }
+
+    /* 3. Menú Desplegable (Estilo tipo cajón) */
+    .header-menu-container {
+        display: none; /* Se oculta inicialmente */
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        margin-top: 10px;
+        background-color: white;
+    }
+
+    /* 4. Clase para mostrar el menú (se activa con JS) */
+    .header-menu-container.show {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+    }
+
+    /* Ajustes internos del menú desplegado */
+    nav {
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+        text-align: center;
+    }
+    
+    nav a {
+        display: block;
+        padding: 15px;
+        width: 100%;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 16px;
+    }
+
+    .user-actions {
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 20px;
+        width: 100%;
+        padding-bottom: 20px;
+        justify-content: center;
+    }
+    
+    /* El botón de cerrar sesión se vuelve ancho para tocar fácil */
+    .btn-logout {
+        width: 80%;
+        text-align: center;
+        display: block;
+        padding: 12px;
+        margin: 0 auto;
+    }
+    
+    /* El engrane de configuración */
+    .btn-config {
+        font-size: 32px; 
+        padding: 10px;
+        margin: 0 auto;
+        color: #333;
+    }
+}
+
+
+/* Animación suave de aparición */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

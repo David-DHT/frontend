@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mapa de Sitio - Administrador</title>
+    <link rel="stylesheet" href="../css/MapaDeNavClient.css" />
+  </head>
+  <body>
+    <main>
+      <div class="sitemap-container">
+        <h1>MAPA DE SITIO - UNICAFE</h1>
+
+        <div class="sitemap-inicio">
+          <a href="../pages/principalAdmin.html">Inicio</a>
+        </div>
+
+        <h2>ADMINISTRADOR</h2>
+        <div class="sitemap-grid">
+          <div class="sitemap-card">
+            <h3>
+              <a href="../pages/gestionProductos.html">Gestion de Productos</a>
+            </h3>
+            <ul>
+              <li>Ver lista de productos</li>
+              <li>Agregar nuevo producto</li>
+              <li>Editar producto (precio/stock)</li>
+              <li>Eliminar producto</li>
+            </ul>
+          </div>
+
+          <div class="sitemap-card">
+            <h3>
+              <a href="../pages/gestionProveedores.html"
+                >Gestión de Proveedores</a
+              >
+            </h3>
+            <ul>
+              <li>Ver lista de proveedores</li>
+              <li>Registrar nuevo proveedor</li>
+              <li>Editar datos de contacto</li>
+              <li>Eliminar proveedor</li>
+            </ul>
+          </div>
+
+          <div class="sitemap-card">
+            <h3>
+              <a href="../pages/gestionCategorias.html"
+                >Gestión de Categorías</a
+              >
+            </h3>
+            <ul>
+              <li>Ver listado de categorías</li>
+              <li>Crear nueva categoría</li>
+              <li>Editar nombre o descripción</li>
+              <li>Eliminar categoría</li>
+            </ul>
+          </div>
+
+          <div class="sitemap-card">
+            <h3>
+              <a href="../pages/gestionUsuarios.html">Gestión de usuarios</a>
+            </h3>
+            <ul>
+              <li>Ver clientes registrados</li>
+              <li>Consultar historial de compras</li>
+              <li>Bloquear o eliminar usuario</li>
+            </ul>
+          </div>
+
+          <div class="sitemap-card">
+            <h3><a href="../pages/perfil.html">Mi perfil</a></h3>
+            <ul>
+              <li>Ver mis datos personales</li>
+              <li>Actualizar correo o teléfono</li>
+              <li>Cambiar contraseña</li>
+            </ul>
+          </div>
+
+          <div class="sitemap-card">
+            <h3><a href="../pages/reportes.html">reportes</a></h3>
+            <ul>
+              <li>productos registrados</li>
+              <li>usuarios registrados</li>
+              <li>categorias registradas</li>
+              <li>opiniones y sugerencias</li>
+            </ul>
+          </div>
+
+          <div class="sitemap-card">
+            <h3><a href="../pages/agregarAdmin.html">Administradores</a></h3>
+            <ul>
+              <li>Registrar nuevo administrador</li>
+              <li>Eliminar cuenta de admin</li>
+            </ul>
+          </div>
+
+          <div class="sitemap-card">
+            <h3>
+              <a href="../pages/configuracionGeneral.html"
+                >Configuracion General</a
+              >
+            </h3>
+            <ul>
+              <li>Editar Nombre y Eslogan del sitio</li>
+              <li>Subir o cambiar Logo</li>
+              <li>Modificar Políticas y Términos</li>
+            </ul>
+          </div>
+
+          <div class="sitemap-card">
+            <h3>
+              <center>
+                <a
+                  href="#"
+                  onclick="cerrarSesionLocal(event)"
+                  style="color: #d32f2f; cursor: pointer"
+                >
+                  Cerrar sesion
+                </a>
+              </center>
+            </h3>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      function cerrarSesionLocal(event) {
+        event.preventDefault(); // Evita que la página recargue
+        if (confirm("¿Estás seguro de salir de la sesión?")) {
+          localStorage.clear(); // Borra token, nombre e idPerfil
+          window.location.href = "../pages/login.html"; // Redirige al inicio
+        }
+      }
+    </script>
+  </body>
+</html>

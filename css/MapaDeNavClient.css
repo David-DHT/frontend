@@ -1,0 +1,246 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f0f0;
+}
+
+/* --- Estilos del Header --- */
+
+header {
+  background-color: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #000;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.brand-name {
+  font-size: 36px;
+  font-weight: bold;
+  font-style: italic;
+  color: #333;
+}
+nav {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+nav a {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+}
+nav a:hover {
+  color: #8b6f47;
+}
+
+/* ==== FOOTER ==== */
+
+footer {
+  background-color: #d9c9b3;
+  text-align: center;
+  padding: 20px;
+  border-top: 2px solid #8b7355;
+}
+
+/* ==== ESTILOS PARA EL ENLACE DEL FOOTER ==== */
+footer > a {
+  display: inline-block;
+  margin-top: 15px;    
+  margin-bottom: 25px;  
+  color: #5f5248;          
+  font-size: 15px;        
+  font-weight: 600;        
+  text-decoration: none;  
+  transition: all 0.3s ease;
+}
+
+footer > a:hover {
+  color: #4a3c2e;          
+  text-decoration: underline;
+}
+
+.footer-text {
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+}
+
+/* ==== VALUES ==== */
+.values {
+  padding:20px 40px;
+  background-color: #d9c9b3;
+  text-align: center;
+}
+
+.values h2 {
+  font-size: 32px;
+  color: #4a3c2e;
+  margin-bottom: 40px;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+  gap: 20px;
+  max-width: 1150px;
+  margin: 0 auto;
+}
+
+.values-grid >a{
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.3s ease;
+}
+.value-card {
+  background-color: #f3ebe4;
+  border: 2px solid #d6c0af;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+  height: 100%;
+}
+
+.value-card:hover {
+  transform: translateY(-5px);
+}
+
+.value-card h3 {
+  color: #7a5b45;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.value-card p {
+  color: #5f5248;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.sitemap-container {
+  max-width: 1200px;
+  margin: 40px auto; /* Centra el contenido y le da espacio */
+  padding: 0 20px;
+  text-align: center; /* Centra los títulos y el botón de inicio */
+}
+
+.sitemap-container h1 {
+  font-size: 36px;
+  color: #4a3c2e; /* Color oscuro de tu paleta */
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.sitemap-container h2 {
+  font-size: 24px;
+  color: #7a5b45; /* Color medio de tu paleta */
+  margin-bottom: 30px;
+  font-weight: normal;
+  letter-spacing: 1px;
+}
+
+/* --- Botón de Inicio --- */
+.sitemap-inicio {
+  margin-bottom: 30px;
+}
+
+.sitemap-inicio a {
+  display: inline-block;
+  background-color: #f3ebe4;
+  border: 2px solid #d6c0af;
+  color: #7a5b45;
+  padding: 10px 30px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.sitemap-inicio a:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+/* --- Grid de Tarjetas (La clave de la uniformidad) --- */
+.sitemap-grid {
+  display: grid;
+  /* Usa auto-fit para crear columnas automáticas.
+    Cada columna tendrá un mínimo de 300px y un máximo de 1fr (fracción).
+    Esto las hace responsivas y uniformes.
+  */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  text-align: left; /* Resetea el texto a la izquierda dentro de las tarjetas */
+}
+
+.sitemap-card {
+  /* Reutilizamos los estilos de tu .value-card */
+  background-color: #f3ebe4;
+  border: 2px solid #d6c0af;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  
+  /* ESTA ES LA MAGIA PARA LA ALTURA UNIFORME:
+    Al ser un item directo del grid, podemos usar height: 100%.
+    (En tu footer, la <a> era el item, por eso funcionaba)
+  */
+  height: 100%; 
+  display: flex;
+  flex-direction: column; /* Asegura que el contenido fluya verticalmente */
+}
+
+/* --- Contenido de las Tarjetas --- */
+.sitemap-card h3 {
+  color: #7a5b45;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.sitemap-card h3 a {
+  color: inherit; /* Hereda el color del h3 */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.sitemap-card h3 a:hover {
+  color: #4a3c2e; /* Color oscuro al pasar el mouse */
+}
+
+.sitemap-card p,
+.sitemap-card ul {
+  color: #5f5248;
+  font-size: 15px;
+  line-height: 1.6;
+  flex-grow: 1; /* Esto empuja el contenido para rellenar el espacio */
+}
+
+.sitemap-card ul {
+  list-style-position: inside; /* Mantiene las viñetas dentro del padding */
+  padding-left: 5px;
+}
+
+.sitemap-card ul li {
+  margin-bottom: 5px;
+}

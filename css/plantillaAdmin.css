@@ -1,0 +1,338 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f1ea;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* =========================================
+   HEADER ADMINISTRADOR
+   ========================================= */
+header {
+    background-color: #ffffff;
+    padding: 10px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #8b6f47;
+    box-shadow: 0 4px 12px rgba(139, 111, 71, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    /* Necesario para que el menú baje en móvil */
+    flex-wrap: wrap; 
+}
+/* Estilos para el Sidebar dinámico */
+.sidebar-container {
+    position: fixed;
+    width: 280px;
+    height: 100%;
+    top: 0;
+    right: -300px; /* Escondido por defecto */
+    background: white;
+    z-index: 2000;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-container.active {
+    right: 0 !important; /* Se desliza hacia adentro */
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1500;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* --- LOGO --- */
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-logo-img {
+    height: 55px;
+    width: auto;
+    border-radius: 50%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.header-logo-img:hover {
+    transform: scale(1.05);
+}
+
+.brand-name {
+    font-size: 32px; 
+    font-weight: bold;
+    font-style: italic;
+    color: #333;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+}
+
+/* --- BOTÓN HAMBURGUESA (Nuevo) --- */
+.hamburger-btn {
+    display: none; /* Oculto en PC por defecto */
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #333;
+    padding: 5px;
+}
+
+/* --- CONTENEDOR DEL MENÚ --- */
+.header-menu-container {
+    display: flex;
+    align-items: center;
+}
+
+/* --- NAVEGACIÓN --- */
+nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+/* Texto de Bienvenida */
+.welcome-text {
+    font-size: 15px;
+    color: #888;
+    margin: 0;
+    font-weight: 500;
+    border-right: 1px solid #ddd; 
+    padding-right: 25px;
+    margin-right: 10px;
+}
+
+.welcome-text span {
+    color: #8b6f47;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: capitalize;
+}
+
+/* Enlaces del menú (Excluyendo el botón rojo) */
+nav a:not(.btn-logout-admin) {
+    text-decoration: none;
+    color: #5f5248;
+    font-weight: 600;
+    font-size: 15px;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+nav a:not(.btn-logout-admin)::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #8b6f47;
+    transition: width 0.3s ease;
+}
+
+nav a:not(.btn-logout-admin):hover {
+    color: #8b6f47;
+}
+
+nav a:not(.btn-logout-admin):hover::after {
+    width: 100%;
+}
+
+/* --- BOTÓN CERRAR SESIÓN --- */
+.btn-logout-admin {
+    text-decoration: none;
+    background-color: #a94442;
+    color: white !important;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(169, 68, 66, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-logout-admin:hover {
+    background-color: #c9302c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(169, 68, 66, 0.4);
+}
+
+/* =========================================
+   FOOTER COMPACTO
+   ========================================= */
+footer {
+    margin-top: auto;
+    background-color: #d9c9b3;
+    padding: 30px 20px;
+    border-top: 4px solid #8b7355;
+    text-align: center;
+    color: #4a3c2e;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #4a3c2e;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.footer-links a:hover {
+    color: #fff;
+    background-color: #8b6f47;
+    transform: translateY(-2px);
+}
+
+.footer-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.sitemap-link {
+    font-size: 14px;
+    color: #5f5248;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-bottom: 5px;
+}
+
+.sitemap-link:hover {
+    color: #8b6f47;
+}
+
+.footer-text {
+    font-size: 13px;
+    color: #5f5248;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* =========================================
+   RESPONSIVE (MÓVIL - MENÚ ADMIN)
+   ========================================= */
+@media (max-width: 900px) {
+    header {
+        padding: 10px 20px;
+        height: auto; /* Permite crecer */
+    }
+
+    /* 1. Ajuste Logo */
+    .header-logo-img { height: 50px; }
+    .brand-name { font-size: 24px; }
+
+    /* 2. Mostrar botón hamburguesa */
+    .hamburger-btn { display: block; }
+
+    /* 3. Menú oculto por defecto (cajón) */
+    .header-menu-container {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        margin-top: 10px;
+        background-color: white;
+    }
+
+    /* 4. Mostrar menú al activar JS */
+    .header-menu-container.show {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+    }
+
+    /* Ajustes internos */
+    nav {
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+    }
+
+    /* Ajuste de enlaces en lista vertical */
+    nav a:not(.btn-logout-admin) {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        text-align: center;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* Texto de bienvenida en móvil */
+    .welcome-text {
+        border-right: none;
+        margin-right: 0;
+        padding-right: 0;
+        margin-bottom: 10px;
+        text-align: center;
+        width: 100%;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* Botón cerrar sesión ancho y centrado */
+    .btn-logout-admin {
+        margin-top: 15px;
+        width: 80%;
+        justify-content: center;
+    }
+    
+    /* Footer responsive */
+    .footer-links {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .footer-links a {
+        width: 100%;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

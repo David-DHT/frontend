@@ -37,7 +37,7 @@ function renderHeroCarousel() {
     }
 
     heroSlides.innerHTML = heroProductos.map((prod, index) => `
-        <a href="pages/gestionProductos.html?id=${prod.id_producto}" 
+        <a href="pages/vistaDetalle.html?id=${prod.id_producto}" 
            class="hero-slide ${index === heroActual ? 'active' : ''}">
             <img src="${prod.imagen || 'uploads/Bienvenido.png'}" 
                  alt="${escaparHTML(prod.nombre)}"
@@ -176,7 +176,7 @@ async function cargarMenu() {
                 cat.productos.forEach(prod => {
                     htmlProductos += `
                         <div class="menu-item">
-                            <a href="pages/gestionProductos.html?id=${prod.id_producto}" class="menu-item-link">
+                            <a href="pages/vistaDetalle.html?id=${prod.id_producto}" class="menu-item-link">
                                 <img src="${prod.imagen || 'uploads/Bienvenido.png'}" 
                                      alt="${escaparHTML(prod.nombre)}"
                                      onerror="this.src='uploads/Bienvenido.png';">
