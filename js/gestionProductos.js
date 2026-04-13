@@ -19,6 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (formEditarProducto) {
         formEditarProducto.addEventListener('submit', actualizarProducto);
     }
+
+    const formAgregarProducto = document.getElementById('formAgregarProducto');
+    if (formAgregarProducto) {
+        formAgregarProducto.addEventListener('submit', agregarProducto);
+    }
+
+    const btnAbrirModalAgregarProducto = document.getElementById('btnAbrirModalAgregarProducto');
+    if (btnAbrirModalAgregarProducto) {
+        btnAbrirModalAgregarProducto.addEventListener('click', abrirModalAgregarProducto);
+    }
 });
 
 const API_PRODUCTOS = 'https://backend-liard-alpha-37.vercel.app/api/productos';
@@ -42,8 +52,6 @@ async function obtenerProductos() {
             throw new Error('Error en la respuesta del servidor');
         }
 
-
-
         const resultado = await respuesta.json();
         const productos = resultado.data || [];
 
@@ -65,11 +73,15 @@ async function obtenerProductos() {
                 ? `<img src="${producto.imagen}" alt="${producto.nombre}" class="product-img" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=&quot;empty-image&quot;>Sin imagen</div>';">`
                 : `<div class="empty-image">Sin imagen</div>`;
 
-            const estadoClase = String(producto.estado).toLowerCase() === 'activo'
+            const estado = String(producto.estado || '').toLowerCase();
+            const estadoClase = estado === 'activo'
                 ? 'badge-estado badge-activo'
                 : 'badge-estado badge-inactivo';
 
             const precioFormateado = Number(producto.precio || 0).toFixed(2);
+            const siguienteEstado = estado === 'activo' ? 'inactivo' : 'activo';
+            const iconoEstado = estado === 'activo' ? 'bi-toggle-on' : 'bi-toggle-off';
+            const tituloEstado = estado === 'activo' ? 'Desactivar producto' : 'Activar producto';
 
             tr.innerHTML = `
                 <td>${imagenHTML}</td>
@@ -91,7 +103,12 @@ async function obtenerProductos() {
                         <button onclick="abrirModalEditarProducto(${producto.id_producto})" class="btn-icon btn-edit" title="Editar">
                             <i class="bi bi-pencil-square"></i>
                         </button>
-                        <button onclick="eliminarProducto(${producto.id_producto})" class="btn-icon btn-delete" title="Eliminar">
+
+                        <button onclick="cambiarEstadoProducto(${producto.id_producto}, '${siguienteEstado}')" class="btn-icon btn-edit" title="${tituloEstado}">
+                            <i class="bi ${iconoEstado}"></i>
+                        </button>
+
+                        <button onclick="eliminarProducto(${producto.id_producto})" class="btn-icon btn-delete" title="Dar de baja">
                             <i class="bi bi-trash3-fill"></i>
                         </button>
                     </div>
@@ -114,7 +131,8 @@ async function obtenerProductos() {
 }
 
 async function cargarCategoriasEnSelect() {
-    const selectCategoria = document.getElementById('editCategoria');
+    const selectEdit = document.getElementById('editCategoria');
+    const selectAdd = document.getElementById('addCategoria');
 
     try {
         const respuesta = await fetch(API_CATEGORIAS, {
@@ -127,18 +145,98 @@ async function cargarCategoriasEnSelect() {
             throw new Error('No se pudieron cargar las categorías');
         }
 
-        const categorias = await respuesta.json();
+        const resultado = await respuesta.json();
+        const categorias = resultado.categorias || resultado.data || resultado || [];
 
-        selectCategoria.innerHTML = `<option value="">Selecciona una categoría</option>`;
+        if (selectEdit) {
+            selectEdit.innerHTML = `<option value="">Selecciona una categoría</option>`;
+        }
+
+        if (selectAdd) {
+            selectAdd.innerHTML = `<option value="">Selecciona una categoría</option>`;
+        }
 
         categorias.forEach(categoria => {
-            selectCategoria.innerHTML += `
-                <option value="${categoria.idCategoria}">${categoria.nombre}</option>
-            `;
+            const optionHTML = `<option value="${categoria.idCategoria}">${categoria.nombre}</option>`;
+
+            if (selectEdit) {
+                selectEdit.innerHTML += optionHTML;
+            }
+
+            if (selectAdd) {
+                selectAdd.innerHTML += optionHTML;
+            }
         });
 
     } catch (error) {
         console.error('Error al cargar categorías:', error);
+    }
+}
+
+function abrirModalAgregarProducto() {
+    document.getElementById('formAgregarProducto').reset();
+    document.getElementById('mensajeModalAgregarProducto').innerHTML = '';
+    document.getElementById('addEstado').value = 'activo';
+
+    const modal = new bootstrap.Modal(document.getElementById('modalAgregarProducto'));
+    modal.show();
+}
+
+async function agregarProducto(e) {
+    e.preventDefault();
+
+    const mensajeModal = document.getElementById('mensajeModalAgregarProducto');
+
+    const formData = new FormData();
+    formData.append('nombre', document.getElementById('addNombre').value.trim());
+    formData.append('estado', document.getElementById('addEstado').value);
+    formData.append('categoria', document.getElementById('addCategoria').value);
+    formData.append('precio', document.getElementById('addPrecio').value);
+    formData.append('descripcion', document.getElementById('addDescripcion').value.trim());
+
+    const imagenInput = document.getElementById('addImagen');
+    if (imagenInput.files.length > 0) {
+        formData.append('imagen', imagenInput.files[0]);
+    }
+
+    try {
+        const respuesta = await fetch(API_PRODUCTOS, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${obtenerToken()}`
+            },
+            body: formData
+        });
+
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok) {
+            throw new Error(resultado.message || 'No se pudo agregar el producto');
+        }
+
+        mensajeModal.innerHTML = `
+            <div class="alert alert-success">
+                ${resultado.message || 'Producto agregado correctamente'}
+            </div>
+        `;
+
+        await obtenerProductos();
+
+        setTimeout(() => {
+            const modalElement = document.getElementById('modalAgregarProducto');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+        }, 900);
+
+    } catch (error) {
+        console.error('Error al agregar producto:', error);
+        mensajeModal.innerHTML = `
+            <div class="alert alert-danger">
+                ${error.message}
+            </div>
+        `;
     }
 }
 
@@ -155,17 +253,16 @@ async function abrirModalEditarProducto(id) {
         }
 
         const resultado = await respuesta.json();
-        const producto = resultado.data || resultado;
+        const producto = resultado.data;
 
         document.getElementById('editIdProducto').value = producto.id_producto || '';
         document.getElementById('editNombre').value = producto.nombre || '';
-        document.getElementById('editDescripcion').value = producto.descripcion || '';
         document.getElementById('editPrecio').value = producto.precio || '';
         document.getElementById('editCategoria').value = producto.categoria || '';
         document.getElementById('editEstado').value = producto.estado || 'activo';
+        document.getElementById('editDescripcion').value = producto.descripcion || '';
         document.getElementById('editImagenActual').value = producto.imagen || '';
         document.getElementById('editImagen').value = '';
-
         document.getElementById('mensajeModalProducto').innerHTML = '';
 
         const modal = new bootstrap.Modal(document.getElementById('modalEditarProducto'));
@@ -173,7 +270,7 @@ async function abrirModalEditarProducto(id) {
 
     } catch (error) {
         console.error('Error al abrir modal de edición:', error);
-        alert(`No se pudo cargar el producto para editar.\n${error.message}`);
+        alert('No se pudo cargar la información del producto para editar.');
     }
 }
 
@@ -185,18 +282,14 @@ async function actualizarProducto(e) {
 
     const formData = new FormData();
     formData.append('nombre', document.getElementById('editNombre').value.trim());
-    formData.append('descripcion', document.getElementById('editDescripcion').value.trim());
-    formData.append('precio', document.getElementById('editPrecio').value);
-    formData.append('categoria', document.getElementById('editCategoria').value);
     formData.append('estado', document.getElementById('editEstado').value);
-
-    // Mantener imagen actual por defecto
+    formData.append('categoria', document.getElementById('editCategoria').value);
+    formData.append('precio', document.getElementById('editPrecio').value);
+    formData.append('descripcion', document.getElementById('editDescripcion').value.trim());
     formData.append('imagenActual', document.getElementById('editImagenActual').value);
 
     const imagenInput = document.getElementById('editImagen');
-
-    // Si el usuario selecciona una nueva imagen, esa reemplaza la actual
-    if (imagenInput.files && imagenInput.files[0]) {
+    if (imagenInput.files.length > 0) {
         formData.append('imagen', imagenInput.files[0]);
     }
 
@@ -217,11 +310,11 @@ async function actualizarProducto(e) {
 
         mensajeModal.innerHTML = `
             <div class="alert alert-success">
-                ${resultado.message || 'Producto actualizado con éxito'}
+                ${resultado.message || 'Producto actualizado correctamente'}
             </div>
         `;
 
-        obtenerProductos();
+        await obtenerProductos();
 
         setTimeout(() => {
             const modalElement = document.getElementById('modalEditarProducto');
@@ -229,7 +322,7 @@ async function actualizarProducto(e) {
             if (modalInstance) {
                 modalInstance.hide();
             }
-        }, 1000);
+        }, 900);
 
     } catch (error) {
         console.error('Error al actualizar producto:', error);
@@ -241,9 +334,54 @@ async function actualizarProducto(e) {
     }
 }
 
-async function eliminarProducto(id) {
-    const confirmar = confirm('¿Deseas eliminar este producto?');
+async function cambiarEstadoProducto(id, nuevoEstado) {
+    try {
+        const respuestaProducto = await fetch(`${API_PRODUCTOS}/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${obtenerToken()}`
+            }
+        });
 
+        if (!respuestaProducto.ok) {
+            throw new Error('No se pudo obtener el producto');
+        }
+
+        const resultadoProducto = await respuestaProducto.json();
+        const producto = resultadoProducto.data;
+
+        const formData = new FormData();
+        formData.append('nombre', producto.nombre || '');
+        formData.append('estado', nuevoEstado);
+        formData.append('categoria', producto.categoria || '');
+        formData.append('precio', producto.precio || 0);
+        formData.append('descripcion', producto.descripcion || '');
+        formData.append('imagenActual', producto.imagen || '');
+
+        const respuesta = await fetch(`${API_PRODUCTOS}/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${obtenerToken()}`
+            },
+            body: formData
+        });
+
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok) {
+            throw new Error(resultado.message || 'No se pudo cambiar el estado del producto');
+        }
+
+        await obtenerProductos();
+        alert(`Producto ${nuevoEstado === 'activo' ? 'activado' : 'desactivado'} correctamente`);
+
+    } catch (error) {
+        console.error('Error al cambiar estado del producto:', error);
+        alert(error.message);
+    }
+}
+
+async function eliminarProducto(id) {
+    const confirmar = confirm('¿Deseas dar de baja este producto?');
     if (!confirmar) return;
 
     try {
@@ -260,8 +398,8 @@ async function eliminarProducto(id) {
             throw new Error(resultado.message || 'No se pudo eliminar el producto');
         }
 
-        alert(resultado.message || 'Producto eliminado correctamente');
-        obtenerProductos();
+        alert(resultado.message || 'Producto dado de baja correctamente');
+        await obtenerProductos();
 
     } catch (error) {
         console.error('Error al eliminar producto:', error);
