@@ -135,13 +135,33 @@ body {
     display: flex;
     justify-content: flex-start;
 }
-.btn-add-provider{
-
-    display: block;
-    background-color:#166534;
-    border-radius: 20px;
-    text-decoration-color: #1f2937;
+.btn-add-provider {
+    display: inline-block;
+    background-color: #875851; /* Manteniendo tu color */
+    color: #ffffff; /* Texto blanco para contraste */
+    font-weight: 600;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px; /* Más redondeado */
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* Sombra elegante */
+    transition: all 0.3s ease;
 }
+
+.btn-add-provider:hover {
+    background-color: #6d463f; /* Un tono más oscuro al pasar el mouse */
+    transform: translateY(-2px); /* Efecto de elevación */
+    box-shadow: 0 6px 10px rgba(0,0,0,0.25);
+}
+
+.btn-add-provider:active {
+    transform: translateY(0); /* Vuelve al nivel original al hacer clic */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
 .btn-regresar-unicafe {
     text-decoration: none;
     background-color: var(--primary-brown, #4a3c2e);
