@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                          onerror="this.src='../uploads/Bienvenido.png';">
                          
                     <div class="action-buttons">
-                        <button class="btn btn-primary" onclick="agregarAlCarrito(${prod.id_producto}, '${prod.nombre}', ${prod.precio}, '${prod.imagen}')">
+                        <button class="btn btn-primary" onclick="agregarAlCarrito(${prod.id_producto}, '${prod.nombre}', ${prod.precio}, '${prod.imagen}', ${prod.stock})">
                             🛒 Ordenar
                         </button>
                         <button class="btn btn-tertiary" id="btn-fav">❤️ Añadir</button>
@@ -100,14 +100,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         contenedor.innerHTML = `<p style="color:red; text-align:center;">Error al conectar con el servidor.</p>`;
     }
 });
-
-window.agregarAlCarrito = function(id, nombre, precio, imagen) {
+// MODIFICA EL INICIO DE LA FUNCIÓN PARA RECIBIR 'stock'
+window.agregarAlCarrito = function(id, nombre, precio, imagen, stock) {
     let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     
-    // Buscar si el producto ya existe en el carrito
     const index = carrito.findIndex(item => item.id === id);
     
     if (index !== -1) {
+        // Validación extra aquí al intentar agregar más desde el detalle
+        if (carrito[index].cantidad + 1 > stock) {
+            alert(`No puedes agregar más, el stock máximo es ${stock}`);
+            return;
+        }
         carrito[index].cantidad += 1;
     } else {
         carrito.push({
@@ -115,13 +119,13 @@ window.agregarAlCarrito = function(id, nombre, precio, imagen) {
             nombre: nombre,
             precio: parseFloat(precio),
             imagen: imagen || '../uploads/Bienvenido.png',
-            cantidad: 1
+            cantidad: 1,
+            stock: stock // <--- ES VITAL GUARDAR ESTO AQUÍ
         });
     }
     
     localStorage.setItem('carrito', JSON.stringify(carrito));
     alert(`¡${nombre} se agregó al carrito! 🛒`);
     
-    // Actualizar burbuja del header si existe
     if (window.actualizarContadorHeader) window.actualizarContadorHeader();
 };

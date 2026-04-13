@@ -75,15 +75,24 @@ function renderizarCarrito() {
             <h3 class="total-text">Total a pagar: <strong>$${total_pagar.toFixed(2)}</strong></h3>
             <button class="btn-pay" onclick="procederAlPago()">Proceder al Pago</button>
         </div>`;
-
+    
+    
+    
     contenedor.innerHTML = html;
 }
 
 window.cambiarCantidad = (index, delta) => {
     const carrito = obtenerCarrito();
-    carrito[index].cantidad += delta;
-    
-    if (carrito[index].cantidad < 1) {
+    const producto = carrito[index];
+    const nuevaCantidad = producto.cantidad + delta;
+
+   if (delta > 0 && producto.stock !== undefined && nuevaCantidad > producto.stock) {
+        alert(`Solo hay ${producto.stock} unidades disponibles para este producto.`);
+        return; 
+    }
+    producto.cantidad=nuevaCantidad;
+
+    if (producto.cantidad < 1) {
         eliminarDelCarrito(index);
     } else {
         guardarCarrito(carrito);
@@ -96,12 +105,32 @@ window.eliminarDelCarrito = (index) => {
     guardarCarrito(carrito);
 };
 
-window.procederAlPago = () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        alert("Debes iniciar sesión para finalizar la compra.");
-        window.location.href = "login.html";
-        return;
+
+const procederAlPago = async () => {
+   // 1. Obtenemos el carrito y el token de login
+    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    const token = localStorage.getItem("token"); // Tu middleware lo pide
+
+    try {
+        // 2. Llamamos a tu backend en Vercel
+        const response = await fetch('https://backend-liard-alpha-37.vercel.app/api/pago/crear-preferencia', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Para pasar el verificarToken
+            },
+            body: JSON.stringify(carrito)
+        });
+
+        const data = await response.json();
+
+        // 3. Redirigimos a Mercado Pago
+        if (data.init_point) {
+            window.location.href = data.init_point;
+        }
+
+    } catch (error) {
+        console.error("Error al procesar el pago:", error);
+        alert("Hubo un error al conectar con Mercado Pago");
     }
-    alert("¡Gracias por tu compra! (Aquí conectarías con la pasarela de pago)");
 };
