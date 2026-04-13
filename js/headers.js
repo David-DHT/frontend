@@ -46,8 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             </div>
                             <div style="overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column;">
                                 <a href="../pages/principalAdmin.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">🏠 Inicio</a>
-                                <a href="../pages/principalAdmin.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">🏠 Inicio</a>
-                                <a href="../pages/principalAdmin.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">🏠 Inicio</a>
                                 <a href="../pages/gestionProductos.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">☕ Productos</a>
                                 <a href="../pages/gestionUsuarios.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">👥 Usuarios</a>
                                 <a href="../pages/gestionProveedores.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">💼 Proveedores</a>
