@@ -135,7 +135,13 @@ body {
     display: flex;
     justify-content: flex-start;
 }
+.btn-add-provider{
 
+    display: block;
+    background-color:#166534;
+    border-radius: 20px;
+    text-decoration-color: #1f2937;
+}
 .btn-regresar-unicafe {
     text-decoration: none;
     background-color: var(--primary-brown, #4a3c2e);
