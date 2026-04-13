@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const idPerfil = localStorage.getItem('idPerfil');
     
     // 2. Lógica para definir la ruta del Mapa del Sitio
-    let rutaMapa = "../Publica/mapaDeSitioPublic.html"; // Por defecto (Invitado)
+    let rutaMapa = "../pages/mapaDeSitioPublic.html"; // Por defecto (Invitado)
 
     if (token) {
         if (idPerfil === "3") {
