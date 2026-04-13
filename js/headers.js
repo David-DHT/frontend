@@ -45,16 +45,18 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <button onclick="toggleSidebar()" style="background: none; border: none; color: white; font-size: 28px; cursor: pointer;">&times;</button>
                             </div>
                             <div style="overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column;">
-                                <a href="../Pages/principalAdmin.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">🏠 Inicio</a>
-                                <a href="../Pages/gestionProductos.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">☕ Productos</a>
-                                <a href="../Pages/gestionUsuarios.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">👥 Usuarios</a>
-                                <a href="../Pages/gestionProveedores.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">💼 Proveedores</a>
-                                <a href="../Pages/gestionCategorias.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">📋 Categorias</a>
-                                <a href="../Pages/perfil.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">👤 Mi perfil</a>
-                                <a href="../Pages/reportes.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">📊 Reportes</a>
-                                <a href="../Pages/gestionVentas.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">💵 Ventas</a>
-                                <a href="../Pages/gestionInventario.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">📦 Inventario</a>
-                                <a href="../Pages/agregarAdmin.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">👔➕ Agregar Admin</a>  
+                                <a href="../pages/principalAdmin.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">🏠 Inicio</a>
+                                <a href="../pages/principalAdmin.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">🏠 Inicio</a>
+                                <a href="../pages/principalAdmin.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">🏠 Inicio</a>
+                                <a href="../pages/gestionProductos.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">☕ Productos</a>
+                                <a href="../pages/gestionUsuarios.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">👥 Usuarios</a>
+                                <a href="../pages/gestionProveedores.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">💼 Proveedores</a>
+                                <a href="../pages/gestionCategorias.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">📋 Categorias</a>
+                                <a href="../pages/perfil.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">👤 Mi perfil</a>
+                                <a href="../pages/reportes.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">📊 Reportes</a>
+                                <a href="../pages/gestionVentas.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">💵 Ventas</a>
+                                <a href="../pages/gestionInventario.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">📦 Inventario</a>
+                                <a href="../pages/agregarAdmin.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">👔➕ Agregar Admin</a>  
                                 </div>
                             <button id="btnCerrarSesion" style="margin: 20px; padding: 10px; background: #d32f2f; color: white; border: none; border-radius: 5px; cursor: pointer;">🚪 Cerrar Sesión</button>
                         </div>
