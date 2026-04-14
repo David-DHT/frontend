@@ -1,23 +1,14 @@
-html, body {
-    height: 100%;
-    margin: 0;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-}
-#tu-contenedor-principal { 
-    flex: 1;
-}
+/* =========================================
+   FOOTER COMPACTO
+   ========================================= */
 footer {
     background-color: #d9c9b3;
     padding: 30px 20px; 
     border-top: 4px solid #8b7355; 
     text-align: center;
     color: #4a3c2e;
-    width: 100%;
 }
+
 .footer-links {
     display: flex;
     justify-content: center;
