@@ -129,6 +129,7 @@ async function cargarContadoresGenerales() {
         document.getElementById("totalUsuarios").textContent = "--";
     }
 }
+
 async function cargarTopProductosMasVendidos() {
     const tbody = document.getElementById("tablaTopProductos");
     const resumen = document.getElementById("resumenTopProductos");
@@ -142,12 +143,62 @@ async function cargarTopProductosMasVendidos() {
             </tr>
         `;
 
-        // 🚀 1. AQUÍ ESTÁ LA MAGIA: Una sola petición al nuevo endpoint de la base de datos
-        const responseData = await fetchJSON(`${API_BASE}/ventas/top-productos`);
-        const rankingBD = extraerArreglo(responseData); 
+        const ventasData = await fetchJSON(`${API_BASE}/ventas`);
+        const ventas = extraerArreglo(ventasData);
 
-        // Si no hay datos, mostramos estado vacío
-        if (!rankingBD || !rankingBD.length) {
+        const ventasActivas = ventas.filter((venta) => {
+            const estado = String(venta.estatus || venta.estado || "").toLowerCase();
+            return estado !== "cancelada";
+        });
+
+        if (!ventasActivas.length) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center p-4">No hay ventas activas para analizar.</td>
+                </tr>
+            `;
+            resumen.textContent = "No hay suficiente información para generar el ranking.";
+            tituloTop.textContent = "---";
+            textoTop.textContent = "Sin ventas activas";
+            destruirGrafica();
+            mostrarEstadoGrafica("No hay ventas activas para mostrar en la gráfica.");
+            return;
+        }
+
+       // Solución: Peticiones en fila (una por una) para no saturar la base de datos
+        const detallesPorVenta = [];
+        for (const venta of ventasActivas) {
+            try {
+                const detalleData = await fetchJSON(`${API_BASE}/ventas/${venta.id_venta}`);
+                detallesPorVenta.push(detalleData?.data || null);
+            } catch (error) {
+                console.warn(`No se pudo cargar el detalle de la venta ${venta.id_venta}`, error);
+            }
+        }
+
+        const acumuladoProductos = new Map();
+
+        detallesPorVenta.forEach((venta) => {
+            if (!venta || !Array.isArray(venta.detalles)) return;
+
+            venta.detalles.forEach((detalle) => {
+                const nombre = detalle.nombre_producto || "Producto sin nombre";
+                const cantidad = Number(detalle.cantidad || 0);
+
+                if (!acumuladoProductos.has(nombre)) {
+                    acumuladoProductos.set(nombre, 0);
+                }
+
+                acumuladoProductos.set(nombre, acumuladoProductos.get(nombre) + cantidad);
+            });
+        });
+
+        const ranking = Array.from(acumuladoProductos.entries())
+            .map(([nombre, cantidad]) => ({ nombre, cantidad }))
+            .sort((a, b) => b.cantidad - a.cantidad)
+            .slice(0, 10);
+
+        if (!ranking.length) {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="4" class="text-center p-4">No se encontraron productos vendidos.</td>
@@ -161,13 +212,6 @@ async function cargarTopProductosMasVendidos() {
             return;
         }
 
-        // 2. Nos aseguramos de que la cantidad sea número (a veces MySQL los manda como texto)
-        const ranking = rankingBD.map(item => ({
-            nombre: item.nombre || "Producto sin nombre",
-            cantidad: Number(item.cantidad || 0)
-        }));
-
-        // 3. Calculamos porcentajes para tu gráfica
         const totalTopVentas = ranking.reduce((sum, item) => sum + item.cantidad, 0);
         const rankingConPorcentaje = ranking.map((item) => ({
             ...item,
@@ -176,11 +220,9 @@ async function cargarTopProductosMasVendidos() {
 
         const productoTop = rankingConPorcentaje[0];
 
-        // 4. Renderizamos los textos de arriba
         tituloTop.textContent = productoTop.nombre;
         textoTop.textContent = `${productoTop.cantidad} unidades vendidas (${formatearPorcentaje(productoTop.porcentaje)})`;
 
-        // 5. Renderizamos la tabla
         tbody.innerHTML = rankingConPorcentaje.map((item, index) => `
             <tr>
                 <td><span class="top-pill">#${index + 1}</span></td>
@@ -190,7 +232,6 @@ async function cargarTopProductosMasVendidos() {
             </tr>
         `).join("");
 
-        // 6. Renderizamos el resumen
         resumen.innerHTML = `
             El producto con mayor salida es <strong>${escapeHTML(productoTop.nombre)}</strong>,
             con <strong>${productoTop.cantidad} unidades vendidas</strong>, lo que representa
@@ -198,10 +239,8 @@ async function cargarTopProductosMasVendidos() {
             en el top 10 de productos más vendidos.
         `;
 
-        // 7. Dibujamos la gráfica (tu función original hace el trabajo perfecto)
         renderizarGraficaTopProductos(rankingConPorcentaje);
         mostrarEstadoGrafica("Gráfica actualizada con base en ventas activas registradas.");
-
     } catch (error) {
         console.error("Error al cargar top de productos más vendidos:", error);
 
