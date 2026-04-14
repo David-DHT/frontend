@@ -1,8 +1,16 @@
 /* =========================================
    FOOTER COMPACTO
    ========================================= */
+html {
+    height: 100%;
+}
 
-
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
 
 footer {
     background-color: #d9c9b3;
@@ -10,16 +18,12 @@ footer {
     border-top: 4px solid #8b7355; 
     text-align: center;
     color: #4a3c2e;
-
-    position: relative;
-    margin-top: auto; 
+    position: relative; 
     width: 100%;
 }
-
-body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+#footer-dinamico {
+    margin-top: auto;
+    width: 100%;
 }
 
 .footer-links {
