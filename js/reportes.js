@@ -165,17 +165,16 @@ async function cargarTopProductosMasVendidos() {
             return;
         }
 
-        const detallesPorVenta = await Promise.all(
-            ventasActivas.map(async (venta) => {
-                try {
-                    const detalleData = await fetchJSON(`${API_BASE}/ventas/${venta.id_venta}`);
-                    return detalleData?.data || null;
-                } catch (error) {
-                    console.warn(`No se pudo cargar el detalle de la venta ${venta.id_venta}`, error);
-                    return null;
-                }
-            })
-        );
+       // Solución: Peticiones en fila (una por una) para no saturar la base de datos
+        const detallesPorVenta = [];
+        for (const venta of ventasActivas) {
+            try {
+                const detalleData = await fetchJSON(`${API_BASE}/ventas/${venta.id_venta}`);
+                detallesPorVenta.push(detalleData?.data || null);
+            } catch (error) {
+                console.warn(`No se pudo cargar el detalle de la venta ${venta.id_venta}`, error);
+            }
+        }
 
         const acumuladoProductos = new Map();
 
