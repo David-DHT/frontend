@@ -137,28 +137,28 @@ body {
 }
 .btn-add-provider {
     display: inline-block;
-    background-color: #875851; /* Manteniendo tu color */
-    color: #ffffff; /* Texto blanco para contraste */
+    background-color: #875851; 
+    color: #ffffff; 
     font-weight: 600;
     font-size: 16px;
     padding: 10px 20px;
     border: none;
-    border-radius: 25px; /* Más redondeado */
+    border-radius: 25px;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* Sombra elegante */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
     transition: all 0.3s ease;
 }
 
 .btn-add-provider:hover {
-    background-color: #6d463f; /* Un tono más oscuro al pasar el mouse */
-    transform: translateY(-2px); /* Efecto de elevación */
+    background-color: #6d463f; 
+    transform: translateY(-2px); 
     box-shadow: 0 6px 10px rgba(0,0,0,0.25);
 }
 
 .btn-add-provider:active {
-    transform: translateY(0); /* Vuelve al nivel original al hacer clic */
+    transform: translateY(0); 
     box-shadow: 0 3px 6px rgba(0,0,0,0.2);
 }
 
