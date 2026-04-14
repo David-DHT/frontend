@@ -7,8 +7,16 @@ function crearAnchorId(nombre) {
     id = id.replace(/ /g, '-');
     id = id.replace(/[áéíóúñ\.\/\(\)]/g, match => {
         const mapa = {
-            'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u', 'ñ': 'n',
-            '.': '', '/': '', '(': '', ')': ''
+            'á': 'a',
+            'é': 'e',
+            'í': 'i',
+            'ó': 'o',
+            'ú': 'u',
+            'ñ': 'n',
+            '.': '',
+            '/': '',
+            '(': '',
+            ')': ''
         };
         return mapa[match] || '';
     });
@@ -144,16 +152,20 @@ async function cargarMenu() {
             }
         });
 
+        // Solo mostrar categorías que sí tengan productos
+        const categoriasConProductos = categorias.filter(cat => cat.productos.length > 0);
+
         sidebarMenu.innerHTML = '';
         contenedorProductos.innerHTML = '';
 
-        if (categorias.length === 0) {
+        if (categoriasConProductos.length === 0) {
             sidebarMenu.innerHTML = '<p style="padding: 15px;">No hay categorías disponibles.</p>';
             contenedorProductos.innerHTML = '<p>Próximamente agregaremos productos a nuestro menú.</p>';
             return;
         }
 
-        heroProductos = productos.filter(prod => prod.imagen);
+        // Solo productos con imagen y con estado visible desde backend
+        heroProductos = productos.filter(prod => prod.imagen && prod.nombre && prod.precio);
 
         renderHeroCarousel();
         configurarControlesHero();
@@ -162,7 +174,7 @@ async function cargarMenu() {
             iniciarHeroAutomatico();
         }
 
-        categorias.forEach(cat => {
+        categoriasConProductos.forEach(cat => {
             const anchorId = crearAnchorId(cat.nombre);
 
             const linkSidebar = document.createElement('a');
@@ -172,23 +184,19 @@ async function cargarMenu() {
 
             let htmlProductos = '';
 
-            if (cat.productos && cat.productos.length > 0) {
-                cat.productos.forEach(prod => {
-                    htmlProductos += `
-                        <div class="menu-item">
-                            <a href="pages/vistaDetalle.html?id=${prod.id_producto}" class="menu-item-link">
-                                <img src="${prod.imagen || 'uploads/Bienvenido.png'}" 
-                                     alt="${escaparHTML(prod.nombre)}"
-                                     onerror="this.src='uploads/Bienvenido.png';">
-                                <span class="price-tag">$${parseFloat(prod.precio || 0).toFixed(2)}</span>
-                                <div class="item-name">${escaparHTML(prod.nombre)}</div>
-                            </a>
-                        </div>
-                    `;
-                });
-            } else {
-                htmlProductos = `<p class="no-products">Próximamente más productos.</p>`;
-            }
+            cat.productos.forEach(prod => {
+                htmlProductos += `
+                    <div class="menu-item">
+                        <a href="pages/vistaDetalle.html?id=${prod.id_producto}" class="menu-item-link">
+                            <img src="${prod.imagen || 'uploads/Bienvenido.png'}" 
+                                 alt="${escaparHTML(prod.nombre)}"
+                                 onerror="this.src='uploads/Bienvenido.png';">
+                            <span class="price-tag">$${parseFloat(prod.precio || 0).toFixed(2)}</span>
+                            <div class="item-name">${escaparHTML(prod.nombre)}</div>
+                        </a>
+                    </div>
+                `;
+            });
 
             const seccionHTML = `
                 <section id="${anchorId}" class="menu-section">

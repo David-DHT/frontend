@@ -189,6 +189,16 @@ body {
     transition: all 0.2s;
 }
 
+.btn-view {
+    color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.10);
+}
+
+.btn-view:hover {
+    background-color: #0d6efd;
+    color: white;
+}
+
 .btn-edit {
     color: var(--secondary-brown);
     background-color: rgba(122, 91, 69, 0.1);
@@ -239,8 +249,33 @@ body {
     padding: 16px;
 }
 
+.resumen-box {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+}
+
 .table-light th {
     background-color: #f3eee8 !important;
+}
+
+#mensajeModalEditarVenta .alert,
+#mensajeModalCancelarVenta .alert {
+    margin-bottom: 0;
+}
+
+#motivoCancelacion:disabled,
+#editMetodoPagoVenta:disabled,
+#editMotivoCancelacionGuardado:disabled,
+#motivoCancelacionGuardado:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+}
+
+.text-danger-strong {
+    color: #b91c1c;
+    font-weight: 600;
 }
 
 @media (max-width: 992px) {
@@ -275,5 +310,14 @@ body {
 
     .inventory-table-container {
         border-radius: 8px;
+    }
+
+    .action-buttons {
+        gap: 6px;
+    }
+
+    .btn-icon {
+        padding: 7px;
+        font-size: 1rem;
     }
 }

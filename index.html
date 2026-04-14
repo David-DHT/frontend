@@ -11,23 +11,25 @@
 </head>
 
 <body>
-    <div id="header-dinamico"></div>
-<div class="header-categorias">
-      <nav class="menu-list" id="sidebarMenu">
-        <p style="padding:10px">Cargando categorías...</p>
-      </nav>
-    </div>
-  <section class="hero-carousel-section">
-  <div class="hero-carousel" id="heroCarousel">
-    <button class="hero-btn prev" id="heroPrev">❮</button>
+  <div id="header-dinamico"></div>
 
-    <div class="hero-slides" id="heroSlides">
-      <p style="padding:20px;">Cargando productos destacados...</p>
-    </div>
-
-    <button class="hero-btn next" id="heroNext">❯</button>
+  <div class="header-categorias">
+    <nav class="menu-list" id="sidebarMenu">
+      <p style="padding:10px">Cargando categorías...</p>
+    </nav>
   </div>
-</section>
+
+  <section class="hero-carousel-section">
+    <div class="hero-carousel" id="heroCarousel">
+      <button class="hero-btn prev" id="heroPrev" aria-label="Anterior">❮</button>
+
+      <div class="hero-slides" id="heroSlides">
+        <p style="padding:20px;">Cargando productos destacados...</p>
+      </div>
+
+      <button class="hero-btn next" id="heroNext" aria-label="Siguiente">❯</button>
+    </div>
+  </section>
 
   <div class="layout">
     <div class="main-content">
@@ -37,10 +39,11 @@
     </div>
   </div>
 
- <!-- Footer -->
   <div id="footer-dinamico"></div>
+
   <script src="../js/footer.js"></script>
   <script src="js/index.js"></script>
   <script src="js/headers.js"></script>
 </body>
+
 </html>
