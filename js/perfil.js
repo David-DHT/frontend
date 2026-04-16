@@ -32,6 +32,23 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('resumen-rol').textContent = nombreRol;
             document.getElementById('rolInput').value = nombreRol;
 
+            const btnRegresar = document.getElementById('btnRegresar');
+
+            if(btnRegresar){
+                btnRegresar.addEventListener('click',(e)=>{
+                    e.preventDefault();
+
+                    if(usuario.idPerfil===3){
+                    window.location.href = '../pages/principalAdmin.html';
+                    }
+                    else{
+                        window.location.href='../index.html';
+                    }
+                });
+            }
+
+
+
             // B. Llenar los Inputs del Formulario (Listos para ser editados)
             document.getElementById('inputIdUsuario').value = usuario.idUsuario;
             document.getElementById('nombre').value = usuario.nombre;
