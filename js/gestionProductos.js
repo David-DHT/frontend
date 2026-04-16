@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     obtenerProductos();
     cargarCategoriasEnSelect();
+    inicializarValidacionesProducto();
 
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
@@ -36,6 +37,109 @@ const API_CATEGORIAS = 'https://backend-liard-alpha-37.vercel.app/api/categorias
 
 function obtenerToken() {
     return localStorage.getItem('token');
+}
+
+function inicializarValidacionesProducto() {
+    const addImagen = document.getElementById('addImagen');
+    const editImagen = document.getElementById('editImagen');
+    const addPrecio = document.getElementById('addPrecio');
+    const editPrecio = document.getElementById('editPrecio');
+
+    if (addImagen) {
+        addImagen.addEventListener('change', () => {
+            validarArchivoImagen(addImagen, 'mensajeModalAgregarProducto');
+        });
+    }
+
+    if (editImagen) {
+        editImagen.addEventListener('change', () => {
+            validarArchivoImagen(editImagen, 'mensajeModalProducto');
+        });
+    }
+
+    if (addPrecio) {
+        addPrecio.addEventListener('input', () => sanitizarPrecioInput(addPrecio));
+        addPrecio.addEventListener('change', () => sanitizarPrecioInput(addPrecio));
+    }
+
+    if (editPrecio) {
+        editPrecio.addEventListener('input', () => sanitizarPrecioInput(editPrecio));
+        editPrecio.addEventListener('change', () => sanitizarPrecioInput(editPrecio));
+    }
+}
+
+function limpiarMensajeModal(idContenedor) {
+    const contenedor = document.getElementById(idContenedor);
+    if (contenedor) {
+        contenedor.innerHTML = '';
+    }
+}
+
+function mostrarMensajeModal(idContenedor, tipo, mensaje) {
+    const contenedor = document.getElementById(idContenedor);
+    if (contenedor) {
+        contenedor.innerHTML = `
+            <div class="alert alert-${tipo}">
+                ${mensaje}
+            </div>
+        `;
+    }
+}
+
+function sanitizarPrecioInput(input) {
+    if (!input) return;
+
+    let valor = input.value;
+
+    if (valor === '') return;
+
+    valor = Number(valor);
+
+    if (isNaN(valor) || valor < 0) {
+        input.value = '0';
+    }
+}
+
+function validarPrecioNoNegativo(idInput, idMensaje) {
+    const input = document.getElementById(idInput);
+    if (!input) return true;
+
+    const valor = Number(input.value);
+
+    if (input.value === '' || isNaN(valor)) {
+        mostrarMensajeModal(idMensaje, 'danger', 'Ingresa un precio válido.');
+        return false;
+    }
+
+    if (valor < 0) {
+        input.value = '0';
+        mostrarMensajeModal(idMensaje, 'danger', 'El precio no puede ser negativo.');
+        return false;
+    }
+
+    return true;
+}
+
+function validarArchivoImagen(inputFile, idMensaje) {
+    if (!inputFile || !inputFile.files || inputFile.files.length === 0) {
+        return true;
+    }
+
+    const archivo = inputFile.files[0];
+    const extensionesPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'];
+    const nombre = archivo.name || '';
+    const extension = nombre.includes('.') ? nombre.split('.').pop().toLowerCase() : '';
+
+    const mimeValido = archivo.type && archivo.type.startsWith('image/');
+    const extensionValida = extensionesPermitidas.includes(extension);
+
+    if (!mimeValido || !extensionValida) {
+        inputFile.value = '';
+        mostrarMensajeModal(idMensaje, 'danger', 'Solo se permiten archivos de imagen válidos.');
+        return false;
+    }
+
+    return true;
 }
 
 async function obtenerProductos() {
@@ -178,6 +282,17 @@ function abrirModalAgregarProducto() {
     document.getElementById('mensajeModalAgregarProducto').innerHTML = '';
     document.getElementById('addEstado').value = 'activo';
 
+    const addPrecio = document.getElementById('addPrecio');
+    if (addPrecio) {
+        addPrecio.min = '0';
+        sanitizarPrecioInput(addPrecio);
+    }
+
+    const addImagen = document.getElementById('addImagen');
+    if (addImagen) {
+        addImagen.value = '';
+    }
+
     const modal = new bootstrap.Modal(document.getElementById('modalAgregarProducto'));
     modal.show();
 }
@@ -186,6 +301,14 @@ async function agregarProducto(e) {
     e.preventDefault();
 
     const mensajeModal = document.getElementById('mensajeModalAgregarProducto');
+    limpiarMensajeModal('mensajeModalAgregarProducto');
+
+    const precioValido = validarPrecioNoNegativo('addPrecio', 'mensajeModalAgregarProducto');
+    const imagenValida = validarArchivoImagen(document.getElementById('addImagen'), 'mensajeModalAgregarProducto');
+
+    if (!precioValido || !imagenValida) {
+        return;
+    }
 
     const formData = new FormData();
     formData.append('nombre', document.getElementById('addNombre').value.trim());
@@ -265,6 +388,12 @@ async function abrirModalEditarProducto(id) {
         document.getElementById('editImagen').value = '';
         document.getElementById('mensajeModalProducto').innerHTML = '';
 
+        const editPrecio = document.getElementById('editPrecio');
+        if (editPrecio) {
+            editPrecio.min = '0';
+            sanitizarPrecioInput(editPrecio);
+        }
+
         const modal = new bootstrap.Modal(document.getElementById('modalEditarProducto'));
         modal.show();
 
@@ -279,6 +408,14 @@ async function actualizarProducto(e) {
 
     const id = document.getElementById('editIdProducto').value;
     const mensajeModal = document.getElementById('mensajeModalProducto');
+    limpiarMensajeModal('mensajeModalProducto');
+
+    const precioValido = validarPrecioNoNegativo('editPrecio', 'mensajeModalProducto');
+    const imagenValida = validarArchivoImagen(document.getElementById('editImagen'), 'mensajeModalProducto');
+
+    if (!precioValido || !imagenValida) {
+        return;
+    }
 
     const formData = new FormData();
     formData.append('nombre', document.getElementById('editNombre').value.trim());

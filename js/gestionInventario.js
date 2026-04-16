@@ -9,19 +9,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await Promise.all([
         obtenerInventario(),
-        cargarCategorias(),
         cargarProductos(),
         cargarProveedores(),
     ]);
 
+    inicializarValidacionesInventario();
+
     const searchInput = document.getElementById("searchInput");
     if (searchInput) {
         searchInput.addEventListener("keyup", aplicarFiltros);
-    }
-
-    const filtroCategoria = document.getElementById("filtroCategoria");
-    if (filtroCategoria) {
-        filtroCategoria.addEventListener("change", aplicarFiltros);
     }
 
     const btnAbrirModalCompra = document.getElementById("btnAbrirModalCompra");
@@ -37,6 +33,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const formCompra = document.getElementById("formCompra");
     if (formCompra) {
         formCompra.addEventListener("submit", registrarCompra);
+    }
+
+    const formEliminarInventario = document.getElementById("formEliminarInventario");
+    if (formEliminarInventario) {
+        formEliminarInventario.addEventListener("submit", registrarSalidaInventario);
     }
 });
 
@@ -77,7 +78,7 @@ function escapeHTML(texto) {
 }
 
 function obtenerNombreProducto(item) {
-    return item.nombre_producto || item.producto || item.nombre || "Sin nombre";
+    return item.nombre_producto || item.producto_nombre || item.nombre || "Sin nombre";
 }
 
 function obtenerNombreCategoria(item) {
@@ -90,7 +91,63 @@ function obtenerStock(item) {
 }
 
 function obtenerIdProducto(item) {
-    return item.id_producto || item.producto_id || item.id || "";
+    return item.id_producto ?? item.producto ?? item.producto_id ?? item.id ?? "";
+}
+
+function obtenerIdCategoria(item) {
+    return item.id_categoria ?? item.categoria ?? item.idCategoria ?? item.categoria_id ?? "";
+}
+
+function limpiarMensajeInventario(id) {
+    const contenedor = document.getElementById(id);
+    if (contenedor) contenedor.innerHTML = "";
+}
+
+function mostrarMensajeInventario(id, tipo, mensaje) {
+    const contenedor = document.getElementById(id);
+    if (!contenedor) return;
+
+    contenedor.innerHTML = `
+        <div class="alert alert-${tipo}">
+            ${mensaje}
+        </div>
+    `;
+}
+
+function inicializarValidacionesInventario() {
+    const compraCantidad = document.getElementById("compraCantidad");
+    const compraPrecio = document.getElementById("compraPrecio");
+    const eliminarCantidad = document.getElementById("eliminarCantidad");
+
+    if (compraCantidad) {
+        compraCantidad.addEventListener("input", () => {
+            if (compraCantidad.value === "") return;
+            const valor = Number(compraCantidad.value);
+            if (isNaN(valor) || valor < 1) {
+                compraCantidad.value = "1";
+            }
+        });
+    }
+
+    if (compraPrecio) {
+        compraPrecio.addEventListener("input", () => {
+            if (compraPrecio.value === "") return;
+            const valor = Number(compraPrecio.value);
+            if (isNaN(valor) || valor < 0) {
+                compraPrecio.value = "0";
+            }
+        });
+    }
+
+    if (eliminarCantidad) {
+        eliminarCantidad.addEventListener("input", () => {
+            if (eliminarCantidad.value === "") return;
+            const valor = Number(eliminarCantidad.value);
+            if (isNaN(valor) || valor < 1) {
+                eliminarCantidad.value = "1";
+            }
+        });
+    }
 }
 
 async function obtenerInventario() {
@@ -99,9 +156,10 @@ async function obtenerInventario() {
 
     try {
         const respuesta = await fetch(API_INVENTARIO, {
+            method: "GET",
             headers: {
-                Authorization: `Bearer ${obtenerToken()}`,
-            },
+                "Authorization": `Bearer ${obtenerToken()}`
+            }
         });
 
         if (respuesta.status === 401 || respuesta.status === 403) {
@@ -118,15 +176,16 @@ async function obtenerInventario() {
         const inventario = await respuesta.json();
         inventarioGlobal = Array.isArray(inventario) ? inventario : [];
         renderizarInventario(inventarioGlobal);
+
     } catch (error) {
         console.error("Error al obtener inventario:", error);
         tbody.innerHTML = `
-      <tr>
-        <td colspan="4" class="text-center p-4 text-danger">
-          Error al cargar el inventario.
-        </td>
-      </tr>
-    `;
+            <tr>
+                <td colspan="4" class="text-center p-4 text-danger">
+                    Error al cargar el inventario.
+                </td>
+            </tr>
+        `;
     }
 }
 
@@ -138,16 +197,16 @@ function renderizarInventario(data) {
 
     if (!data.length) {
         tbody.innerHTML = `
-      <tr>
-        <td colspan="4" class="text-center p-4">
-          No hay registros de inventario.
-        </td>
-      </tr>
-    `;
+            <tr>
+                <td colspan="3" class="text-center p-3">
+                    No hay registros de inventario.
+                </td>
+            </tr>
+        `;
         return;
     }
 
-    data.forEach((item) => {
+    data.forEach((item, index) => {
         const nombreProducto = obtenerNombreProducto(item);
         const nombreCategoria = obtenerNombreCategoria(item);
         const stockActual = obtenerStock(item);
@@ -158,80 +217,33 @@ function renderizarInventario(data) {
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-      <td>
-        <div class="product-name">${escapeHTML(nombreProducto)}</div>
-      </td>
-      <td>${escapeHTML(nombreCategoria)}</td>
-      <td>
-        <span class="${badgeStock}">${stockActual}</span>
-      </td>
-      <td class="text-center">
-        <button
-          class="btn-icon btn-edit"
-          title="Agregar stock"
-          onclick="preseleccionarProductoCompra(${obtenerIdProducto(item)})"
-        >
-          <i class="bi bi-cart-plus"></i>
-        </button>
-      </td>
-    `;
+            <td>
+                <div class="product-name">${escapeHTML(nombreProducto)}</div>
+            </td>
+            <td>${escapeHTML(nombreCategoria)}</td>
+            <td>
+                <span class="${badgeStock}">${stockActual}</span>
+            </td>
+        `;
         tbody.appendChild(tr);
     });
 }
 
 function aplicarFiltros() {
     const texto = (document.getElementById("searchInput")?.value || "").toLowerCase().trim();
-    const categoriaSeleccionada = document.getElementById("filtroCategoria")?.value || "";
 
     const filtrado = inventarioGlobal.filter((item) => {
         const nombreProducto = obtenerNombreProducto(item).toLowerCase();
         const nombreCategoria = obtenerNombreCategoria(item).toLowerCase();
-        const idCategoria = String(item.id_categoria || item.categoria || "");
 
-        const coincideTexto =
+        return (
             nombreProducto.includes(texto) ||
             nombreCategoria.includes(texto) ||
-            String(obtenerStock(item)).includes(texto);
-
-        const coincideCategoria =
-            !categoriaSeleccionada || idCategoria === String(categoriaSeleccionada);
-
-        return coincideTexto && coincideCategoria;
+            String(obtenerStock(item)).includes(texto)
+        );
     });
 
     renderizarInventario(filtrado);
-}
-
-async function cargarCategorias() {
-    const filtroCategoria = document.getElementById("filtroCategoria");
-
-    try {
-        const respuesta = await fetch(API_CATEGORIAS, {
-            headers: {
-                Authorization: `Bearer ${obtenerToken()}`,
-            },
-        });
-
-        if (!respuesta.ok) {
-            throw new Error("No se pudieron cargar las categorías");
-        }
-
-        const categorias = await respuesta.json();
-        categoriasGlobal = Array.isArray(categorias) ? categorias : [];
-
-        if (filtroCategoria) {
-            filtroCategoria.innerHTML = `<option value="">Todas las categorías</option>`;
-            categoriasGlobal.forEach((categoria) => {
-                filtroCategoria.innerHTML += `
-          <option value="${categoria.idCategoria}">
-            ${escapeHTML(categoria.nombre)}
-          </option>
-        `;
-            });
-        }
-    } catch (error) {
-        console.error("Error al cargar categorías:", error);
-    }
 }
 
 async function cargarProductos() {
@@ -239,9 +251,10 @@ async function cargarProductos() {
 
     try {
         const respuesta = await fetch(API_PRODUCTOS, {
+            method: "GET",
             headers: {
-                Authorization: `Bearer ${obtenerToken()}`,
-            },
+                "Authorization": `Bearer ${obtenerToken()}`
+            }
         });
 
         if (!respuesta.ok) {
@@ -255,10 +268,10 @@ async function cargarProductos() {
             selectProducto.innerHTML = `<option value="">Selecciona un producto</option>`;
             productosGlobal.forEach((producto) => {
                 selectProducto.innerHTML += `
-          <option value="${producto.id_producto}">
-            ${escapeHTML(producto.nombre)}
-          </option>
-        `;
+                    <option value="${producto.id_producto}">
+                        ${escapeHTML(producto.nombre)}
+                    </option>
+                `;
             });
         }
     } catch (error) {
@@ -271,9 +284,10 @@ async function cargarProveedores() {
 
     try {
         const respuesta = await fetch(API_PROVEEDORES, {
+            method: "GET",
             headers: {
-                Authorization: `Bearer ${obtenerToken()}`,
-            },
+                "Authorization": `Bearer ${obtenerToken()}`
+            }
         });
 
         if (!respuesta.ok) {
@@ -289,10 +303,10 @@ async function cargarProveedores() {
                 const nombreCompleto = `${proveedor.nombre} ${proveedor.aPaterno} ${proveedor.aMaterno}`.trim();
 
                 selectProveedor.innerHTML += `
-          <option value="${proveedor.idProveedor}">
-            ${escapeHTML(nombreCompleto)}
-          </option>
-        `;
+                    <option value="${proveedor.idProveedor}">
+                        ${escapeHTML(nombreCompleto)}
+                    </option>
+                `;
             });
         }
     } catch (error) {
@@ -305,32 +319,24 @@ function abrirModalCompra() {
     renderizarDetalleCompra();
 
     const formCompra = document.getElementById("formCompra");
-    if (formCompra) formCompra.reset();
+    if (formCompra) {
+        formCompra.reset();
+    }
 
     const fechaInput = document.getElementById("compraFecha");
     if (fechaInput) {
         fechaInput.value = obtenerFechaSistema();
     }
 
-    const mensaje = document.getElementById("mensajeModalCompra");
-    if (mensaje) mensaje.innerHTML = "";
+    limpiarMensajeInventario("mensajeModalCompra");
 
     const total = document.getElementById("totalCompra");
-    if (total) total.textContent = formatearMoneda(0);
+    if (total) {
+        total.textContent = formatearMoneda(0);
+    }
 
     const modal = new bootstrap.Modal(document.getElementById("modalCompra"));
     modal.show();
-}
-
-function preseleccionarProductoCompra(idProducto) {
-    abrirModalCompra();
-
-    setTimeout(() => {
-        const selectProducto = document.getElementById("compraProducto");
-        if (selectProducto) {
-            selectProducto.value = String(idProducto);
-        }
-    }, 100);
 }
 
 function agregarDetalleCompra() {
@@ -344,8 +350,18 @@ function agregarDetalleCompra() {
     const cantidad = Number(cantidadInput.value);
     const precio = Number(precioInput.value);
 
-    if (!idProducto || cantidad <= 0 || precio < 0) {
-        alert("Selecciona un producto y captura una cantidad y precio válidos.");
+    if (!idProducto) {
+        alert("Selecciona un producto.");
+        return;
+    }
+
+    if (isNaN(cantidad) || cantidad <= 0) {
+        alert("La cantidad debe ser mayor que cero.");
+        return;
+    }
+
+    if (isNaN(precio) || precio < 0) {
+        alert("El precio de compra no puede ser negativo.");
         return;
     }
 
@@ -391,10 +407,10 @@ function renderizarDetalleCompra() {
 
     if (!detallesCompra.length) {
         tbody.innerHTML = `
-      <tr>
-        <td colspan="5" class="text-center p-3">No hay productos agregados.</td>
-      </tr>
-    `;
+            <tr>
+                <td colspan="5" class="text-center p-3">No hay productos agregados.</td>
+            </tr>
+        `;
         if (total) total.textContent = formatearMoneda(0);
         return;
     }
@@ -407,21 +423,21 @@ function renderizarDetalleCompra() {
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-      <td>${escapeHTML(item.nombre)}</td>
-      <td>${item.cantidad}</td>
-      <td>${formatearMoneda(item.precio)}</td>
-      <td>${formatearMoneda(subtotal)}</td>
-      <td class="text-center">
-        <button
-          type="button"
-          class="btn-icon btn-delete"
-          onclick="eliminarDetalleCompra(${index})"
-          title="Quitar"
-        >
-          <i class="bi bi-trash3-fill"></i>
-        </button>
-      </td>
-    `;
+            <td>${escapeHTML(item.nombre)}</td>
+            <td>${item.cantidad}</td>
+            <td>${formatearMoneda(item.precio)}</td>
+            <td>${formatearMoneda(subtotal)}</td>
+            <td class="text-center">
+                <button
+                    type="button"
+                    class="btn-icon btn-delete"
+                    onclick="eliminarDetalleCompra(${index})"
+                    title="Quitar"
+                >
+                    <i class="bi bi-trash3-fill"></i>
+                </button>
+            </td>
+        `;
         tbody.appendChild(tr);
     });
 
@@ -461,19 +477,23 @@ async function registrarCompra(e) {
     };
 
     try {
-        console.log("Payload enviado:", payload);
-
         const respuesta = await fetch(`${API_INVENTARIO}/compras`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${obtenerToken()}`,
+                "Authorization": `Bearer ${obtenerToken()}`
             },
             body: JSON.stringify(payload),
         });
 
         const resultado = await respuesta.json();
-        console.log("Respuesta del backend:", resultado);
+
+        if (respuesta.status === 401 || respuesta.status === 403) {
+            localStorage.removeItem("token");
+            alert("Tu sesión expiró. Inicia sesión nuevamente.");
+            window.location.href = "login.html";
+            return;
+        }
 
         if (!respuesta.ok) {
             throw new Error(resultado.message || "No se pudo registrar la compra");
@@ -484,10 +504,10 @@ async function registrarCompra(e) {
         }
 
         mensaje.innerHTML = `
-      <div class="alert alert-success">
-        Compra registrada correctamente. Folio: ${resultado.id_compra}
-      </div>
-    `;
+            <div class="alert alert-success">
+                Compra registrada correctamente. Folio: ${resultado.id_compra}
+            </div>
+        `;
 
         await obtenerInventario();
 
@@ -498,15 +518,119 @@ async function registrarCompra(e) {
                 modalInstance.hide();
             }
         }, 1000);
+
     } catch (error) {
         console.error("Error al registrar compra:", error);
         mensaje.innerHTML = `
-      <div class="alert alert-danger">
-        ${error.message}
-      </div>
-    `;
+            <div class="alert alert-danger">
+                ${error.message}
+            </div>
+        `;
     }
 }
 
-window.preseleccionarProductoCompra = preseleccionarProductoCompra;
+function abrirModalEliminarInventario(index) {
+    const item = inventarioGlobal[index];
+
+    if (!item) {
+        alert("No se encontró el producto en el inventario.");
+        return;
+    }
+
+    const idProducto = obtenerIdProducto(item);
+
+    if (!idProducto) {
+        alert("No se encontró un id válido para este producto.");
+        return;
+    }
+
+    document.getElementById("eliminarIdProducto").value = idProducto;
+    document.getElementById("eliminarNombreProducto").value = obtenerNombreProducto(item);
+    document.getElementById("eliminarStockActual").value = obtenerStock(item);
+    document.getElementById("eliminarCantidad").value = "";
+    document.getElementById("eliminarMotivo").value = "";
+    limpiarMensajeInventario("mensajeModalEliminarInventario");
+
+    const modal = new bootstrap.Modal(document.getElementById("modalEliminarInventario"));
+    modal.show();
+}
+
+async function registrarSalidaInventario(e) {
+    e.preventDefault();
+
+    const idProducto = document.getElementById("eliminarIdProducto").value;
+    const stockActual = Number(document.getElementById("eliminarStockActual").value);
+    const cantidad = Number(document.getElementById("eliminarCantidad").value);
+    const motivo = document.getElementById("eliminarMotivo").value.trim();
+
+    if (!idProducto) {
+        mostrarMensajeInventario("mensajeModalEliminarInventario", "danger", "No se encontró el producto.");
+        return;
+    }
+
+    if (isNaN(cantidad) || cantidad <= 0) {
+        mostrarMensajeInventario("mensajeModalEliminarInventario", "danger", "La cantidad a descontar debe ser mayor que cero.");
+        return;
+    }
+
+    if (cantidad > stockActual) {
+        mostrarMensajeInventario("mensajeModalEliminarInventario", "danger", "La cantidad no puede ser mayor al stock actual.");
+        return;
+    }
+
+    if (!motivo) {
+        mostrarMensajeInventario("mensajeModalEliminarInventario", "danger", "Debes escribir el motivo.");
+        return;
+    }
+
+    try {
+        const respuesta = await fetch(`${API_INVENTARIO}/salidas`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${obtenerToken()}`
+            },
+            body: JSON.stringify({
+                id_producto: Number(idProducto),
+                cantidad: Number(cantidad),
+                motivo: motivo
+            }),
+        });
+
+        const resultado = await respuesta.json();
+
+        if (respuesta.status === 401 || respuesta.status === 403) {
+            localStorage.removeItem("token");
+            alert("Tu sesión expiró. Inicia sesión nuevamente.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        if (!respuesta.ok) {
+            throw new Error(resultado.message || "No se pudo actualizar el stock.");
+        }
+
+        mostrarMensajeInventario(
+            "mensajeModalEliminarInventario",
+            "success",
+            resultado.message || "Stock actualizado correctamente."
+        );
+
+        await obtenerInventario();
+
+        setTimeout(() => {
+            const modalElement = document.getElementById("modalEliminarInventario");
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+        }, 900);
+
+    } catch (error) {
+        console.error("Error al actualizar stock:", error);
+        mostrarMensajeInventario("mensajeModalEliminarInventario", "danger", error.message);
+    }
+}
+
 window.eliminarDetalleCompra = eliminarDetalleCompra;
+window.abrirModalEliminarInventario = abrirModalEliminarInventario;

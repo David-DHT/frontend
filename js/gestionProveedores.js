@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     await obtenerProveedores();
+    inicializarValidacionesProveedor();
 
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
@@ -26,12 +27,129 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (formEditarProveedor) {
         formEditarProveedor.addEventListener('submit', actualizarProveedor);
     }
+
+    const btnAbrirModalProveedor = document.getElementById('btnAbrirModalProveedor');
+    if (btnAbrirModalProveedor) {
+        btnAbrirModalProveedor.addEventListener('click', () => {
+            limpiarFormularioProveedor();
+            limpiarMensaje('mensajeModalAgregarProveedor');
+
+            const modal = new bootstrap.Modal(document.getElementById('modalAgregarProveedor'));
+            modal.show();
+        });
+    }
+
+    const formAgregarProveedor = document.getElementById('formAgregarProveedor');
+    if (formAgregarProveedor) {
+        formAgregarProveedor.addEventListener('submit', agregarProveedor);
+    }
 });
 
 const API_PROVEEDORES = 'https://backend-liard-alpha-37.vercel.app/api/proveedores';
 
 function obtenerToken() {
     return localStorage.getItem('token');
+}
+
+function limpiarMensaje(id) {
+    const contenedor = document.getElementById(id);
+    if (contenedor) contenedor.innerHTML = '';
+}
+
+function mostrarMensaje(id, tipo, mensaje) {
+    const contenedor = document.getElementById(id);
+    if (!contenedor) return;
+
+    contenedor.innerHTML = `
+        <div class="alert alert-${tipo}">
+            ${mensaje}
+        </div>
+    `;
+}
+
+function inicializarValidacionesProveedor() {
+    const inputsSoloLetras = [
+        document.getElementById('nombreProveedor'),
+        document.getElementById('aPaternoProveedor'),
+        document.getElementById('aMaternoProveedor'),
+        document.getElementById('editNombre'),
+        document.getElementById('editAPaterno'),
+        document.getElementById('editAMaterno')
+    ];
+
+    const inputsTelefono = [
+        document.getElementById('telefonoProveedor'),
+        document.getElementById('editTelefono')
+    ];
+
+    const inputsCorreo = [
+        document.getElementById('correoProveedor'),
+        document.getElementById('editCorreo')
+    ];
+
+    inputsSoloLetras.forEach(input => {
+        if (!input) return;
+        input.addEventListener('input', () => {
+            input.value = input.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]/g, '');
+        });
+    });
+
+    inputsTelefono.forEach(input => {
+        if (!input) return;
+        input.addEventListener('input', () => {
+            input.value = input.value.replace(/\D/g, '');
+        });
+    });
+
+    inputsCorreo.forEach(input => {
+        if (!input) return;
+        input.addEventListener('blur', () => {
+            if (input.value.trim() !== '' && !esCorreoValido(input.value.trim())) {
+                input.classList.add('is-invalid');
+            } else {
+                input.classList.remove('is-invalid');
+            }
+        });
+        input.addEventListener('input', () => {
+            input.classList.remove('is-invalid');
+        });
+    });
+}
+
+function esCorreoValido(correo) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+}
+
+function validarProveedor(datos, idMensaje) {
+    const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]+$/;
+    const telefonoRegex = /^[0-9]+$/;
+
+    if (!datos.nombre || !nombreRegex.test(datos.nombre)) {
+        mostrarMensaje(idMensaje, 'danger', 'El nombre solo debe contener letras.');
+        return false;
+    }
+
+    if (!datos.aPaterno || !nombreRegex.test(datos.aPaterno)) {
+        mostrarMensaje(idMensaje, 'danger', 'El apellido paterno solo debe contener letras.');
+        return false;
+    }
+
+    if (!datos.aMaterno || !nombreRegex.test(datos.aMaterno)) {
+        mostrarMensaje(idMensaje, 'danger', 'El apellido materno solo debe contener letras.');
+        return false;
+    }
+
+    if (!datos.telefono || !telefonoRegex.test(datos.telefono)) {
+        mostrarMensaje(idMensaje, 'danger', 'El teléfono solo debe contener números.');
+        return false;
+    }
+
+    if (!datos.correo || !esCorreoValido(datos.correo)) {
+        mostrarMensaje(idMensaje, 'danger', 'Ingresa un correo válido.');
+        return false;
+    }
+
+    return true;
 }
 
 async function obtenerProveedores() {
@@ -109,21 +227,6 @@ async function obtenerProveedores() {
     }
 }
 
-const btnAbrirModalProveedor = document.getElementById('btnAbrirModalProveedor');
-const formAgregarProveedor = document.getElementById('formAgregarProveedor');
-
-btnAbrirModalProveedor.addEventListener('click', () => {
-    limpiarFormularioProveedor();
-
-    const mensaje = document.getElementById('mensajeModalProveedor');
-    mensaje.innerHTML = '';
-
-    const modal = new bootstrap.Modal(document.getElementById('modalAgregarProveedor'));
-    modal.show();
-});
-
-formAgregarProveedor.addEventListener('submit', agregarProveedor);
-
 function limpiarFormularioProveedor() {
     document.getElementById('nombreProveedor').value = '';
     document.getElementById('aPaternoProveedor').value = '';
@@ -135,8 +238,6 @@ function limpiarFormularioProveedor() {
 async function agregarProveedor(e) {
     e.preventDefault();
 
-    const mensajeModal = document.getElementById('mensajeModalProveedor');
-
     const proveedorData = {
         nombre: document.getElementById('nombreProveedor').value.trim(),
         aPaterno: document.getElementById('aPaternoProveedor').value.trim(),
@@ -144,6 +245,10 @@ async function agregarProveedor(e) {
         telefono: document.getElementById('telefonoProveedor').value.trim(),
         correo: document.getElementById('correoProveedor').value.trim()
     };
+
+    if (!validarProveedor(proveedorData, 'mensajeModalAgregarProveedor')) {
+        return;
+    }
 
     try {
         const respuesta = await fetch(API_PROVEEDORES, {
@@ -161,32 +266,20 @@ async function agregarProveedor(e) {
             throw new Error(resultado.message || 'No se pudo agregar el proveedor');
         }
 
-        mensajeModal.innerHTML = `
-            <div class="alert alert-success">
-                ${resultado.message || 'Proveedor agregado correctamente'}
-            </div>
-        `;
+        mostrarMensaje('mensajeModalAgregarProveedor', 'success', resultado.message || 'Proveedor agregado correctamente');
 
-        if (typeof obtenerProveedores === 'function') {
-            await obtenerProveedores();
-        }
+        await obtenerProveedores();
 
         setTimeout(() => {
             const modalElement = document.getElementById('modalAgregarProveedor');
             const modalInstance = bootstrap.Modal.getInstance(modalElement);
-            if (modalInstance) {
-                modalInstance.hide();
-            }
+            if (modalInstance) modalInstance.hide();
             limpiarFormularioProveedor();
         }, 900);
 
     } catch (error) {
         console.error('Error al agregar proveedor:', error);
-        mensajeModal.innerHTML = `
-            <div class="alert alert-danger">
-                ${error.message}
-            </div>
-        `;
+        mostrarMensaje('mensajeModalAgregarProveedor', 'danger', error.message);
     }
 }
 
@@ -217,8 +310,7 @@ async function abrirModalEditarProveedor(id) {
         document.getElementById('editAMaterno').value = proveedor.aMaterno || '';
         document.getElementById('editTelefono').value = proveedor.telefono || '';
         document.getElementById('editCorreo').value = proveedor.correo || '';
-
-        document.getElementById('mensajeModalProveedor').innerHTML = '';
+        limpiarMensaje('mensajeModalEditarProveedor');
 
         const modal = new bootstrap.Modal(document.getElementById('modalEditarProveedor'));
         modal.show();
@@ -233,7 +325,6 @@ async function actualizarProveedor(e) {
     e.preventDefault();
 
     const id = document.getElementById('editIdProveedor').value;
-    const mensajeModal = document.getElementById('mensajeModalProveedor');
 
     const datosProveedor = {
         nombre: document.getElementById('editNombre').value.trim(),
@@ -242,6 +333,10 @@ async function actualizarProveedor(e) {
         telefono: document.getElementById('editTelefono').value.trim(),
         correo: document.getElementById('editCorreo').value.trim()
     };
+
+    if (!validarProveedor(datosProveedor, 'mensajeModalEditarProveedor')) {
+        return;
+    }
 
     try {
         const respuesta = await fetch(`${API_PROVEEDORES}/${id}`, {
@@ -259,13 +354,9 @@ async function actualizarProveedor(e) {
             throw new Error(resultado.message || 'No se pudo actualizar el proveedor');
         }
 
-        mensajeModal.innerHTML = `
-            <div class="alert alert-success">
-                ${resultado.message || 'Proveedor actualizado con éxito'}
-            </div>
-        `;
+        mostrarMensaje('mensajeModalEditarProveedor', 'success', resultado.message || 'Proveedor actualizado con éxito');
 
-        obtenerProveedores();
+        await obtenerProveedores();
 
         setTimeout(() => {
             const modalElement = document.getElementById('modalEditarProveedor');
@@ -277,11 +368,7 @@ async function actualizarProveedor(e) {
 
     } catch (error) {
         console.error('Error al actualizar proveedor:', error);
-        mensajeModal.innerHTML = `
-            <div class="alert alert-danger">
-                ${error.message}
-            </div>
-        `;
+        mostrarMensaje('mensajeModalEditarProveedor', 'danger', error.message);
     }
 }
 
