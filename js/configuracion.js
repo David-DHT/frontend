@@ -86,5 +86,9 @@ document.getElementById('configForm').addEventListener('submit', async (e) => {
     } catch (error) {
         console.error("Error al guardar:", error);
         mostrarAlerta(error.message, 'error');
+    }finally {
+        
+        btnSubmit.textContent = textoOriginal;
+        btnSubmit.disabled = false;
     }
 });
