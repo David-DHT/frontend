@@ -75,3 +75,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+async function cargarInformacionDinamica() {
+    try {
+        const respuesta = await fetch('https://backend-liard-alpha-37.vercel.app/api/config/configuracion');
+        
+        if (respuesta.ok) {
+            const datos = await respuesta.json();
+
+            // 1. Reemplazamos el Eslogan
+            const esloganElemento = document.getElementById('esloganSitio');
+            if (esloganElemento && datos.eslogan) {
+                esloganElemento.innerText = datos.eslogan;
+            }
+
+            // 2. Reemplazamos el Nombre (si usaste la clase en el HTML)
+            const elementosNombre = document.querySelectorAll('.nombreSitioDinamico');
+            elementosNombre.forEach(el => {
+                if (datos.nombreSitio) el.innerText = datos.nombreSitio;
+            });
+        }
+    } catch (error) {
+        console.error("Error al cargar el eslogan dinámico:", error);
+    }
+}
+
+// Ejecutar cuando cargue la página
+document.addEventListener("DOMContentLoaded", cargarInformacionDinamica);
