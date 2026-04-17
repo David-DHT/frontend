@@ -31,6 +31,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (formCancelarVenta) {
         formCancelarVenta.addEventListener("submit", confirmarCancelacionVenta);
     }
+
+    const modalCancelar = document.getElementById("modalCancelarVenta");
+    if (modalCancelar) {
+        modalCancelar.addEventListener("hidden.bs.modal", () => {
+            if (switchPendiente && !cancelacionConfirmada) {
+                switchPendiente.checked = true;
+            }
+
+            switchPendiente = null;
+            cancelacionConfirmada = false;
+        });
+    }
 });
 
 const API_VENTAS = "https://backend-liard-alpha-37.vercel.app/api/ventas";
@@ -38,6 +50,8 @@ const API_VENTAS = "https://backend-liard-alpha-37.vercel.app/api/ventas";
 let ventasGlobal = [];
 let ventaActual = null;
 let metodosPagoGlobal = [];
+let switchPendiente = null;
+let cancelacionConfirmada = false;
 
 function obtenerToken() {
     return localStorage.getItem("token");
@@ -45,6 +59,11 @@ function obtenerToken() {
 
 function formatearMoneda(valor) {
     return `$${Number(valor || 0).toFixed(2)}`;
+}
+
+function formatearFechaSolo(fecha) {
+    if (!fecha) return "";
+    return String(fecha).slice(0, 10);
 }
 
 function escapeHTML(texto) {
@@ -132,11 +151,14 @@ function renderizarVentas(ventas) {
 
     ventas.forEach((venta) => {
         const id = venta.id_venta;
-        const fecha = venta.fecha || "Sin fecha";
+        const fecha = formatearFechaSolo(venta.fecha);
         const trabajador = venta.trabajador || "Sin trabajador";
         const total = venta.total || 0;
-        const estatus = venta.estatus || "activa";
+        const estatus = String(venta.estatus || "activa").toLowerCase();
         const metodoPago = venta.metodo_pago || "Sin método";
+
+        const checked = estatus === "activa" ? "checked" : "";
+        const disabled = estatus === "cancelada" ? "disabled" : "";
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -147,7 +169,7 @@ function renderizarVentas(ventas) {
             <td>${obtenerBadgeEstado(estatus)}</td>
             <td>${escapeHTML(metodoPago)}</td>
             <td class="text-center">
-                <div class="action-buttons">
+                <div class="action-buttons d-flex justify-content-center align-items-center gap-2">
                     <button
                         class="btn-icon btn-view"
                         title="Ver detalle"
@@ -164,13 +186,17 @@ function renderizarVentas(ventas) {
                         <i class="bi bi-pencil-square"></i>
                     </button>
 
-                    <button
-                        class="btn-icon btn-delete"
-                        title="Cancelar venta"
-                        onclick="abrirModalCancelarVenta(${id})"
-                    >
-                        <i class="bi bi-x-circle"></i>
-                    </button>
+                    <div class="form-check form-switch m-0">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            ${checked}
+                            ${disabled}
+                            onchange="manejarSwitchEstadoVenta(${id}, this)"
+                            title="Cancelar venta"
+                        >
+                    </div>
                 </div>
             </td>
         `;
@@ -184,7 +210,7 @@ function aplicarFiltros() {
 
     const filtradas = ventasGlobal.filter((venta) => {
         const id = String(venta.id_venta || "").toLowerCase();
-        const fecha = String(venta.fecha || "").toLowerCase();
+        const fecha = String(formatearFechaSolo(venta.fecha) || "").toLowerCase();
         const trabajador = String(venta.trabajador || "").toLowerCase();
         const metodo = String(venta.metodo_pago || "").toLowerCase();
         const estatus = String(venta.estatus || "").toLowerCase();
@@ -335,7 +361,7 @@ async function abrirModalDetalleVenta(id) {
         if (!ventaActual) return;
 
         document.getElementById("detalleVentaId").value = ventaActual.id_venta || "";
-        document.getElementById("detalleFechaVenta").value = ventaActual.fecha || "";
+        document.getElementById("detalleFechaVenta").value = formatearFechaSolo(ventaActual.fecha);
         document.getElementById("detalleTrabajadorVenta").value = ventaActual.trabajador || "";
         document.getElementById("detalleTotalVenta").value = formatearMoneda(ventaActual.total || 0);
         document.getElementById("detalleEstadoVenta").value = ventaActual.estatus || "";
@@ -357,22 +383,34 @@ async function abrirModalEditarVenta(id) {
 
         document.getElementById("editVentaId").value = ventaActual.id_venta || "";
         document.getElementById("editIdVenta").value = ventaActual.id_venta || "";
-        document.getElementById("editFechaVenta").value = ventaActual.fecha || "";
+        document.getElementById("editFechaVenta").value = formatearFechaSolo(ventaActual.fecha);
         document.getElementById("editTrabajadorVenta").value = ventaActual.trabajador || "";
         document.getElementById("editTotalVenta").value = formatearMoneda(ventaActual.total || 0);
         document.getElementById("editEstadoVenta").value = ventaActual.estatus || "";
-        document.getElementById("editMotivoCancelacionGuardado").value = ventaActual.motivo_cancelacion || "";
+
+        const contenedorMotivo = document.getElementById("contenedorMotivoCancelacionEdit");
+        const inputMotivo = document.getElementById("editMotivoCancelacionGuardado");
+        const esCancelada = String(ventaActual.estatus || "").toLowerCase() === "cancelada";
+
+        if (contenedorMotivo && inputMotivo) {
+            if (esCancelada) {
+                contenedorMotivo.style.display = "block";
+                inputMotivo.value = ventaActual.motivo_cancelacion || "Sin motivo registrado";
+            } else {
+                contenedorMotivo.style.display = "none";
+                inputMotivo.value = "";
+            }
+        }
 
         const selectMetodo = document.getElementById("editMetodoPagoVenta");
         if (selectMetodo) {
             selectMetodo.value = String(ventaActual.id_metodo_pago || "");
-            const esCancelada = String(ventaActual.estatus || "").toLowerCase() === "cancelada";
             selectMetodo.disabled = esCancelada;
         }
 
         const btnGuardar = document.getElementById("btnGuardarCambiosVenta");
         if (btnGuardar) {
-            btnGuardar.disabled = String(ventaActual.estatus || "").toLowerCase() === "cancelada";
+            btnGuardar.disabled = esCancelada;
         }
 
         limpiarMensaje("mensajeModalEditarVenta");
@@ -391,13 +429,12 @@ async function abrirModalCancelarVenta(id) {
 
         document.getElementById("cancelVentaId").value = ventaActual.id_venta || "";
         document.getElementById("cancelIdVenta").value = ventaActual.id_venta || "";
-        document.getElementById("cancelFechaVenta").value = ventaActual.fecha || "";
+        document.getElementById("cancelFechaVenta").value = formatearFechaSolo(ventaActual.fecha);
         document.getElementById("cancelTrabajadorVenta").value = ventaActual.trabajador || "";
         document.getElementById("cancelTotalVenta").value = formatearMoneda(ventaActual.total || 0);
         document.getElementById("cancelEstadoVenta").value = ventaActual.estatus || "";
         document.getElementById("cancelMetodoPagoVenta").value = ventaActual.metodo_pago || "";
         document.getElementById("motivoCancelacion").value = "";
-        document.getElementById("motivoCancelacionGuardado").value = ventaActual.motivo_cancelacion || "";
 
         renderizarTablaDetalle(ventaActual.detalles || [], "tablaDetalleVentaCancelar");
 
@@ -500,6 +537,8 @@ async function confirmarCancelacionVenta(e) {
             throw new Error(resultado.message || "No se pudo cancelar la venta.");
         }
 
+        cancelacionConfirmada = true;
+
         mostrarMensaje(
             "mensajeModalCancelarVenta",
             resultado.message || "Venta cancelada correctamente.",
@@ -517,6 +556,21 @@ async function confirmarCancelacionVenta(e) {
     }
 }
 
+async function manejarSwitchEstadoVenta(id, switchElement) {
+    const quiereCancelar = !switchElement.checked;
+
+    if (!quiereCancelar) {
+        switchElement.checked = true;
+        return;
+    }
+
+    switchPendiente = switchElement;
+    cancelacionConfirmada = false;
+
+    await abrirModalCancelarVenta(id);
+}
+
 window.abrirModalDetalleVenta = abrirModalDetalleVenta;
 window.abrirModalEditarVenta = abrirModalEditarVenta;
 window.abrirModalCancelarVenta = abrirModalCancelarVenta;
+window.manejarSwitchEstadoVenta = manejarSwitchEstadoVenta;
