@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     // Buscamos el contenedor donde se inyectará el header
     const headerContainer = document.getElementById("header-dinamico");
     if (!headerContainer) return;
@@ -14,11 +14,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const idPerfil = localStorage.getItem('idPerfil');
     const nombreUsuario = localStorage.getItem('nombre') || 'Usuario';
     
+    // --- 3. NUEVO: CARGAR CONFIGURACIÓN DESDE LA BASE DE DATOS ---
+    let logoSitio = '<span style="font-size: 1.5em;">☕</span>'; // Default si no hay imagen
+    let nombreSitio = 'UNICAFE'; // Default si no hay nombre
+    
+    try {
+        const respuestaConfig = await fetch('https://backend-liard-alpha-37.vercel.app/api/config/configuracion');
+        if (respuestaConfig.ok) {
+            const configDatos = await respuestaConfig.json();
+            
+            if (configDatos.nombreSitio) {
+                nombreSitio = configDatos.nombreSitio;
+            }
+            if (configDatos.logo) {
+                // Creamos la etiqueta de imagen asegurando que tenga un tamaño que no rompa el header
+                logoSitio = `<img src="${configDatos.logo}" alt="Logo del sitio" style="height: 40px; width: 40px; object-fit: contain; border-radius: 5px;">`;
+            }
+        }
+    } catch (error) {
+        console.error("No se pudo cargar la configuración del header:", error);
+    }
+    // -------------------------------------------------------------
+
     // Variables para definir qué cargar
     let archivoCSS = "../css/Plantilla.css"; // Por defecto
     let headerHTML = "";
 
-    // 3. LOGICA DE ROLES
+    // 4. LOGICA DE ROLES
     if (token && idPerfil === "3") {
         // =========================================
         // VISTA ADMINISTRADOR
@@ -27,8 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
         headerHTML = `
             <header>
                 <div class="logo-section">
-                    <a href="../Privada/principalAdmin.html" style="text-decoration:none; display: flex; align-items: center;">
-                        <h1 class="brand-name">☕ UNICAFE</h1>
+                    <a href="../Privada/principalAdmin.html" style="text-decoration:none; display: flex; align-items: center; gap: 10px;">
+                        ${logoSitio}
+                        <h1 class="brand-name">${nombreSitio}</h1>
                     </a>
                 </div>
                 <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
@@ -73,8 +96,9 @@ document.addEventListener("DOMContentLoaded", () => {
         headerHTML = `
             <header>
                 <div class="logo-section">
-                    <a href="../Privada/principalCliente.html" style="text-decoration:none; display: flex; align-items: center;">
-                        <h1 class="brand-name">☕ UNICAFE</h1>
+                    <a href="../Privada/principalCliente.html" style="text-decoration:none; display: flex; align-items: center; gap: 10px;">
+                        ${logoSitio}
+                        <h1 class="brand-name">${nombreSitio}</h1>
                     </a>
                 </div>
                 <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
@@ -102,8 +126,9 @@ document.addEventListener("DOMContentLoaded", () => {
         headerHTML = `
             <header>
                 <div class="logo-section">
-                    <a href="../index.html" style="text-decoration:none; display: flex; align-items: center;">
-                        <h1 class="brand-name">☕ UNICAFE</h1>
+                    <a href="../index.html" style="text-decoration:none; display: flex; align-items: center; gap: 10px;">
+                        ${logoSitio}
+                        <h1 class="brand-name">${nombreSitio}</h1>
                     </a>
                 </div>
                 <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
@@ -122,16 +147,16 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }
 
-    // 4. Inyectar el CSS del rol correspondiente
+    // 5. Inyectar el CSS del rol correspondiente
     const linkCSS = document.createElement("link");
     linkCSS.rel = "stylesheet";
     linkCSS.href = archivoCSS;
     document.head.appendChild(linkCSS);
 
-    // 5. Inyectar el HTML al contenedor
+    // 6. Inyectar el HTML al contenedor
     headerContainer.innerHTML = headerHTML;
 
-    // 6. Configurar evento de Cerrar Sesión
+    // 7. Configurar evento de Cerrar Sesión
     const btnCerrarSesion = document.getElementById("btnCerrarSesion");
     if (btnCerrarSesion) {
         btnCerrarSesion.addEventListener("click", () => {
