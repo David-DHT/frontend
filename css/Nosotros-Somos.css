@@ -90,10 +90,11 @@ body {
 }
 
 /* === MISION Y VISION === */
+/* === MISION Y VISION === */
 .mision-vision {
   display: flex;
-  justify-content: space-around;
-  align-items: flex-start;
+  justify-content: center; /* Cambiado para que no estén tan separadas */
+  align-items: stretch; /* Hace que ambas tarjetas midan lo mismo de alto */
   padding: 60px 10%;
   background: #fffaf2;
   flex-wrap: wrap;
@@ -105,22 +106,34 @@ body {
   max-width: 450px;
   background: #f9f6ee;
   border-radius: 12px;
-  padding: 20px;
+  padding: 40px 30px; /* Más espacio interno para que respire */
   text-align: center;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .mision img, .vision img {
-  width: 100%;
-  border-radius: 10px;
-  height: 250px;
-  object-fit: cover;
-  margin-bottom: 15px;
+  width: auto; 
+  max-width: 180px; /* Hace que las tacitas de café no sean gigantes */
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 25px; /* Más espacio entre la imagen y el título */
 }
 
 .mision h3, .vision h3 {
   color: #5c3b1e;
-  font-size: 24px;
+  font-size: 26px;
+  margin-bottom: 15px; /* Espacio entre el título y el párrafo */
+}
+
+/* Agrega esta nueva regla para mejorar la lectura del texto de la BD */
+.mision p, .vision p {
+  color: #4a4a4a;
+  font-size: 16px;
+  line-height: 1.6; /* Separa las líneas de texto para que sea fácil de leer */
+  text-align: justify; /* Alinea el texto de forma elegante */
 }
 
 /* === GALERÍA === */
