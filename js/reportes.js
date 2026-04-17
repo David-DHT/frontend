@@ -17,6 +17,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         btnRecargar.addEventListener("click", cargarDashboardReportes);
     }
 
+    // REPORTEEEEEEEE
+    const btnGenerarPDF = document.getElementById("btnGenerarPDF");
+    if (btnGenerarPDF) {
+        btnGenerarPDF.addEventListener("click", generarReportePDF);
+    }
     await cargarDashboardReportes();
 });
 
@@ -429,6 +434,96 @@ async function eliminarOpinion(idOpinion) {
         console.error("Error al eliminar opinión:", error);
         alert(error.message || "No se pudo eliminar la opinión.");
     }
+}
+
+// ==========================================
+// MÓDULO DE GENERACIÓN DE PDF
+// ==========================================
+
+function generarReportePDF() {
+    // 1. Inicializar jsPDF (Lo que te recomendó tu compañero)
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // 2. Título y Fecha
+    const fechaActual = new Date().toLocaleDateString("es-MX");
+    doc.setFontSize(20);
+    doc.setTextColor(92, 58, 33); // Color café oscuro (opcional)
+    doc.text("Reporte Inteligente - UNICAFE", 14, 22);
+    
+    doc.setFontSize(11);
+    doc.setTextColor(100, 100, 100); // Gris
+    doc.text(`Fecha de generación: ${fechaActual}`, 14, 30);
+
+    // 3. Extraer contadores generales del DOM
+    const totalCat = document.getElementById("totalCategorias").innerText;
+    const totalProd = document.getElementById("totalProductos").innerText;
+    const totalUsu = document.getElementById("totalUsuarios").innerText;
+    const prodEstrella = document.getElementById("productoMasVendido").innerText;
+
+    // 4. Imprimir resumen
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0); // Negro
+    doc.text("Resumen General:", 14, 45);
+    
+    doc.setFontSize(12);
+    doc.text(`• Categorías activas: ${totalCat}`, 14, 53);
+    doc.text(`• Productos en catálogo: ${totalProd}`, 14, 60);
+    doc.text(`• Usuarios registrados: ${totalUsu}`, 14, 67);
+    doc.text(`• Producto estrella: ${prodEstrella}`, 14, 74);
+
+    // 5. Tabla: Top 10 Productos
+    doc.setFontSize(14);
+    doc.text("Ranking Detallado de Ventas (Top 10)", 14, 90);
+
+    doc.autoTable({
+        startY: 95,
+        head: [['#', 'Producto', 'Unidades Vendidas', 'Participación']],
+        body: extraerDatosTabla("tablaTopProductos"),
+        theme: 'striped',
+        headStyles: { fillColor: [123, 85, 49] }, // Color café UNICAFE
+    });
+
+    // 6. Tabla: Stock Bajo
+    // Calculamos dónde terminó la tabla anterior para que no se encimen
+    let posicionYFinal = doc.lastAutoTable.finalY + 15; 
+
+    doc.setFontSize(14);
+    doc.text("Monitoreo de Inventario (Stock Bajo)", 14, posicionYFinal);
+
+    doc.autoTable({
+        startY: posicionYFinal + 5,
+        head: [['Producto', 'Categoría', 'Stock Actual', 'Nivel']],
+        body: extraerDatosTabla("tablaStockBajo"),
+        theme: 'striped',
+        headStyles: { fillColor: [180, 50, 50] }, // Color rojo/alerta
+    });
+
+    // 7. Descargar el archivo
+    doc.save(`Reporte_UNICAFE_${fechaActual.replace(/\//g, "-")}.pdf`);
+}
+
+// Función auxiliar: Lee una tabla de tu HTML y la convierte en arreglo para jsPDF
+function extraerDatosTabla(idTbody) {
+    const tbody = document.getElementById(idTbody);
+    const filas = tbody.querySelectorAll("tr");
+    const datos = [];
+
+    filas.forEach(fila => {
+        const celdas = fila.querySelectorAll("td, th");
+        // Filtramos la fila de "Cargando..." o "No hay datos" (tienen colspan)
+        if (celdas.length > 1 && !celdas[0].hasAttribute("colspan")) {
+            const filaDatos = Array.from(celdas).map(celda => celda.innerText.trim());
+            datos.push(filaDatos);
+        }
+    });
+
+    // Si la tabla está vacía, devolvemos un mensaje
+    if (datos.length === 0) {
+        return [["Sin datos", "-", "-", "-"]];
+    }
+
+    return datos;
 }
 
 window.eliminarOpinion = eliminarOpinion;

@@ -1,187 +1,211 @@
 <!doctype html>
 <html lang="es">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UNICAFE - Reportes Inteligentes</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
 
     <link rel="stylesheet" href="../css/header.css" />
     <link rel="stylesheet" href="../css/footer.css" />
     <link rel="stylesheet" href="../css/reportes.css" />
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="header-dinamico"></div>
 
     <div class="back-container">
-        <a href="principalAdmin.html" class="btn-regresar-unicafe">
-            <i class="fas fa-arrow-left"></i> Regresar
-        </a>
+      <a href="principalAdmin.html" class="btn-regresar-unicafe">
+        <i class="fas fa-arrow-left"></i> Regresar
+      </a>
     </div>
 
     <main class="report-dashboard-container">
-        <section class="hero-report">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <h1>Panel Inteligente de Reportes</h1>
-                <p>
-                    Analiza el comportamiento de ventas, detecta productos líderes
-                    y monitorea el inventario crítico de UNICAFE.
-                </p>
-            </div>
-        </section>
+      <section class="hero-report">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <h1>Panel Inteligente de Reportes</h1>
+          <p>
+            Analiza el comportamiento de ventas, detecta productos líderes y
+            monitorea el inventario crítico de UNICAFE.
+          </p>
+          <button
+            id="btnGenerarPDF"
+            class="btn btn-light mt-3"
+            style="font-weight: bold; color: #5c3a21"
+          >
+            <i class="bi bi-file-earmark-pdf-fill text-danger"></i> Descargar
+            Reporte PDF
+          </button>
+        </div>
+      </section>
 
-        <section class="stats-grid">
-            <article class="stat-card">
-                <div class="stat-icon icon-categorias">
-                    <i class="bi bi-tags-fill"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="totalCategorias">0</h3>
-                    <p>Categorías registradas</p>
-                    <span>Secciones activas del menú</span>
-                </div>
-            </article>
+      <section class="stats-grid">
+        <article class="stat-card">
+          <div class="stat-icon icon-categorias">
+            <i class="bi bi-tags-fill"></i>
+          </div>
+          <div class="stat-info">
+            <h3 id="totalCategorias">0</h3>
+            <p>Categorías registradas</p>
+            <span>Secciones activas del menú</span>
+          </div>
+        </article>
 
-            <article class="stat-card">
-                <div class="stat-icon icon-productos">
-                    <i class="bi bi-cup-hot-fill"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="totalProductos">0</h3>
-                    <p>Productos registrados</p>
-                    <span>Productos cargados en catálogo</span>
-                </div>
-            </article>
+        <article class="stat-card">
+          <div class="stat-icon icon-productos">
+            <i class="bi bi-cup-hot-fill"></i>
+          </div>
+          <div class="stat-info">
+            <h3 id="totalProductos">0</h3>
+            <p>Productos registrados</p>
+            <span>Productos cargados en catálogo</span>
+          </div>
+        </article>
 
-            <article class="stat-card">
-                <div class="stat-icon icon-usuarios">
-                    <i class="bi bi-people-fill"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="totalUsuarios">0</h3>
-                    <p>Usuarios registrados</p>
-                    <span>Usuarios dados de alta en el sistema</span>
-                </div>
-            </article>
+        <article class="stat-card">
+          <div class="stat-icon icon-usuarios">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <div class="stat-info">
+            <h3 id="totalUsuarios">0</h3>
+            <p>Usuarios registrados</p>
+            <span>Usuarios dados de alta en el sistema</span>
+          </div>
+        </article>
 
-            <article class="stat-card highlight-card">
-                <div class="stat-icon icon-top">
-                    <i class="bi bi-trophy-fill"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="productoMasVendido">---</h3>
-                    <p>Producto más vendido</p>
-                    <span id="textoProductoMasVendido">Esperando análisis...</span>
-                </div>
-            </article>
-        </section>
+        <article class="stat-card highlight-card">
+          <div class="stat-icon icon-top">
+            <i class="bi bi-trophy-fill"></i>
+          </div>
+          <div class="stat-info">
+            <h3 id="productoMasVendido">---</h3>
+            <p>Producto más vendido</p>
+            <span id="textoProductoMasVendido">Esperando análisis...</span>
+          </div>
+        </article>
+      </section>
 
-        <section class="dashboard-grid">
-            <div class="panel-card panel-chart">
-                <div class="panel-header">
-                    <div>
-                        <h2>Top 10 productos más vendidos</h2>
-                        <p>Distribución porcentual de ventas por producto</p>
-                    </div>
-
-                    <button class="btn-refresh-panel" id="btnRecargarReportes" type="button">
-                        <i class="bi bi-arrow-clockwise"></i>
-                        Actualizar
-                    </button>
-                </div>
-
-                <div id="estadoGrafica" class="chart-status">
-                    Cargando información de ventas...
-                </div>
-
-                <div class="chart-wrapper">
-                    <canvas id="graficaTopProductos"></canvas>
-                </div>
-
-                <div class="chart-summary" id="resumenTopProductos">
-                    Cargando resumen de productos...
-                </div>
+      <section class="dashboard-grid">
+        <div class="panel-card panel-chart">
+          <div class="panel-header">
+            <div>
+              <h2>Top 10 productos más vendidos</h2>
+              <p>Distribución porcentual de ventas por producto</p>
             </div>
 
-            <div class="panel-card panel-list">
-                <div class="panel-header">
-                    <div>
-                        <h2>Ranking detallado</h2>
-                        <p>Participación de cada producto dentro del top 10</p>
-                    </div>
-                </div>
+            <button
+              class="btn-refresh-panel"
+              id="btnRecargarReportes"
+              type="button"
+            >
+              <i class="bi bi-arrow-clockwise"></i>
+              Actualizar
+            </button>
+          </div>
 
-                <div class="table-responsive custom-table-wrapper">
-                    <table class="table align-middle report-table mb-0">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Producto</th>
-                                <th>Unidades vendidas</th>
-                                <th>Participación</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaTopProductos">
-                            <tr>
-                                <td colspan="4" class="text-center p-4">Cargando top de ventas...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+          <div id="estadoGrafica" class="chart-status">
+            Cargando información de ventas...
+          </div>
+
+          <div class="chart-wrapper">
+            <canvas id="graficaTopProductos"></canvas>
+          </div>
+
+          <div class="chart-summary" id="resumenTopProductos">
+            Cargando resumen de productos...
+          </div>
+        </div>
+
+        <div class="panel-card panel-list">
+          <div class="panel-header">
+            <div>
+              <h2>Ranking detallado</h2>
+              <p>Participación de cada producto dentro del top 10</p>
             </div>
-        </section>
+          </div>
 
-        <section class="stock-section">
-            <div class="panel-card stock-card">
-                <div class="panel-header">
-                    <div>
-                        <h2>Productos con stock bajo</h2>
-                        <p>Monitoreo de inventario para prevenir faltantes</p>
-                    </div>
-                    <div class="stock-badge" id="contadorStockBajo">0 en riesgo</div>
-                </div>
+          <div class="table-responsive custom-table-wrapper">
+            <table class="table align-middle report-table mb-0">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Producto</th>
+                  <th>Unidades vendidas</th>
+                  <th>Participación</th>
+                </tr>
+              </thead>
+              <tbody id="tablaTopProductos">
+                <tr>
+                  <td colspan="4" class="text-center p-4">
+                    Cargando top de ventas...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-                <div class="table-responsive custom-table-wrapper">
-                    <table class="table align-middle report-table mb-0">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Categoría</th>
-                                <th>Stock actual</th>
-                                <th>Nivel</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaStockBajo">
-                            <tr>
-                                <td colspan="4" class="text-center p-4">Cargando inventario crítico...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+      <section class="stock-section">
+        <div class="panel-card stock-card">
+          <div class="panel-header">
+            <div>
+              <h2>Productos con stock bajo</h2>
+              <p>Monitoreo de inventario para prevenir faltantes</p>
             </div>
-        </section>
+            <div class="stock-badge" id="contadorStockBajo">0 en riesgo</div>
+          </div>
 
-        <section class="opiniones-section">
-            <div class="panel-card opiniones-card">
-                <div class="panel-header">
-                    <div>
-                        <h2>Opiniones</h2>
-                        <p>Comentarios y sugerencias registradas por los usuarios</p>
-                    </div>
-                    <div class="stock-badge" id="contadorOpiniones">0 registradas</div>
-                </div>
+          <div class="table-responsive custom-table-wrapper">
+            <table class="table align-middle report-table mb-0">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Categoría</th>
+                  <th>Stock actual</th>
+                  <th>Nivel</th>
+                </tr>
+              </thead>
+              <tbody id="tablaStockBajo">
+                <tr>
+                  <td colspan="4" class="text-center p-4">
+                    Cargando inventario crítico...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-                <div id="listaOpiniones" class="opiniones-grid">
-                    <div class="empty-state">Cargando opiniones...</div>
-                </div>
+      <section class="opiniones-section">
+        <div class="panel-card opiniones-card">
+          <div class="panel-header">
+            <div>
+              <h2>Opiniones</h2>
+              <p>Comentarios y sugerencias registradas por los usuarios</p>
             </div>
-        </section>
+            <div class="stock-badge" id="contadorOpiniones">0 registradas</div>
+          </div>
+
+          <div id="listaOpiniones" class="opiniones-grid">
+            <div class="empty-state">Cargando opiniones...</div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <div id="footer-dinamico"></div>
@@ -189,7 +213,10 @@
     <script src="../js/footer.js"></script>
     <script src="../js/headers.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../js/reportes.js"></script>
-</body>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    
+    <script src="../js/reportes.js"></script>
+  </body>
 </html>
