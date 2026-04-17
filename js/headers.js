@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             if (configDatos.logo) {
                 // Creamos la etiqueta de imagen asegurando que tenga un tamaño que no rompa el header
-                logoSitio = `<img src="${configDatos.logo}" alt="Logo del sitio" style="height: 40px; width: 40px; object-fit: contain; border-radius: 5px;">`;
+                logoSitio = `<img src="${configDatos.logo}" alt="Logo del sitio" style="height: 60px; width: 60px; object-fit: contain; border-radius: 5px;">`;
             }
         }
     } catch (error) {
