@@ -1,57 +1,25 @@
-document.addEventListener("DOMContentLoaded", async () => {
-    // Buscamos el contenedor donde se inyectará el header
+document.addEventListener("DOMContentLoaded", () => {
     const headerContainer = document.getElementById("header-dinamico");
     if (!headerContainer) return;
 
-    // 1. Cargamos el CSS de animaciones (asegúrate de que la ruta sea correcta)
     const linkAnimaciones = document.createElement("link");
     linkAnimaciones.rel = "stylesheet";
-    linkAnimaciones.href = "../css/animaciones.css"; 
+    linkAnimaciones.href = "../css/animaciones.css";
     document.head.appendChild(linkAnimaciones);
 
-    // 2. Leer datos del usuario desde LocalStorage
     const token = localStorage.getItem('token');
     const idPerfil = localStorage.getItem('idPerfil');
-    const nombreUsuario = localStorage.getItem('nombre') || 'Usuario';
-    
-    // --- 3. NUEVO: CARGAR CONFIGURACIÓN DESDE LA BASE DE DATOS ---
-    let logoSitio = '<span style="font-size: 1.5em;">☕</span>'; // Default si no hay imagen
-    let nombreSitio = 'UNICAFE'; // Default si no hay nombre
-    
-    try {
-        const respuestaConfig = await fetch('https://backend-liard-alpha-37.vercel.app/api/config/configuracion');
-        if (respuestaConfig.ok) {
-            const configDatos = await respuestaConfig.json();
-            
-            if (configDatos.nombreSitio) {
-                nombreSitio = configDatos.nombreSitio;
-            }
-            if (configDatos.logo) {
-                // Creamos la etiqueta de imagen asegurando que tenga un tamaño que no rompa el header
-                logoSitio = `<img src="${configDatos.logo}" alt="Logo del sitio" style="height: 60px; width: 60px; object-fit: contain; border-radius: 5px;">`;
-            }
-        }
-    } catch (error) {
-        console.error("No se pudo cargar la configuración del header:", error);
-    }
-    // -------------------------------------------------------------
 
-    // Variables para definir qué cargar
-    let archivoCSS = "../css/Plantilla.css"; // Por defecto
+    let archivoCSS = "../css/Plantilla.css";
     let headerHTML = "";
 
-    // 4. LOGICA DE ROLES
     if (token && idPerfil === "3") {
-        // =========================================
-        // VISTA ADMINISTRADOR
-        // =========================================
         archivoCSS = "../css/plantillaAdmin.css";
         headerHTML = `
             <header>
                 <div class="logo-section">
-                    <a href="../Privada/principalAdmin.html" style="text-decoration:none; display: flex; align-items: center; gap: 10px;">
-                        ${logoSitio}
-                        <h1 class="brand-name">${nombreSitio}</h1>
+                    <a href="../pages/principalAdmin.html" style="text-decoration:none; display: flex; align-items: center;">
+                        <h1 class="brand-name">☕ UNICAFE</h1>
                     </a>
                 </div>
                 <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
@@ -61,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <button class="open-sidebar-btn" onclick="toggleSidebar()" style="background-color: #8b6f47; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px;">
                             ☰ Menú
                         </button>
-                        
+
                         <div id="miSidebar" class="sidebar-container">
                             <div style="background-color: #554229; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
                                 <h3 style="color: white; margin: 0;">Panel Admin</h3>
@@ -77,28 +45,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 <a href="../pages/reportes.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">📊 Reportes</a>
                                 <a href="../pages/gestionVentas.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">💵 Ventas</a>
                                 <a href="../pages/gestionInventario.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">📦 Inventario</a>
-                                <a href="../pages/agregarAdmin.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">👔➕ Agregar Admin</a> 
-                                <a href="../pages/configuracion.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">⚙️ Configuracion</a>   
-                                </div>
+                                <a href="../pages/agregarAdmin.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">👔➕ Agregar Admin</a>
+                                <a href="../pages/configuracion.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">Configuracion</a>
+                            </div>
                             <button id="btnCerrarSesion" style="margin: 20px; padding: 10px; background: #d32f2f; color: white; border: none; border-radius: 5px; cursor: pointer;">🚪 Cerrar Sesión</button>
                         </div>
-                        
+
                         <div id="overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
                     </nav>
                 </div>
             </header>
         `;
     } else if (token) {
-        // =========================================
-        // VISTA CLIENTE
-        // =========================================
         archivoCSS = "../css/plantillaCliente.css";
         headerHTML = `
             <header>
                 <div class="logo-section">
-                    <a href="../Privada/principalCliente.html" style="text-decoration:none; display: flex; align-items: center; gap: 10px;">
-                        ${logoSitio}
-                        <h1 class="brand-name">${nombreSitio}</h1>
+                    <a href="../pages/principalCliente.html" style="text-decoration:none; display: flex; align-items: center;">
+                        <h1 class="brand-name">☕ UNICAFE</h1>
                     </a>
                 </div>
                 <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
@@ -119,16 +83,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             </header>
         `;
     } else {
-        // =========================================
-        // VISTA INVITADO
-        // =========================================
         archivoCSS = "../css/Plantilla.css";
         headerHTML = `
             <header>
                 <div class="logo-section">
-                    <a href="../index.html" style="text-decoration:none; display: flex; align-items: center; gap: 10px;">
-                        ${logoSitio}
-                        <h1 class="brand-name">${nombreSitio}</h1>
+                    <a href="../index.html" style="text-decoration:none; display: flex; align-items: center;">
+                        <h1 class="brand-name">☕ UNICAFE</h1>
                     </a>
                 </div>
                 <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
@@ -147,16 +107,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         `;
     }
 
-    // 5. Inyectar el CSS del rol correspondiente
     const linkCSS = document.createElement("link");
     linkCSS.rel = "stylesheet";
     linkCSS.href = archivoCSS;
     document.head.appendChild(linkCSS);
 
-    // 6. Inyectar el HTML al contenedor
     headerContainer.innerHTML = headerHTML;
 
-    // 7. Configurar evento de Cerrar Sesión
     const btnCerrarSesion = document.getElementById("btnCerrarSesion");
     if (btnCerrarSesion) {
         btnCerrarSesion.addEventListener("click", () => {
@@ -166,9 +123,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
     }
+
+    window.actualizarContadorHeader();
 });
 
-// FUNCIONES GLOBALES (Controlan las clases CSS de animaciones.css)
 window.toggleMobileMenu = function() {
     const menu = document.getElementById('mobileMenu');
     if (menu) menu.classList.toggle('show');
@@ -177,31 +135,45 @@ window.toggleMobileMenu = function() {
 window.toggleSidebar = function() {
     const sidebar = document.getElementById("miSidebar");
     const overlay = document.getElementById("overlay");
-    
+
     if (sidebar && overlay) {
-        // Alternamos la clase 'active' definida en animaciones.css
         sidebar.classList.toggle('active');
         overlay.classList.toggle('active');
     }
 };
 
-// Función global para actualizar la burbuja del carrito
-window.actualizarContadorHeader = function() {
+window.actualizarContadorHeader = function(animar = true) {
     const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-    const totalArticulos = carrito.reduce((acc, item) => acc + item.cantidad, 0);
-    
+    const totalArticulos = carrito.reduce((acc, item) => acc + Number(item.cantidad || 0), 0);
+
     const cartBadge = document.getElementById('cart-count');
     if (cartBadge) {
         cartBadge.innerText = totalArticulos;
-        
-        // Animación de "pop" para que el usuario note el cambio
-        cartBadge.style.transform = 'scale(1.3)';
-        setTimeout(() => cartBadge.style.transform = 'scale(1)', 200);
-        
-        // Ocultar si es cero, mostrar si hay algo
         cartBadge.style.display = totalArticulos > 0 ? 'flex' : 'none';
+
+        if (animar && totalArticulos > 0) {
+            cartBadge.style.transform = 'scale(1.3)';
+            setTimeout(() => {
+                cartBadge.style.transform = 'scale(1)';
+            }, 200);
+        }
     }
 };
 
-// Ejecutar al cargar para que el número persista al navegar
-document.addEventListener('DOMContentLoaded', window.actualizarContadorHeader);
+window.addEventListener('storage', () => {
+    window.actualizarContadorHeader(false);
+});
+
+window.addEventListener('carritoActualizado', () => {
+    window.actualizarContadorHeader();
+});
+
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        window.actualizarContadorHeader(false);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    window.actualizarContadorHeader(false);
+});

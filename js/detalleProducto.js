@@ -84,8 +84,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (btnFav) {
                 btnFav.addEventListener('click', () => {
                     if (!token) {
-                        alert("Debes iniciar sesión para guardar favoritos");
-                        window.location.href = "login.html";
+                        const deseaIniciarSesion = confirm("Debes iniciar sesión o registrarte para guardar favoritos. ¿Deseas ir al login?");
+                        if (deseaIniciarSesion) {
+                            window.location.href = "../pages/login.html";
+                        }
                     } else {
                         btnFav.innerHTML = btnFav.innerHTML.includes('❤️') ? '💚 Guardado' : '❤️ Añadir';
                     }
@@ -106,6 +108,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 window.agregarAlCarrito = function (id, nombre, precio, imagen, stock) {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        const deseaIniciarSesion = confirm(
+            "Debes iniciar sesión o registrarte para agregar productos al carrito. ¿Deseas ir al login?"
+        );
+
+        if (deseaIniciarSesion) {
+            window.location.href = "../pages/login.html";
+        }
+        return;
+    }
+
     let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
     const index = carrito.findIndex(item => item.id === id);
@@ -128,7 +143,12 @@ window.agregarAlCarrito = function (id, nombre, precio, imagen, stock) {
     }
 
     localStorage.setItem('carrito', JSON.stringify(carrito));
-    alert(`¡${nombre} se agregó al carrito! 🛒`);
 
-    if (window.actualizarContadorHeader) window.actualizarContadorHeader();
+    if (window.actualizarContadorHeader) {
+        window.actualizarContadorHeader();
+    }
+
+    window.dispatchEvent(new Event('carritoActualizado'));
+
+    alert(`¡${nombre} se agregó al carrito! 🛒`);
 };

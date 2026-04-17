@@ -43,35 +43,30 @@
         <thead>
           <tr>
             <th>Imagen</th>
-            <th>Producto</th>
+            <th>Nombre</th>
             <th>Descripción</th>
             <th>Categoría</th>
             <th>Precio</th>
             <th>Estado</th>
-            <th>Movimiento</th>
+            <th class="text-center">Acciones</th>
           </tr>
         </thead>
         <tbody id="tablaResultados">
           <tr>
-            <td colspan="7" class="text-center p-4">
-              Cargando productos...
-            </td>
+            <td colspan="7" class="text-center p-4">Cargando productos...</td>
           </tr>
         </tbody>
       </table>
     </section>
   </main>
 
-  <!-- Modal agregar producto -->
-  <div class="modal fade" id="modalAgregarProducto" tabindex="-1" aria-labelledby="modalAgregarProductoLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+  <!-- MODAL AGREGAR -->
+  <div class="modal fade" id="modalAgregarProducto" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <form id="formAgregarProducto">
           <div class="modal-header">
-            <h5 class="modal-title" id="modalAgregarProductoLabel">
-              Agregar producto
-            </h5>
+            <h5 class="modal-title">Agregar producto</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
           </div>
 
@@ -129,16 +124,13 @@
     </div>
   </div>
 
-  <!-- Modal editar producto -->
-  <div class="modal fade" id="modalEditarProducto" tabindex="-1" aria-labelledby="modalEditarProductoLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+  <!-- MODAL EDITAR -->
+  <div class="modal fade" id="modalEditarProducto" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <form id="formEditarProducto">
           <div class="modal-header">
-            <h5 class="modal-title" id="modalEditarProductoLabel">
-              Editar producto
-            </h5>
+            <h5 class="modal-title">Editar producto</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
           </div>
 
@@ -161,14 +153,6 @@
                 <label for="editCategoria" class="form-label">Categoría</label>
                 <select class="form-select" id="editCategoria" required>
                   <option value="">Selecciona una categoría</option>
-                </select>
-              </div>
-
-              <div class="col-md-6">
-                <label for="editEstado" class="form-label">Estado</label>
-                <select class="form-select" id="editEstado" required>
-                  <option value="activo">activo</option>
-                  <option value="inactivo">inactivo</option>
                 </select>
               </div>
 

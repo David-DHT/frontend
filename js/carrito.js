@@ -9,8 +9,12 @@ function obtenerCarrito() {
 function guardarCarrito(carrito) {
     localStorage.setItem('carrito', JSON.stringify(carrito));
     renderizarCarrito();
-    // Opcional: Actualizar contador del header si tienes la función
-    if (window.actualizarContadorHeader) window.actualizarContadorHeader();
+
+    if (window.actualizarContadorHeader) {
+        window.actualizarContadorHeader();
+    }
+
+    window.dispatchEvent(new Event('carritoActualizado'));
 }
 
 function renderizarCarrito() {

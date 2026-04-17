@@ -90,7 +90,6 @@ function sanitizarPrecioInput(input) {
     if (!input) return;
 
     let valor = input.value;
-
     if (valor === '') return;
 
     valor = Number(valor);
@@ -183,9 +182,7 @@ async function obtenerProductos() {
                 : 'badge-estado badge-inactivo';
 
             const precioFormateado = Number(producto.precio || 0).toFixed(2);
-            const siguienteEstado = estado === 'activo' ? 'inactivo' : 'activo';
-            const iconoEstado = estado === 'activo' ? 'bi-toggle-on' : 'bi-toggle-off';
-            const tituloEstado = estado === 'activo' ? 'Desactivar producto' : 'Activar producto';
+            const checked = estado === 'activo' ? 'checked' : '';
 
             tr.innerHTML = `
                 <td>${imagenHTML}</td>
@@ -208,13 +205,16 @@ async function obtenerProductos() {
                             <i class="bi bi-pencil-square"></i>
                         </button>
 
-                        <button onclick="cambiarEstadoProducto(${producto.id_producto}, '${siguienteEstado}')" class="btn-icon btn-edit" title="${tituloEstado}">
-                            <i class="bi ${iconoEstado}"></i>
-                        </button>
-
-                        <button onclick="eliminarProducto(${producto.id_producto})" class="btn-icon btn-delete" title="Dar de baja">
-                            <i class="bi bi-trash3-fill"></i>
-                        </button>
+                        <div class="form-check form-switch m-0 d-inline-flex">
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                role="switch"
+                                ${checked}
+                                onchange="cambiarEstadoProducto(${producto.id_producto}, this.checked ? 'activo' : 'inactivo')"
+                                title="Cambiar estado"
+                            >
+                        </div>
                     </div>
                 </td>
             `;
@@ -382,7 +382,6 @@ async function abrirModalEditarProducto(id) {
         document.getElementById('editNombre').value = producto.nombre || '';
         document.getElementById('editPrecio').value = producto.precio || '';
         document.getElementById('editCategoria').value = producto.categoria || '';
-        document.getElementById('editEstado').value = producto.estado || 'activo';
         document.getElementById('editDescripcion').value = producto.descripcion || '';
         document.getElementById('editImagenActual').value = producto.imagen || '';
         document.getElementById('editImagen').value = '';
@@ -419,7 +418,6 @@ async function actualizarProducto(e) {
 
     const formData = new FormData();
     formData.append('nombre', document.getElementById('editNombre').value.trim());
-    formData.append('estado', document.getElementById('editEstado').value);
     formData.append('categoria', document.getElementById('editCategoria').value);
     formData.append('precio', document.getElementById('editPrecio').value);
     formData.append('descripcion', document.getElementById('editDescripcion').value.trim());
@@ -509,37 +507,10 @@ async function cambiarEstadoProducto(id, nuevoEstado) {
         }
 
         await obtenerProductos();
-        alert(`Producto ${nuevoEstado === 'activo' ? 'activado' : 'desactivado'} correctamente`);
 
     } catch (error) {
         console.error('Error al cambiar estado del producto:', error);
         alert(error.message);
-    }
-}
-
-async function eliminarProducto(id) {
-    const confirmar = confirm('¿Deseas dar de baja este producto?');
-    if (!confirmar) return;
-
-    try {
-        const respuesta = await fetch(`${API_PRODUCTOS}/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${obtenerToken()}`
-            }
-        });
-
-        const resultado = await respuesta.json();
-
-        if (!respuesta.ok) {
-            throw new Error(resultado.message || 'No se pudo eliminar el producto');
-        }
-
-        alert(resultado.message || 'Producto dado de baja correctamente');
         await obtenerProductos();
-
-    } catch (error) {
-        console.error('Error al eliminar producto:', error);
-        alert(error.message);
     }
 }
