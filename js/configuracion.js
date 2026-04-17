@@ -52,3 +52,39 @@ function mostrarAlerta(mensaje, tipo) {
         alertBox.style.display = 'none';
     }, 5000);
 }
+
+document.getElementById('configForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); // Evita que la página se recargue
+
+    // Obtenemos el formulario y metemos todo en un FormData (ideal para archivos)
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const btnSubmit = form.querySelector('.btn-save');
+    const textoOriginal = btnSubmit.textContent;
+    btnSubmit.textContent = 'Guardando...';
+    btnSubmit.disabled = true;
+    try {
+        const respuesta = await fetch('https://backend-liard-alpha-37.vercel.app/api/config/actualizar', {
+            method: 'PUT', // o 'POST' si tu ruta es POST
+            body: formData // No necesitas Headers de Content-Type, FormData lo hace solo
+        });
+
+        const resultado = await respuesta.json();
+
+        if (respuesta.ok && resultado.success) {
+            mostrarAlerta('¡Configuración guardada exitosamente!', 'success');
+            
+            // Actualizamos el input oculto por si cambian la imagen otra vez sin recargar
+            if (resultado.data && resultado.data.logo) {
+                document.getElementById('imagen_anterior').value = resultado.data.logo;
+            }
+        } else {
+            throw new Error(resultado.message || 'Error al guardar');
+        }
+
+    } catch (error) {
+        console.error("Error al guardar:", error);
+        mostrarAlerta(error.message, 'error');
+    }
+});
