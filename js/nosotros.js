@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function cargarMisionYVision() {
     try {
-        const respuesta = await fetch('https://backend-liard-alpha-37.vercel.app/api/configuracion');
+        const respuesta = await fetch('https://backend-liard-alpha-37.vercel.app/api/config/configuracion');
         
         if (!respuesta.ok) {
             throw new Error('Error al obtener los datos del servidor');
