@@ -19,6 +19,7 @@ main {
     padding: 40px;
 }
 
+
 /* Sección Imagen */
 .product-image-container {
     display: flex;
@@ -152,6 +153,36 @@ main {
 
 .btn-tertiary:hover {
     background: #e2e8f0;
+}
+
+.detalle-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.back-container {
+    margin-bottom: 18px;
+}
+
+.btn-regresar-unicafe {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #8b6f47;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(139, 111, 71, 0.18);
+}
+
+.btn-regresar-unicafe:hover {
+    background-color: #6d5436;
+    color: #fff;
+    transform: translateY(-1px);
 }
 
 /* Responsive */

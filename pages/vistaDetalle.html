@@ -1,31 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle del Producto - UNICAFE</title>
+    <title>Detalle del producto - UNICAFE</title>
     <link rel="stylesheet" href="../css/vistaDetalle.css">
     <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="../css/footer.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
+
 <body>
 
     <div id="header-dinamico"></div>
 
-    <main>
-        <div class="product-detail-card">
-            <div class="product-content" id="detalle-producto">
-                <div style="text-align: center; padding: 50px; width: 100%;">
-                    <p>Cargando información del producto...</p>
-                </div>
-            </div>
+    <main class="detalle-main">
+        <div class="back-container">
+            <a href="../index.html" class="btn-regresar-unicafe">
+                <i class="bi bi-arrow-left"></i> Regresar
+            </a>
         </div>
+
+        <section class="detalle-container" id="detalle-producto">
+            <p>Cargando detalle del producto...</p>
+        </section>
     </main>
 
     <div id="footer-dinamico"></div>
 
-    <script src="../js/headers.js"></script>
     <script src="../js/footer.js"></script>
+    <script src="../js/headers.js"></script>
     <script src="../js/detalleProducto.js"></script>
 </body>
+
 </html>
