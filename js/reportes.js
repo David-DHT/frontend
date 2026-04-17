@@ -478,7 +478,7 @@ function generarReportePDF() {
 
     doc.autoTable({
         startY: 95,
-        head: [['#', 'Producto', 'Unidades Vendidas', 'Participación']],
+        head: [['#', 'Producto', 'Unidades Vendidas', 'Porcentaje']],
         body: extraerDatosTabla("tablaTopProductos"),
         theme: 'striped',
         headStyles: { fillColor: [123, 85, 49] }, // Color café UNICAFE
