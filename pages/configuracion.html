@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configuración General - UNICAFE</title>
+    <link rel="stylesheet" href="../css/configuracion.css" />
+    <style>
+      .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+      }
+      .alert-success {
+        color: #3c763d;
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+      }
+      .alert-error {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header-dinamico"></div>
+
+    <div class="config-container">
+      <div class="config-header">
+        <h1>CONFIGURACIÓN GENERAL</h1>
+        <p>Aquí puedes editar el logo, colores y textos institucionales</p>
+      </div>
+
+      <div id="alert-message" class="alert" style="display: none"></div>
+
+      <form
+        action="#"
+        method="POST"
+        enctype="multipart/form-data"
+        id="configForm"
+      >
+        <input
+          type="hidden"
+          id="imagen_anterior"
+          name="imagen_anterior"
+          value=""
+        />
+
+        <div class="config-section">
+          <h2 class="section-title">Identidad del Sitio</h2>
+
+          <div class="identity-grid">
+            <div class="logo-container">
+              <div class="logo-box">
+                <div
+                  id="default-icon-text"
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                  "
+                >
+                  <div class="logo-circle">
+                    <span class="logo-icon">☕</span>
+                  </div>
+                  <div class="logo-text">UNICAFE</div>
+                </div>
+                <img
+                  id="image-preview-box"
+                  src="#"
+                  alt="Vista previa"
+                  style="
+                    display: none;
+                    max-width: 100%;
+                    max-height: 150px;
+                    object-fit: contain;
+                  "
+                />
+              </div>
+
+              <input
+                type="file"
+                id="product-image"
+                name="logo"
+                accept=".jpg, .jpeg, .png"
+                style="display: none"
+                onchange="validarArchivo(this)"
+              />
+
+              <button
+                type="button"
+                class="upload-button"
+                onclick="document.getElementById('product-image').click()"
+              >
+                Subir nuevo logo
+              </button>
+              <small style="display: block; margin-top: 5px; color: #666"
+                >Solo archivos .jpg y .png</small
+              >
+            </div>
+
+            <div class="form-fields">
+              <div class="form-group">
+                <label class="form-label">Nombre del Sitio</label>
+                <input
+                  type="text"
+                  id="nombreSitio"
+                  name="nombreSitio"
+                  class="form-input"
+                  value=""
+                  placeholder="Nombre del sitio"
+                  required
+                  oninput="
+                    this.setCustomValidity('');
+                    sinNumeros(event);
+                  "
+                  oninvalid="
+                    this.setCustomValidity(
+                      'El nombre del sitio es obligatorio y no debe contener números.',
+                    )
+                  "
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Eslogan / Frase Principal</label>
+                <input
+                  type="text"
+                  id="eslogan"
+                  name="eslogan"
+                  class="form-input"
+                  value=""
+                  placeholder="Escribe tu eslogan"
+                  required
+                  oninput="
+                    this.setCustomValidity('');
+                    sinNumeros(event);
+                  "
+                  oninvalid="
+                    this.setCustomValidity(
+                      'El eslogan es obligatorio y no debe contener números.',
+                    )
+                  "
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="config-section">
+          <h2 class="section-title">Acerca de la Empresa</h2>
+
+          <div class="policies-grid">
+            <div class="policy-card">
+              <h3 class="policy-title">Misión</h3>
+              <textarea
+                id="mision"
+                name="mision"
+                class="policy-textarea"
+                placeholder="Escribe aquí..."
+                required
+                oninput="
+                  this.setCustomValidity('');
+                  sinNumeros(event);
+                "
+                oninvalid="
+                  this.setCustomValidity(
+                    'La misión es obligatoria y no acepta números.',
+                  )
+                "
+              ></textarea>
+            </div>
+
+            <div class="policy-card">
+              <h3 class="policy-title">Visión</h3>
+              <textarea
+                id="vision"
+                name="vision"
+                class="policy-textarea"
+                placeholder="Escribe aquí..."
+                required
+                oninput="
+                  this.setCustomValidity('');
+                  sinNumeros(event);
+                "
+                oninvalid="
+                  this.setCustomValidity(
+                    'La visión es obligatoria y no acepta números.',
+                  )
+                "
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="config-section">
+          <h2 class="section-title">Marco Legal</h2>
+
+          <div class="policy-card full-width-card">
+            <h3 class="policy-title">Políticas de Privacidad</h3>
+            <textarea
+              id="politicas"
+              name="politicas"
+              class="policy-textarea large-area"
+              placeholder="Detalles..."
+              required
+              oninput="this.setCustomValidity('')"
+              oninvalid="
+                this.setCustomValidity('Las políticas son obligatorias.')"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button type="submit" class="btn btn-save">Guardar cambios</button>
+          <button type="button" class="btn btn-cancel" onclick="cancelar()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div id="footer-dinamico"></div>
+
+    <script src="../js/configuracion.js"></script>
+    <script src="../js/headers.js"></script>
+    <script src="../js/footer.js"></script>
+    <script>
+      // --- FUNCIÓN PARA ELIMINAR NÚMEROS AUTOMÁTICAMENTE ---
+      function sinNumeros(e) {
+        // Reemplaza cualquier número (0-9) por vacío
+        e.target.value = e.target.value.replace(/[0-9]/g, "");
+      }
+
+      // --- VALIDACIÓN DE EXTENSIÓN DE ARCHIVO ---
+      function validarArchivo(input) {
+        const archivo = input.files[0];
+        if (archivo) {
+          const nombreArchivo = archivo.name;
+          const extensionesPermitidas = /(\.jpg|\.jpeg|\.png)$/i;
+
+          if (!extensionesPermitidas.exec(nombreArchivo)) {
+            alert("Error: Solo se permiten archivos de imagen .jpg o .png");
+            input.value = ""; // Limpiar el input
+            return false;
+          }
+          // Si es válido, mostrar vista previa
+          mostrarVistaPrevia(input);
+        }
+      }
+
+      function mostrarVistaPrevia(input) {
+        const file = input.files[0];
+        const imagePreview = document.getElementById("image-preview-box");
+        const defaultContent = document.getElementById("default-icon-text");
+
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            if (defaultContent) defaultContent.style.display = "none";
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function cancelar() {
+        if (
+          confirm(
+            "¿Estás seguro de que deseas cancelar? Los cambios no guardados se perderán.",
+          )
+        ) {
+          window.history.back();
+        }
+      }
+    </script>
+  </body>
+</html>
