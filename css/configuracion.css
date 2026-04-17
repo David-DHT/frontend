@@ -1,0 +1,320 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f1e8;
+}
+
+.config-container {
+    margin: 50px auto;
+    background: linear-gradient(to bottom, #f5f1e8 0%, #e8dcc8 100%);
+    width: 100%;        
+    max-width: 1200px;  
+    margin-top: -10px;
+}
+
+/* ========== HEADER ========== */
+.config-header {
+    text-align: center;
+    padding: 40px 20px 30px;
+    background-color: transparent;
+}
+
+.config-header h1 {
+    font-size: 2.5em;
+    color: #4a3c2e;
+    font-weight: bold;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.config-header p {
+    font-size: 1.1em;
+    color: #6d5436;
+}
+
+/* ========== SECCIONES ========== */
+.config-section {
+    background-color: white;
+    margin: 20px;
+    padding: 35px;
+    border: 2px solid #d6c0af;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.section-title {
+    font-size: 1.4em;
+    color: #4a3c2e;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ========== IDENTIDAD DEL SITIO ========== */
+.identity-grid {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.logo-box {
+    width: 100%;
+    height: 200px;
+    background-color: #f5ebe0;
+    border: 2px solid #d6c0af;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+#default-icon-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+#image-preview-box {
+    display: none;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 5px;
+}
+
+.logo-circle {
+    width: 80px;
+    height: 80px;
+    border: 3px solid #8b6f47;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-icon {
+    font-size: 50px;
+}
+
+.logo-text {
+    font-size: 1.8em;
+    font-weight: bold;
+    font-style: italic;
+    color: #4a3c2e;
+    margin-top: 5px;
+}
+
+.upload-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #e8dcc8;
+    border: 2px solid #d6c0af;
+    border-radius: 8px;
+    color: #4a3c2e;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.upload-button:hover {
+    background-color: #d9c9b3;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+/* ========== FORMULARIO ========== */
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-label {
+    font-size: 1.05em;
+    font-weight: 600;
+    color: #6d5436;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-input {
+    padding: 14px 18px;
+    border: 2px solid #d6c0af;
+    border-radius: 8px;
+    font-size: 1.05em;
+    color: #4a3c2e;
+    background-color: white;
+    transition: border-color 0.3s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #8b6f47;
+}
+
+/* ========== POLÍTICAS Y TARJETAS ========== */
+/* Grid normal para misión/visión (2 columnas) */
+.policies-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.policy-card {
+    border: 2px solid #d6c0af;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #fdfcfa;
+}
+
+/* Clase especial para cuando queremos que ocupe todo el ancho (Privacidad) */
+.full-width-card {
+    width: 100%;
+}
+
+.policy-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #6d5436;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.policy-textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 15px;
+    border: 2px solid #e8dcc8;
+    border-radius: 8px;
+    font-size: 0.95em;
+    color: #4a3c2e;
+    font-family: inherit;
+    resize: vertical;
+    background-color: white;
+}
+
+/* Modificación solicitada: Hacer el área más grande */
+.policy-textarea.large-area {
+    min-height: 350px; /* Mucho más alto */
+    font-size: 1em;    /* Letra un poco más grande para leer mejor */
+}
+
+.policy-textarea:focus {
+    outline: none;
+    border-color: #d6c0af;
+}
+
+/* ========== BOTONES FINALES ========== */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    padding: 30px 20px;
+}
+
+.btn {
+    padding: 15px 60px;
+    border: 2px solid #d6c0af;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-save {
+    background-color: #c4a57b;
+    color: white;
+    border-color: #c4a57b;
+}
+
+.btn-save:hover {
+    background-color: #b08d5f;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(196, 165, 123, 0.3);
+}
+
+.btn-cancel {
+    background-color: #f5f1e8;
+    color: #4a3c2e;
+    border-color: #d6c0af;
+}
+
+.btn-cancel:hover {
+    background-color: #e8dcc8;
+    transform: translateY(-2px);
+}
+
+/* --- Botón Azul de Regresar --- */
+.back-container {
+    width: 100%; 
+    margin: 20px 20px;
+    display: flex;
+    justify-content: flex-start; 
+}
+
+.btn-azul-regresar {
+    display: inline-block;        
+    background-color: #0d6efd;    
+    color: white;                 
+    padding: 10px 20px;           
+    text-decoration: none;        
+    border-radius: 5px;           
+    font-weight: bold;            
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .identity-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .logo-container {
+        max-width: 250px;
+        margin: 0 auto;
+    }
+
+    .policies-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
