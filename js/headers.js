@@ -54,7 +54,8 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <a href="../pages/reportes.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">📊 Reportes</a>
                                 <a href="../pages/gestionVentas.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">💵 Ventas</a>
                                 <a href="../pages/gestionInventario.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">📦 Inventario</a>
-                                <a href="../pages/agregarAdmin.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">👔➕ Agregar Admin</a>  
+                                <a href="../pages/agregarAdmin.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">👔➕ Agregar Admin</a> 
+                                <a href="../pages/configuracion.html" style="padding: 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">Configuracion</a>   
                                 </div>
                             <button id="btnCerrarSesion" style="margin: 20px; padding: 10px; background: #d32f2f; color: white; border: none; border-radius: 5px; cursor: pointer;">🚪 Cerrar Sesión</button>
                         </div>
