@@ -31,11 +31,20 @@ function obtenerHeaders() {
     };
 }
 
-async function fetchJSON(url) {
-    const response = await fetch(url, {
-        method: "GET",
-        headers: obtenerHeaders()
-    });
+async function requestJSON(url, options = {}) {
+    const configuracion = {
+        method: options.method || "GET",
+        headers: {
+            ...obtenerHeaders(),
+            ...(options.headers || {})
+        }
+    };
+
+    if (typeof options.body !== "undefined") {
+        configuracion.body = JSON.stringify(options.body);
+    }
+
+    const response = await fetch(url, configuracion);
 
     if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("token");
@@ -45,11 +54,17 @@ async function fetchJSON(url) {
         throw new Error("Sesión expirada");
     }
 
+    const data = await response.json().catch(() => ({}));
+
     if (!response.ok) {
-        throw new Error(`Error al consultar ${url}`);
+        throw new Error(data?.message || `Error al consultar ${url}`);
     }
 
-    return response.json();
+    return data;
+}
+
+async function fetchJSON(url) {
+    return requestJSON(url, { method: "GET" });
 }
 
 function extraerArreglo(data) {
@@ -99,7 +114,8 @@ async function cargarDashboardReportes() {
         await Promise.all([
             cargarContadoresGenerales(),
             cargarTopProductosMasVendidos(),
-            cargarProductosStockBajo()
+            cargarProductosStockBajo(),
+            cargarOpiniones()
         ]);
     } catch (error) {
         console.error("Error al cargar dashboard de reportes:", error);
@@ -129,6 +145,7 @@ async function cargarContadoresGenerales() {
         document.getElementById("totalUsuarios").textContent = "--";
     }
 }
+
 async function cargarTopProductosMasVendidos() {
     const tbody = document.getElementById("tablaTopProductos");
     const resumen = document.getElementById("resumenTopProductos");
@@ -142,11 +159,9 @@ async function cargarTopProductosMasVendidos() {
             </tr>
         `;
 
-        // 🚀 1. AQUÍ ESTÁ LA MAGIA: Una sola petición al nuevo endpoint de la base de datos
         const responseData = await fetchJSON(`${API_BASE}/ventas/top-productos`);
-        const rankingBD = extraerArreglo(responseData); 
+        const rankingBD = extraerArreglo(responseData);
 
-        // Si no hay datos, mostramos estado vacío
         if (!rankingBD || !rankingBD.length) {
             tbody.innerHTML = `
                 <tr>
@@ -161,13 +176,11 @@ async function cargarTopProductosMasVendidos() {
             return;
         }
 
-        // 2. Nos aseguramos de que la cantidad sea número (a veces MySQL los manda como texto)
         const ranking = rankingBD.map(item => ({
             nombre: item.nombre || "Producto sin nombre",
             cantidad: Number(item.cantidad || 0)
         }));
 
-        // 3. Calculamos porcentajes para tu gráfica
         const totalTopVentas = ranking.reduce((sum, item) => sum + item.cantidad, 0);
         const rankingConPorcentaje = ranking.map((item) => ({
             ...item,
@@ -176,11 +189,9 @@ async function cargarTopProductosMasVendidos() {
 
         const productoTop = rankingConPorcentaje[0];
 
-        // 4. Renderizamos los textos de arriba
         tituloTop.textContent = productoTop.nombre;
         textoTop.textContent = `${productoTop.cantidad} unidades vendidas (${formatearPorcentaje(productoTop.porcentaje)})`;
 
-        // 5. Renderizamos la tabla
         tbody.innerHTML = rankingConPorcentaje.map((item, index) => `
             <tr>
                 <td><span class="top-pill">#${index + 1}</span></td>
@@ -190,7 +201,6 @@ async function cargarTopProductosMasVendidos() {
             </tr>
         `).join("");
 
-        // 6. Renderizamos el resumen
         resumen.innerHTML = `
             El producto con mayor salida es <strong>${escapeHTML(productoTop.nombre)}</strong>,
             con <strong>${productoTop.cantidad} unidades vendidas</strong>, lo que representa
@@ -198,10 +208,8 @@ async function cargarTopProductosMasVendidos() {
             en el top 10 de productos más vendidos.
         `;
 
-        // 7. Dibujamos la gráfica (tu función original hace el trabajo perfecto)
         renderizarGraficaTopProductos(rankingConPorcentaje);
         mostrarEstadoGrafica("Gráfica actualizada con base en ventas activas registradas.");
-
     } catch (error) {
         console.error("Error al cargar top de productos más vendidos:", error);
 
@@ -345,3 +353,82 @@ async function cargarProductosStockBajo() {
         `;
     }
 }
+
+async function cargarOpiniones() {
+    const contenedor = document.getElementById("listaOpiniones");
+    const contador = document.getElementById("contadorOpiniones");
+
+    if (!contenedor || !contador) return;
+
+    try {
+        const data = await fetchJSON(`${API_BASE}/reportes/opiniones`);
+        const opiniones = extraerArreglo(data);
+
+        contador.textContent = `${opiniones.length} registradas`;
+
+        if (!opiniones.length) {
+            contenedor.innerHTML = `
+                <div class="empty-state">
+                    No hay opiniones registradas por el momento.
+                </div>
+            `;
+            return;
+        }
+
+        contenedor.innerHTML = opiniones.map((opinion) => `
+            <article class="opinion-item">
+                <div class="opinion-top">
+                    <div class="opinion-user">
+                        <div class="opinion-avatar">
+                            <i class="bi bi-chat-left-text-fill"></i>
+                        </div>
+                        <div>
+                            <h3>${escapeHTML(opinion.nombreUsuario || "Usuario")}</h3>
+                            <span>Opinión #${opinion.idOpinion}</span>
+                        </div>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-delete-opinion"
+                        onclick="eliminarOpinion(${opinion.idOpinion})"
+                        title="Eliminar opinión"
+                    >
+                        <i class="bi bi-trash3"></i>
+                    </button>
+                </div>
+
+                <p class="opinion-text">
+                    ${escapeHTML(opinion.sugerencia || "Sin contenido")}
+                </p>
+            </article>
+        `).join("");
+    } catch (error) {
+        console.error("Error al cargar opiniones:", error);
+        contador.textContent = "Error";
+        contenedor.innerHTML = `
+            <div class="empty-state text-danger">
+                No se pudieron cargar las opiniones.
+            </div>
+        `;
+    }
+}
+
+async function eliminarOpinion(idOpinion) {
+    const confirmado = confirm("¿Deseas eliminar esta opinión?");
+
+    if (!confirmado) return;
+
+    try {
+        await requestJSON(`${API_BASE}/reportes/opiniones/${idOpinion}`, {
+            method: "DELETE"
+        });
+
+        await cargarOpiniones();
+    } catch (error) {
+        console.error("Error al eliminar opinión:", error);
+        alert(error.message || "No se pudo eliminar la opinión.");
+    }
+}
+
+window.eliminarOpinion = eliminarOpinion;
