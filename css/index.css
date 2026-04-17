@@ -435,18 +435,23 @@ header {
     font-size: 2rem !important;
     margin-bottom: 8px;
   }
-
-  /* Grid de productos como en tu referencia */
-  .products-grid,
-  .menu-grid,
-  .contenedorProductos,
-  .menu-sections {
+/* Grid de productos ajustado para móvil */
+  .items-container {
     display: grid !important;
-    grid-template-columns: repeat(3, 1fr);
+    /* Cambiamos a 2 columnas para que el texto y la imagen tengan espacio */
+    grid-template-columns: repeat(2, 1fr); 
     gap: 12px;
     width: 100%;
   }
 
+  /* Nos aseguramos de que el contenedor principal y las secciones bajen en bloque (uno sobre otro) */
+  .menu-sections, 
+  .menu-section,
+  #contenedorProductos {
+    display: block !important;
+    width: 100%;
+  }
+  
   .product-card,
   .menu-card,
   .card-producto {

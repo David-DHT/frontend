@@ -441,14 +441,14 @@ async function eliminarOpinion(idOpinion) {
 // ==========================================
 
 function generarReportePDF() {
-    // 1. Inicializar jsPDF (Lo que te recomendó tu compañero)
+
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
     // 2. Título y Fecha
     const fechaActual = new Date().toLocaleDateString("es-MX");
     doc.setFontSize(20);
-    doc.setTextColor(92, 58, 33); // Color café oscuro (opcional)
+    doc.setTextColor(92, 58, 33); 
     doc.text("Reporte Inteligente - UNICAFE", 14, 22);
     
     doc.setFontSize(11);
