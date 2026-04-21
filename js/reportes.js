@@ -2,281 +2,244 @@ const API_BASE = "https://backend-liard-alpha-37.vercel.app/api";
 const LIMITE_STOCK_BAJO = 10;
 
 let graficaTopProductos = null;
+let cacheEstimaciones = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
     const token = obtenerToken();
 
     if (!token) {
-        alert("Tu sesión no está activa. Inicia sesión nuevamente.");
-        window.location.href = "login.html";
+        alert("Tu sesión no es válida. Inicia sesión nuevamente.");
+        window.location.href = "../index.html";
         return;
     }
 
+    configurarEventos(token);
+
+    try {
+        await Promise.all([
+            cargarDashboard(token),
+            cargarOpiniones(token),
+            cargarEstimaciones(token)
+        ]);
+    } catch (error) {
+        console.error("Error al inicializar reportes:", error);
+    }
+});
+
+function configurarEventos(token) {
     const btnRecargar = document.getElementById("btnRecargarReportes");
+    const formOpinion = document.getElementById("formOpinion");
+    const btnExportarPdf = document.getElementById("btnExportarPdf");
+
     if (btnRecargar) {
-        btnRecargar.addEventListener("click", cargarDashboardReportes);
+        btnRecargar.addEventListener("click", async () => {
+            await Promise.all([
+                cargarDashboard(token),
+                cargarEstimaciones(token)
+            ]);
+        });
     }
 
-    // REPORTEEEEEEEE
-    const btnGenerarPDF = document.getElementById("btnGenerarPDF");
-    if (btnGenerarPDF) {
-        btnGenerarPDF.addEventListener("click", generarReportePDF);
+    if (formOpinion) {
+        formOpinion.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            await registrarOpinion(token);
+        });
     }
-    await cargarDashboardReportes();
-});
+
+    if (btnExportarPdf) {
+        btnExportarPdf.addEventListener("click", exportarPDF);
+    }
+}
 
 function obtenerToken() {
     return localStorage.getItem("token") || sessionStorage.getItem("token");
 }
 
-function obtenerHeaders() {
-    return {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${obtenerToken()}`
-    };
+function obtenerUsuarioSesion() {
+    const usuarioStorage = localStorage.getItem("usuario") || sessionStorage.getItem("usuario");
+
+    if (!usuarioStorage) return null;
+
+    try {
+        return JSON.parse(usuarioStorage);
+    } catch {
+        return null;
+    }
 }
 
-async function requestJSON(url, options = {}) {
-    const configuracion = {
-        method: options.method || "GET",
-        headers: {
-            ...obtenerHeaders(),
-            ...(options.headers || {})
-        }
-    };
-
-    if (typeof options.body !== "undefined") {
-        configuracion.body = JSON.stringify(options.body);
-    }
-
-    const response = await fetch(url, configuracion);
-
-    if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("token");
-        sessionStorage.removeItem("token");
-        alert("Tu sesión expiró. Inicia sesión nuevamente.");
-        window.location.href = "login.html";
-        throw new Error("Sesión expirada");
-    }
-
-    const data = await response.json().catch(() => ({}));
+async function requestJson(url, options = {}) {
+    const response = await fetch(url, options);
+    const data = await response.json().catch(() => null);
 
     if (!response.ok) {
-        throw new Error(data?.message || `Error al consultar ${url}`);
+        throw new Error(data?.message || "No se pudo completar la solicitud");
     }
 
     return data;
 }
 
-async function fetchJSON(url) {
-    return requestJSON(url, { method: "GET" });
-}
-
-function extraerArreglo(data) {
-    if (Array.isArray(data)) return data;
-    if (Array.isArray(data?.data)) return data.data;
-    if (Array.isArray(data?.categorias)) return data.categorias;
-    if (Array.isArray(data?.usuarios)) return data.usuarios;
-    if (Array.isArray(data?.productos)) return data.productos;
-    return [];
-}
-
-function formatearPorcentaje(valor) {
-    return `${Number(valor || 0).toFixed(1)}%`;
-}
-
-function escapeHTML(texto) {
-    return String(texto || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
-
-function obtenerNombreCategoria(item) {
-    return item.nombre_categoria || item.categoria_nombre || item.categoria || "Sin categoría";
-}
-
-function obtenerNombreProductoInventario(item) {
-    return item.nombre_producto || item.producto || item.nombre || "Producto";
-}
-
-function obtenerStock(item) {
-    return Number(item.stock_actual ?? item.stock ?? item.cantidad ?? 0);
-}
-
-function obtenerColorDinamico(index, total) {
-    const baseHue = 28;
-    const step = total > 1 ? 28 / (total - 1) : 0;
-    const lightness = 30 + (index * 3);
-    return `hsl(${baseHue + (index * step)}, 58%, ${Math.min(lightness, 72)}%)`;
-}
-
-async function cargarDashboardReportes() {
-    try {
-        mostrarEstadoGrafica("Cargando información de ventas...");
-        await Promise.all([
-            cargarContadoresGenerales(),
-            cargarTopProductosMasVendidos(),
-            cargarProductosStockBajo(),
-            cargarOpiniones()
-        ]);
-    } catch (error) {
-        console.error("Error al cargar dashboard de reportes:", error);
-        mostrarEstadoGrafica("No se pudo cargar la información del panel.");
-    }
-}
-
-async function cargarContadoresGenerales() {
-    try {
-        const [categoriasData, productosData, usuariosData] = await Promise.all([
-            fetchJSON(`${API_BASE}/categorias`),
-            fetchJSON(`${API_BASE}/productos`),
-            fetchJSON(`${API_BASE}/usuarios`)
-        ]);
-
-        const categorias = extraerArreglo(categoriasData);
-        const productos = extraerArreglo(productosData);
-        const usuarios = extraerArreglo(usuariosData);
-
-        document.getElementById("totalCategorias").textContent = categorias.length;
-        document.getElementById("totalProductos").textContent = productos.length;
-        document.getElementById("totalUsuarios").textContent = usuarios.length;
-    } catch (error) {
-        console.error("Error al cargar contadores generales:", error);
-        document.getElementById("totalCategorias").textContent = "--";
-        document.getElementById("totalProductos").textContent = "--";
-        document.getElementById("totalUsuarios").textContent = "--";
-    }
-}
-
-async function cargarTopProductosMasVendidos() {
-    const tbody = document.getElementById("tablaTopProductos");
-    const resumen = document.getElementById("resumenTopProductos");
-    const tituloTop = document.getElementById("productoMasVendido");
-    const textoTop = document.getElementById("textoProductoMasVendido");
+async function cargarDashboard(token) {
+    const estadoGrafica = document.getElementById("estadoGrafica");
+    const resumenTop = document.getElementById("resumenTopProductos");
 
     try {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="4" class="text-center p-4">Analizando ventas registradas...</td>
-            </tr>
-        `;
-
-        const responseData = await fetchJSON(`${API_BASE}/ventas/top-productos`);
-        const rankingBD = extraerArreglo(responseData);
-
-        if (!rankingBD || !rankingBD.length) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="4" class="text-center p-4">No se encontraron productos vendidos.</td>
-                </tr>
-            `;
-            resumen.textContent = "No fue posible calcular el top de productos.";
-            tituloTop.textContent = "---";
-            textoTop.textContent = "Sin datos disponibles";
-            destruirGrafica();
-            mostrarEstadoGrafica("No se encontraron productos vendidos.");
-            return;
+        if (estadoGrafica) {
+            estadoGrafica.textContent = "Actualizando estadísticas de ventas...";
         }
 
-        const ranking = rankingBD.map(item => ({
-            nombre: item.nombre || "Producto sin nombre",
-            cantidad: Number(item.cantidad || 0)
-        }));
+        const data = await requestJson(
+            `${API_BASE}/reportes/dashboard?limite_stock_bajo=${LIMITE_STOCK_BAJO}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
 
-        const totalTopVentas = ranking.reduce((sum, item) => sum + item.cantidad, 0);
-        const rankingConPorcentaje = ranking.map((item) => ({
-            ...item,
-            porcentaje: totalTopVentas > 0 ? (item.cantidad / totalTopVentas) * 100 : 0
-        }));
+        const dashboard = data?.data || {};
 
-        const productoTop = rankingConPorcentaje[0];
+        renderResumen(dashboard.resumen || {});
+        renderProductoDestacado(dashboard.producto_mas_vendido);
+        renderTablaTopProductos(dashboard.top_productos || []);
+        renderGraficaTopProductos(dashboard.top_productos || []);
+        renderStockBajo(dashboard.stock_bajo || []);
 
-        tituloTop.textContent = productoTop.nombre;
-        textoTop.textContent = `${productoTop.cantidad} unidades vendidas (${formatearPorcentaje(productoTop.porcentaje)})`;
+        if (resumenTop) {
+            const top = dashboard.producto_mas_vendido;
+            resumenTop.innerHTML = top
+                ? `<strong>${escapeHtml(top.nombre_producto)}</strong> lidera las ventas con <strong>${formatearNumero(top.unidades_vendidas)}</strong> unidades dentro del top actual.`
+                : "Aún no hay suficientes datos para destacar un producto.";
+        }
 
-        tbody.innerHTML = rankingConPorcentaje.map((item, index) => `
-            <tr>
-                <td><span class="top-pill">#${index + 1}</span></td>
-                <td>${escapeHTML(item.nombre)}</td>
-                <td>${item.cantidad}</td>
-                <td>${formatearPorcentaje(item.porcentaje)}</td>
-            </tr>
-        `).join("");
-
-        resumen.innerHTML = `
-            El producto con mayor salida es <strong>${escapeHTML(productoTop.nombre)}</strong>,
-            con <strong>${productoTop.cantidad} unidades vendidas</strong>, lo que representa
-            <strong>${formatearPorcentaje(productoTop.porcentaje)}</strong> del total concentrado
-            en el top 10 de productos más vendidos.
-        `;
-
-        renderizarGraficaTopProductos(rankingConPorcentaje);
-        mostrarEstadoGrafica("Gráfica actualizada con base en ventas activas registradas.");
+        if (estadoGrafica) {
+            estadoGrafica.textContent = "Información actualizada correctamente.";
+        }
     } catch (error) {
-        console.error("Error al cargar top de productos más vendidos:", error);
+        console.error("Error al cargar dashboard:", error);
 
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="4" class="text-center p-4 text-danger">No se pudo cargar el ranking de ventas.</td>
-            </tr>
-        `;
+        if (estadoGrafica) {
+            estadoGrafica.textContent = "No fue posible cargar la información del panel.";
+        }
 
-        resumen.textContent = "No fue posible generar el resumen del top de productos.";
-        tituloTop.textContent = "---";
-        textoTop.textContent = "Error al procesar información";
-        destruirGrafica();
-        mostrarEstadoGrafica("Ocurrió un error al generar la gráfica.");
+        mostrarToast(error.message || "Error al cargar reportes", "danger");
     }
 }
 
-function renderizarGraficaTopProductos(data) {
+function renderResumen(resumen) {
+    const totalCategorias = document.getElementById("statCategorias");
+    const totalProductos = document.getElementById("statProductos");
+    const totalUsuarios = document.getElementById("statUsuarios");
+
+    if (totalCategorias) totalCategorias.textContent = formatearNumero(resumen.total_categorias || 0);
+    if (totalProductos) totalProductos.textContent = formatearNumero(resumen.total_productos || 0);
+    if (totalUsuarios) totalUsuarios.textContent = formatearNumero(resumen.total_usuarios || 0);
+}
+
+function renderProductoDestacado(producto) {
+    const titulo = document.getElementById("productoDestacadoNombre");
+    const valor = document.getElementById("productoDestacadoValor");
+    const detalle = document.getElementById("productoDestacadoDetalle");
+
+    if (!titulo || !valor || !detalle) return;
+
+    if (!producto) {
+        titulo.textContent = "Sin datos";
+        valor.textContent = "0";
+        detalle.textContent = "Todavía no hay ventas activas registradas.";
+        return;
+    }
+
+    titulo.textContent = producto.nombre_producto;
+    valor.textContent = formatearNumero(producto.unidades_vendidas);
+    detalle.textContent = `Representa ${Number(producto.porcentaje || 0).toFixed(1)}% del top actual de ventas.`;
+}
+
+function renderTablaTopProductos(productos) {
+    const tbody = document.getElementById("tablaTopProductos");
+
+    if (!tbody) return;
+
+    if (!productos.length) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" class="text-center p-4">No hay ventas registradas para mostrar.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = productos.map((producto) => `
+        <tr>
+            <td>${producto.posicion}</td>
+            <td>${escapeHtml(producto.nombre_producto)}</td>
+            <td>${formatearNumero(producto.unidades_vendidas)}</td>
+            <td>${Number(producto.porcentaje || 0).toFixed(1)}%</td>
+        </tr>
+    `).join("");
+}
+
+function renderGraficaTopProductos(productos) {
     const canvas = document.getElementById("graficaTopProductos");
+
     if (!canvas) return;
 
-    destruirGrafica();
+    if (graficaTopProductos) {
+        graficaTopProductos.destroy();
+        graficaTopProductos = null;
+    }
 
-    const labels = data.map((item) => item.nombre);
-    const porcentajes = data.map((item) => Number(item.porcentaje.toFixed(2)));
-    const colores = data.map((_, index) => obtenerColorDinamico(index, data.length));
+    const labels = productos.map((item) => item.nombre_producto);
+    const values = productos.map((item) => Number(item.unidades_vendidas || 0));
 
     graficaTopProductos = new Chart(canvas, {
-        type: "doughnut",
+        type: "bar",
         data: {
             labels,
-            datasets: [{
-                label: "Participación de ventas (%)",
-                data: porcentajes,
-                backgroundColor: colores,
-                borderColor: "#ffffff",
-                borderWidth: 2,
-                hoverOffset: 8
-            }]
+            datasets: [
+                {
+                    label: "Unidades vendidas",
+                    data: values,
+                    backgroundColor: [
+                        "#6f4e37",
+                        "#8b5e3c",
+                        "#a56b46",
+                        "#c08a5c",
+                        "#d3a16c",
+                        "#7f5539",
+                        "#9c6644",
+                        "#b08968",
+                        "#ddb892",
+                        "#bc8a5f"
+                    ],
+                    borderRadius: 8,
+                    borderSkipped: false
+                }
+            ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: "58%",
+            animation: {
+                duration: 700
+            },
             plugins: {
                 legend: {
-                    position: "bottom",
-                    labels: {
-                        boxWidth: 14,
-                        padding: 16,
-                        font: {
-                            size: 12,
-                            weight: "600"
-                        }
-                    }
+                    display: false
                 },
                 tooltip: {
                     callbacks: {
-                        label: function (context) {
-                            const item = data[context.dataIndex];
-                            return `${item.nombre}: ${formatearPorcentaje(item.porcentaje)} (${item.cantidad} unidades)`;
-                        }
+                        label: (context) => ` ${formatearNumero(context.raw)} unidades`
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
                     }
                 }
             }
@@ -284,246 +247,593 @@ function renderizarGraficaTopProductos(data) {
     });
 }
 
-function destruirGrafica() {
-    if (graficaTopProductos) {
-        graficaTopProductos.destroy();
-        graficaTopProductos = null;
-    }
-}
-
-function mostrarEstadoGrafica(texto) {
-    const estado = document.getElementById("estadoGrafica");
-    if (estado) {
-        estado.textContent = texto;
-    }
-}
-
-async function cargarProductosStockBajo() {
+function renderStockBajo(stockBajo) {
     const tbody = document.getElementById("tablaStockBajo");
-    const contador = document.getElementById("contadorStockBajo");
+    const badge = document.getElementById("contadorStockBajo");
 
-    try {
-        const inventarioData = await fetchJSON(`${API_BASE}/inventario`);
-        const inventario = extraerArreglo(inventarioData);
+    if (!tbody || !badge) return;
 
-        const stockBajo = inventario
-            .map((item) => ({
-                nombre: obtenerNombreProductoInventario(item),
-                categoria: obtenerNombreCategoria(item),
-                stock: obtenerStock(item)
-            }))
-            .filter((item) => item.stock <= LIMITE_STOCK_BAJO)
-            .sort((a, b) => a.stock - b.stock);
+    badge.textContent = `${stockBajo.length} en riesgo`;
 
-        contador.textContent = `${stockBajo.length} en riesgo`;
-
-        if (!stockBajo.length) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="4" class="text-center p-4">
-                        No hay productos con stock bajo por el momento.
-                    </td>
-                </tr>
-            `;
-            return;
-        }
-
-        tbody.innerHTML = stockBajo.map((item) => {
-            const nivelClase = item.stock <= 3 ? "critico" : "bajo";
-            const nivelTexto = item.stock <= 3 ? "Crítico" : "Bajo";
-
-            return `
-                <tr>
-                    <td>${escapeHTML(item.nombre)}</td>
-                    <td>${escapeHTML(item.categoria)}</td>
-                    <td><span class="stock-value">${item.stock}</span></td>
-                    <td>
-                        <span class="stock-level ${nivelClase}">
-                            ${nivelTexto}
-                        </span>
-                    </td>
-                </tr>
-            `;
-        }).join("");
-    } catch (error) {
-        console.error("Error al cargar productos con stock bajo:", error);
-
-        contador.textContent = "Error";
+    if (!stockBajo.length) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="4" class="text-center p-4 text-danger">
-                    No se pudo cargar el inventario crítico.
-                </td>
+                <td colspan="4" class="text-center p-4">No hay productos con stock bajo.</td>
             </tr>
         `;
+        return;
     }
+
+    tbody.innerHTML = stockBajo.map((item) => `
+        <tr>
+            <td>${escapeHtml(item.nombre_producto)}</td>
+            <td>${escapeHtml(item.nombre_categoria)}</td>
+            <td>${formatearNumero(item.stock_actual)}</td>
+            <td>
+                <span class="stock-pill ${item.nivel === "Crítico" ? "stock-pill-danger" : "stock-pill-warning"}">
+                    ${escapeHtml(item.nivel)}
+                </span>
+            </td>
+        </tr>
+    `).join("");
 }
 
-async function cargarOpiniones() {
-    const contenedor = document.getElementById("listaOpiniones");
-    const contador = document.getElementById("contadorOpiniones");
-
-    if (!contenedor || !contador) return;
+async function cargarEstimaciones(token) {
+    const estado = document.getElementById("estadoEstimaciones");
 
     try {
-        const data = await fetchJSON(`${API_BASE}/reportes/opiniones`);
-        const opiniones = extraerArreglo(data);
-
-        contador.textContent = `${opiniones.length} registradas`;
-
-        if (!opiniones.length) {
-            contenedor.innerHTML = `
-                <div class="empty-state">
-                    No hay opiniones registradas por el momento.
-                </div>
-            `;
-            return;
+        if (estado) {
+            estado.textContent = "Calculando proyección histórica del producto líder...";
         }
 
-        contenedor.innerHTML = opiniones.map((opinion) => `
-            <article class="opinion-item">
-                <div class="opinion-top">
-                    <div class="opinion-user">
-                        <div class="opinion-avatar">
-                            <i class="bi bi-chat-left-text-fill"></i>
-                        </div>
-                        <div>
-                            <h3>${escapeHTML(opinion.nombreUsuario || "Usuario")}</h3>
-                            <span>Opinión #${opinion.idOpinion}</span>
-                        </div>
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn-delete-opinion"
-                        onclick="eliminarOpinion(${opinion.idOpinion})"
-                        title="Eliminar opinión"
-                    >
-                        <i class="bi bi-trash3"></i>
-                    </button>
-                </div>
-
-                <p class="opinion-text">
-                    ${escapeHTML(opinion.sugerencia || "Sin contenido")}
-                </p>
-            </article>
-        `).join("");
-    } catch (error) {
-        console.error("Error al cargar opiniones:", error);
-        contador.textContent = "Error";
-        contenedor.innerHTML = `
-            <div class="empty-state text-danger">
-                No se pudieron cargar las opiniones.
-            </div>
-        `;
-    }
-}
-
-async function eliminarOpinion(idOpinion) {
-    const confirmado = confirm("¿Deseas eliminar esta opinión?");
-
-    if (!confirmado) return;
-
-    try {
-        await requestJSON(`${API_BASE}/reportes/opiniones/${idOpinion}`, {
-            method: "DELETE"
+        const data = await requestJson(`${API_BASE}/reportes/estimaciones`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
         });
 
-        await cargarOpiniones();
+        cacheEstimaciones = data?.data || null;
+        renderEstimaciones(cacheEstimaciones);
+
+        if (estado) {
+            estado.textContent = "Estimaciones calculadas correctamente.";
+        }
+    } catch (error) {
+        console.error("Error al cargar estimaciones:", error);
+
+        if (estado) {
+            estado.textContent = "No fue posible calcular las estimaciones.";
+        }
+
+        renderEstimaciones(null);
+        mostrarToast(error.message || "Error al calcular estimaciones", "danger");
+    }
+}
+
+function renderEstimaciones(data) {
+    const productoBadge = document.getElementById("estimacionProducto");
+    const rango = document.getElementById("estimacionRango");
+    const dia = document.getElementById("estimacionDia");
+    const semana = document.getElementById("estimacionSemana");
+    const mes = document.getElementById("estimacionMes");
+    const detalle = document.getElementById("detalleEstimacion");
+    const pasos = document.getElementById("pasosEstimacion");
+
+    if (!productoBadge || !rango || !dia || !semana || !mes || !detalle || !pasos) return;
+
+    if (!data || !data.producto || !data.estimaciones || !data.procedimiento || !data.puntos_modelo) {
+        productoBadge.textContent = "Sin datos";
+        rango.textContent = "---";
+        dia.textContent = "--";
+        semana.textContent = "--";
+        mes.textContent = "--";
+        detalle.innerHTML = `<div class="empty-state">No hay información suficiente para calcular la proyección.</div>`;
+        pasos.innerHTML = "";
+        return;
+    }
+
+    productoBadge.textContent = data.producto.nombre_producto;
+    rango.textContent = `${formatearFecha(data.rango.fecha_minima_db)} a ${formatearFecha(data.rango.fecha_limite_actual)}`;
+    dia.textContent = formatearNumeroDecimal(data.estimaciones.un_dia);
+    semana.textContent = formatearNumeroDecimal(data.estimaciones.una_semana);
+    mes.textContent = formatearNumeroDecimal(data.estimaciones.un_mes);
+
+    detalle.innerHTML = `
+        <div class="estimate-detail-grid">
+            <div>
+                <span>Producto líder</span>
+                <strong>${escapeHtml(data.producto.nombre_producto)}</strong>
+            </div>
+            <div>
+                <span>Total vendido histórico</span>
+                <strong>${formatearNumero(data.producto.total_vendido)}</strong>
+            </div>
+            <div>
+                <span>Punto inicial</span>
+                <strong>${formatearNumeroDecimal(data.puntos_modelo.y0)} unidades</strong>
+                <small>${formatearFecha(data.puntos_modelo.fecha_inicial_modelo)}</small>
+            </div>
+            <div>
+                <span>Punto final</span>
+                <strong>${formatearNumeroDecimal(data.puntos_modelo.yt)} unidades</strong>
+                <small>${formatearFecha(data.puntos_modelo.fecha_final_modelo)}</small>
+            </div>
+            <div>
+                <span>Días entre puntos del modelo</span>
+                <strong>${formatearNumero(data.puntos_modelo.t)}</strong>
+            </div>
+            <div>
+                <span>Días del rango global</span>
+                <strong>${formatearNumero(data.rango.dias_periodo_global || 0)}</strong>
+            </div>
+        </div>
+        ${renderObservaciones(data.observaciones || [])}
+    `;
+
+    pasos.innerHTML = construirPasosEstimacion(data);
+}
+
+function construirPasosEstimacion(data) {
+    const y0 = Number(data.puntos_modelo.y0 || 0);
+    const yt = Number(data.puntos_modelo.yt || 0);
+    const t = Number(data.puntos_modelo.t || 0);
+    const C = Number(data.procedimiento.valor_C || 0);
+    const k = Number(data.procedimiento.valor_k || 0);
+
+    const division = y0 > 0 ? yt / y0 : 0;
+    const lnDivision = division > 0 ? Math.log(division) : 0;
+
+    const pasos = [
+        {
+            titulo: "1) Ecuación base",
+            descripcion: "Se parte del modelo de ley de crecimiento para las ventas del producto:",
+            formula: "dy/dt = ky"
+        },
+        {
+            titulo: "2) Separación de variables",
+            descripcion: "Se separan las variables para dejar y con dy de un lado y t con dt del otro:",
+            formula: "dy / y = k dt"
+        },
+        {
+            titulo: "3) Integrar",
+            descripcion: "Se integran ambos lados de la ecuación:",
+            formula: "ln(y) = kt + C"
+        },
+        {
+            titulo: "4) Despejar",
+            descripcion: "Se aplica exponencial para obtener la solución general:",
+            formula: "y = Ce^(kt)"
+        },
+        {
+            titulo: "5) Encontrar C",
+            descripcion: `Con el punto inicial del modelo: y(0) = ${formatearNumeroDecimal(y0)}`,
+            formula: `C = ${formatearNumeroDecimal(C)}`
+        },
+        {
+            titulo: "6) Encontrar k",
+            descripcion: `Con el segundo dato: y(${formatearNumero(t)}) = ${formatearNumeroDecimal(yt)}`,
+            formula: [
+                `${formatearNumeroDecimal(yt)} = ${formatearNumeroDecimal(C)}e^(${formatearNumeroDecimal(k)} · ${formatearNumero(t)})`,
+                `${formatearNumeroDecimal(yt / C)} = e^(${formatearNumeroDecimal(k)} · ${formatearNumero(t)})`,
+                `ln(${formatearNumeroDecimal(division)}) = ${formatearNumero(t)}k`,
+                `${formatearNumeroDecimal(lnDivision)} = ${formatearNumero(t)}k`,
+                `k = ${formatearNumeroDecimal(k)}`
+            ]
+        },
+        {
+            titulo: "7) Modelo final",
+            descripcion: "Se sustituye C y k en la solución general:",
+            formula: data.procedimiento.modelo_final
+        },
+        {
+            titulo: "8) Sustitución para la respuesta",
+            descripcion: "Se evalúa el modelo para 1 día, 7 días y 30 días:",
+            formula: [
+                `y(1) = ${formatearNumeroDecimal(data.estimaciones.un_dia)}`,
+                `y(7) = ${formatearNumeroDecimal(data.estimaciones.una_semana)}`,
+                `y(30) = ${formatearNumeroDecimal(data.estimaciones.un_mes)}`
+            ]
+        }
+    ];
+
+    return pasos.map((paso) => `
+        <article class="step-card">
+            <h4>${paso.titulo}</h4>
+            <p>${paso.descripcion}</p>
+            ${
+                Array.isArray(paso.formula)
+                    ? paso.formula.map((linea) => `<code>${escapeHtml(linea)}</code>`).join("")
+                    : `<code>${escapeHtml(paso.formula)}</code>`
+            }
+        </article>
+    `).join("");
+}
+
+function renderObservaciones(observaciones) {
+    if (!observaciones.length) return "";
+
+    return `
+        <div class="estimate-observations">
+            <h4>Observaciones</h4>
+            <ul>
+                ${observaciones.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+            </ul>
+        </div>
+    `;
+}
+
+async function cargarOpiniones(token) {
+    const lista = document.getElementById("listaOpiniones");
+
+    try {
+        if (lista) {
+            lista.innerHTML = `
+                <div class="empty-state">
+                    <div class="spinner-border text-secondary" role="status"></div>
+                    <p class="mt-3 mb-0">Cargando opiniones...</p>
+                </div>
+            `;
+        }
+
+        const data = await requestJson(`${API_BASE}/reportes/opiniones`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        renderOpiniones(data?.data || []);
+    } catch (error) {
+        console.error("Error al cargar opiniones:", error);
+        if (lista) {
+            lista.innerHTML = `<div class="empty-state">No fue posible cargar las opiniones.</div>`;
+        }
+    }
+}
+
+function renderOpiniones(opiniones) {
+    const lista = document.getElementById("listaOpiniones");
+
+    if (!lista) return;
+
+    if (!opiniones.length) {
+        lista.innerHTML = `<div class="empty-state">Todavía no hay opiniones registradas.</div>`;
+        return;
+    }
+
+    lista.innerHTML = opiniones.map((opinion) => `
+        <article class="opinion-item">
+            <div class="opinion-content">
+                <h4>${escapeHtml(opinion.nombreUsuario)}</h4>
+                <p>${escapeHtml(opinion.sugerencia)}</p>
+            </div>
+            <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                onclick="eliminarOpinion(${Number(opinion.idOpinion)})"
+            >
+                <i class="bi bi-trash"></i>
+            </button>
+        </article>
+    `).join("");
+}
+
+async function registrarOpinion(token) {
+    const inputNombre = document.getElementById("opinionNombre");
+    const inputSugerencia = document.getElementById("opinionSugerencia");
+
+    const usuario = obtenerUsuarioSesion();
+    const nombrePorDefecto = usuario?.nombre || usuario?.usuario || "";
+
+    const nombreUsuario = String(inputNombre?.value || nombrePorDefecto).trim();
+    const sugerencia = String(inputSugerencia?.value || "").trim();
+
+    if (!nombreUsuario || !sugerencia) {
+        mostrarToast("Completa los datos de la opinión", "warning");
+        return;
+    }
+
+    try {
+        await requestJson(`${API_BASE}/reportes/opiniones`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                nombreUsuario,
+                sugerencia
+            })
+        });
+
+        if (inputNombre) inputNombre.value = nombrePorDefecto || "";
+        if (inputSugerencia) inputSugerencia.value = "";
+
+        mostrarToast("Opinión registrada correctamente", "success");
+        await cargarOpiniones(token);
+    } catch (error) {
+        console.error("Error al registrar opinión:", error);
+        mostrarToast(error.message || "No fue posible registrar la opinión", "danger");
+    }
+}
+
+window.eliminarOpinion = async function eliminarOpinion(idOpinion) {
+    const token = obtenerToken();
+
+    if (!token) {
+        mostrarToast("Tu sesión ya no es válida", "warning");
+        return;
+    }
+
+    const confirmar = confirm("¿Deseas eliminar esta opinión?");
+    if (!confirmar) return;
+
+    try {
+        await requestJson(`${API_BASE}/reportes/opiniones/${idOpinion}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        mostrarToast("Opinión eliminada correctamente", "success");
+        await cargarOpiniones(token);
     } catch (error) {
         console.error("Error al eliminar opinión:", error);
-        alert(error.message || "No se pudo eliminar la opinión.");
+        mostrarToast(error.message || "No fue posible eliminar la opinión", "danger");
     }
-}
+};
 
-// ==========================================
-// MÓDULO DE GENERACIÓN DE PDF
-// ==========================================
-
-function generarReportePDF() {
-
+function exportarPDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    const doc = new jsPDF("p", "mm", "a4");
 
-    // 2. Título y Fecha
-    const fechaActual = new Date().toLocaleDateString("es-MX");
+    const colorPrincipal = [74, 60, 46];
+    const colorSecundario = [176, 141, 85];
+    const colorSuave = [122, 91, 69];
+
+    const resumen = {
+        categorias: document.getElementById("statCategorias")?.textContent || "0",
+        productos: document.getElementById("statProductos")?.textContent || "0",
+        usuarios: document.getElementById("statUsuarios")?.textContent || "0",
+        topProducto: document.getElementById("productoDestacadoNombre")?.textContent || "Sin datos",
+        topCantidad: document.getElementById("productoDestacadoValor")?.textContent || "0"
+    };
+
+    doc.setFillColor(...colorPrincipal);
+    doc.rect(0, 0, 210, 30, "F");
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(20);
-    doc.setTextColor(92, 58, 33); 
-    doc.text("Reporte Inteligente - UNICAFE", 14, 22);
-    
+    doc.text("UNICAFE - Reporte Inteligente", 14, 18);
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Fecha de exportación: ${new Date().toLocaleString("es-MX")}`, 14, 25);
+
+    let y = 40;
+
+    doc.setTextColor(...colorPrincipal);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("Resumen general", 14, y);
+
+    y += 8;
+
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(11);
-    doc.setTextColor(100, 100, 100); // Gris
-    doc.text(`Fecha de generación: ${fechaActual}`, 14, 30);
+    doc.text(`Categorías registradas: ${resumen.categorias}`, 14, y);
+    y += 6;
+    doc.text(`Productos registrados: ${resumen.productos}`, 14, y);
+    y += 6;
+    doc.text(`Usuarios registrados: ${resumen.usuarios}`, 14, y);
+    y += 6;
+    doc.text(`Producto más vendido: ${resumen.topProducto}`, 14, y);
+    y += 6;
+    doc.text(`Unidades vendidas: ${resumen.topCantidad}`, 14, y);
 
-    // 3. Extraer contadores generales del DOM
-    const totalCat = document.getElementById("totalCategorias").innerText;
-    const totalProd = document.getElementById("totalProductos").innerText;
-    const totalUsu = document.getElementById("totalUsuarios").innerText;
-    const prodEstrella = document.getElementById("productoMasVendido").innerText;
+    y += 12;
 
-    // 4. Imprimir resumen
-    doc.setFontSize(14);
-    doc.setTextColor(0, 0, 0); // Negro
-    doc.text("Resumen General:", 14, 45);
-    
-    doc.setFontSize(12);
-    doc.text(`• Categorías activas: ${totalCat}`, 14, 53);
-    doc.text(`• Productos en catálogo: ${totalProd}`, 14, 60);
-    doc.text(`• Usuarios registrados: ${totalUsu}`, 14, 67);
-    doc.text(`• Producto estrella: ${prodEstrella}`, 14, 74);
+    const filasTop = obtenerFilasTabla("tablaTopProductos", 4);
+    if (filasTop.length) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("Ranking detallado", 14, y);
+        y += 4;
 
-    // 5. Tabla: Top 10 Productos
-    doc.setFontSize(14);
-    doc.text("Ranking Detallado de Ventas (Top 10)", 14, 90);
+        doc.autoTable({
+            startY: y,
+            head: [["#", "Producto", "Unidades vendidas", "Participación"]],
+            body: filasTop,
+            theme: "grid",
+            headStyles: {
+                fillColor: colorSecundario,
+                textColor: 255
+            },
+            styles: {
+                fontSize: 9
+            }
+        });
 
-    doc.autoTable({
-        startY: 95,
-        head: [['#', 'Producto', 'Unidades Vendidas', 'Porcentaje']],
-        body: extraerDatosTabla("tablaTopProductos"),
-        theme: 'striped',
-        headStyles: { fillColor: [123, 85, 49] }, // Color café UNICAFE
-    });
-
-    // 6. Tabla: Stock Bajo
-    // Calculamos dónde terminó la tabla anterior para que no se encimen
-    let posicionYFinal = doc.lastAutoTable.finalY + 15; 
-
-    doc.setFontSize(14);
-    doc.text("Monitoreo de Inventario (Stock Bajo)", 14, posicionYFinal);
-
-    doc.autoTable({
-        startY: posicionYFinal + 5,
-        head: [['Producto', 'Categoría', 'Stock Actual', 'Nivel']],
-        body: extraerDatosTabla("tablaStockBajo"),
-        theme: 'striped',
-        headStyles: { fillColor: [180, 50, 50] }, // Color rojo/alerta
-    });
-
-    // 7. Descargar el archivo
-    doc.save(`Reporte_UNICAFE_${fechaActual.replace(/\//g, "-")}.pdf`);
-}
-
-// Función auxiliar: Lee una tabla de tu HTML y la convierte en arreglo para jsPDF
-function extraerDatosTabla(idTbody) {
-    const tbody = document.getElementById(idTbody);
-    const filas = tbody.querySelectorAll("tr");
-    const datos = [];
-
-    filas.forEach(fila => {
-        const celdas = fila.querySelectorAll("td, th");
-        // Filtramos la fila de "Cargando..." o "No hay datos" (tienen colspan)
-        if (celdas.length > 1 && !celdas[0].hasAttribute("colspan")) {
-            const filaDatos = Array.from(celdas).map(celda => celda.innerText.trim());
-            datos.push(filaDatos);
-        }
-    });
-
-    // Si la tabla está vacía, devolvemos un mensaje
-    if (datos.length === 0) {
-        return [["Sin datos", "-", "-", "-"]];
+        y = doc.lastAutoTable.finalY + 10;
     }
 
-    return datos;
+    const filasStock = obtenerFilasTabla("tablaStockBajo", 4);
+    if (filasStock.length) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("Productos con stock bajo", 14, y);
+        y += 4;
+
+        doc.autoTable({
+            startY: y,
+            head: [["Producto", "Categoría", "Stock actual", "Nivel"]],
+            body: filasStock,
+            theme: "grid",
+            headStyles: {
+                fillColor: colorSuave,
+                textColor: 255
+            },
+            styles: {
+                fontSize: 9
+            }
+        });
+
+        y = doc.lastAutoTable.finalY + 10;
+    }
+
+    if (cacheEstimaciones?.producto && cacheEstimaciones?.estimaciones) {
+        if (y > 220) {
+            doc.addPage();
+            y = 20;
+        }
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.setTextColor(...colorPrincipal);
+        doc.text("Estimaciones con ecuación diferencial", 14, y);
+        y += 8;
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(`Producto líder: ${cacheEstimaciones.producto.nombre_producto}`, 14, y);
+        y += 6;
+        doc.text(
+            `Rango analizado: ${formatearFecha(cacheEstimaciones.rango.fecha_minima_db)} a ${formatearFecha(cacheEstimaciones.rango.fecha_limite_actual)}`,
+            14,
+            y
+        );
+        y += 6;
+        doc.text(`Modelo: ${cacheEstimaciones.procedimiento.modelo_final}`, 14, y);
+        y += 8;
+
+        doc.autoTable({
+            startY: y,
+            head: [["Proyección", "Valor estimado"]],
+            body: [
+                ["1 día", String(cacheEstimaciones.estimaciones.un_dia)],
+                ["1 semana", String(cacheEstimaciones.estimaciones.una_semana)],
+                ["1 mes", String(cacheEstimaciones.estimaciones.un_mes)]
+            ],
+            theme: "grid",
+            headStyles: {
+                fillColor: [138, 107, 52],
+                textColor: 255
+            },
+            styles: {
+                fontSize: 10
+            }
+        });
+
+        y = doc.lastAutoTable.finalY + 8;
+
+        const pasosTexto = [
+            "1) Ecuación base: dy/dt = ky",
+            "2) Separación: dy/y = k dt",
+            "3) Integración: ln(y) = kt + C",
+            "4) Solución general: y = Ce^(kt)",
+            `5) C = ${cacheEstimaciones.procedimiento.valor_C}`,
+            `6) k = ${cacheEstimaciones.procedimiento.valor_k}`,
+            `7) Modelo final: ${cacheEstimaciones.procedimiento.modelo_final}`
+        ];
+
+        doc.setFont("helvetica", "bold");
+        doc.text("Procedimiento aplicado", 14, y);
+        y += 6;
+
+        doc.setFont("helvetica", "normal");
+        pasosTexto.forEach((linea) => {
+            const lineas = doc.splitTextToSize(linea, 180);
+            doc.text(lineas, 14, y);
+            y += lineas.length * 5;
+        });
+    }
+
+    doc.save("reporte-unicafe.pdf");
 }
 
-window.eliminarOpinion = eliminarOpinion;
+function obtenerFilasTabla(idTbody, cantidadColumnas) {
+    const tbody = document.getElementById(idTbody);
+    if (!tbody) return [];
+
+    const filas = Array.from(tbody.querySelectorAll("tr"));
+    return filas
+        .map((fila) => {
+            const columnas = Array.from(fila.querySelectorAll("td")).map((td) =>
+                td.textContent.trim()
+            );
+            return columnas.length === cantidadColumnas ? columnas : null;
+        })
+        .filter(Boolean);
+}
+
+function mostrarToast(mensaje, tipo = "success") {
+    let contenedor = document.getElementById("toastContainer");
+
+    if (!contenedor) {
+        contenedor = document.createElement("div");
+        contenedor.id = "toastContainer";
+        contenedor.className = "toast-container position-fixed top-0 end-0 p-3";
+        document.body.appendChild(contenedor);
+    }
+
+    const toastEl = document.createElement("div");
+    toastEl.className = `toast align-items-center text-bg-${tipo} border-0`;
+    toastEl.role = "alert";
+    toastEl.ariaLive = "assertive";
+    toastEl.ariaAtomic = "true";
+
+    toastEl.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">${escapeHtml(mensaje)}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+        </div>
+    `;
+
+    contenedor.appendChild(toastEl);
+
+    const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
+    bsToast.show();
+
+    toastEl.addEventListener("hidden.bs.toast", () => {
+        toastEl.remove();
+    });
+}
+
+function formatearNumero(valor) {
+    return Number(valor || 0).toLocaleString("es-MX");
+}
+
+function formatearNumeroDecimal(valor) {
+    return Number(valor || 0).toLocaleString("es-MX", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function formatearFecha(fecha) {
+    if (!fecha) return "---";
+
+    const fechaObj = new Date(fecha);
+    if (Number.isNaN(fechaObj.getTime())) return "---";
+
+    return fechaObj.toLocaleDateString("es-MX", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+    });
+}
+
+function escapeHtml(texto) {
+    return String(texto ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+}

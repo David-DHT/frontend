@@ -11,24 +11,17 @@
     />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
-
-    <link rel="stylesheet" href="../css/header.css" />
-    <link rel="stylesheet" href="../css/footer.css" />
     <link rel="stylesheet" href="../css/reportes.css" />
   </head>
-
   <body>
-    <div id="header-dinamico"></div>
+    <div id="header-container"></div>
 
     <div class="back-container">
-      <a href="principalAdmin.html" class="btn-regresar-unicafe">
-        <i class="fas fa-arrow-left"></i> Regresar
+      <a href="../pages/adminDashboard.html" class="btn-regresar-unicafe">
+        <i class="bi bi-arrow-left-circle"></i>
+        Regresar
       </a>
     </div>
 
@@ -36,31 +29,23 @@
       <section class="hero-report">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-          <h1>Panel Inteligente de Reportes</h1>
+          <h1>Reportes inteligentes UNICAFE</h1>
           <p>
-            Analiza el comportamiento de ventas, detecta productos líderes y
-            monitorea el inventario crítico de UNICAFE.
+            Análisis visual de ventas, inventario, compras y estimaciones del
+            producto líder.
           </p>
-          <button
-            id="btnGenerarPDF"
-            class="btn btn-light mt-3"
-            style="font-weight: bold; color: #5c3a21"
-          >
-            <i class="bi bi-file-earmark-pdf-fill text-danger"></i> Descargar
-            Reporte PDF
-          </button>
         </div>
       </section>
 
       <section class="stats-grid">
         <article class="stat-card">
           <div class="stat-icon icon-categorias">
-            <i class="bi bi-tags-fill"></i>
+            <i class="bi bi-grid-3x3-gap-fill"></i>
           </div>
           <div class="stat-info">
-            <h3 id="totalCategorias">0</h3>
-            <p>Categorías registradas</p>
-            <span>Secciones activas del menú</span>
+            <h3 id="statCategorias">0</h3>
+            <p>Categorías</p>
+            <span>Registradas actualmente</span>
           </div>
         </article>
 
@@ -69,9 +54,9 @@
             <i class="bi bi-cup-hot-fill"></i>
           </div>
           <div class="stat-info">
-            <h3 id="totalProductos">0</h3>
-            <p>Productos registrados</p>
-            <span>Productos cargados en catálogo</span>
+            <h3 id="statProductos">0</h3>
+            <p>Productos</p>
+            <span>Disponibles en catálogo</span>
           </div>
         </article>
 
@@ -80,20 +65,20 @@
             <i class="bi bi-people-fill"></i>
           </div>
           <div class="stat-info">
-            <h3 id="totalUsuarios">0</h3>
-            <p>Usuarios registrados</p>
-            <span>Usuarios dados de alta en el sistema</span>
+            <h3 id="statUsuarios">0</h3>
+            <p>Usuarios</p>
+            <span>Clientes y administradores</span>
           </div>
         </article>
 
         <article class="stat-card highlight-card">
           <div class="stat-icon icon-top">
-            <i class="bi bi-trophy-fill"></i>
+            <i class="bi bi-graph-up-arrow"></i>
           </div>
           <div class="stat-info">
-            <h3 id="productoMasVendido">---</h3>
-            <p>Producto más vendido</p>
-            <span id="textoProductoMasVendido">Esperando análisis...</span>
+            <h3 id="productoDestacadoValor">0</h3>
+            <p id="productoDestacadoNombre">Sin datos</p>
+            <span id="productoDestacadoDetalle">Producto líder de ventas</span>
           </div>
         </article>
       </section>
@@ -103,9 +88,8 @@
           <div class="panel-header">
             <div>
               <h2>Top 10 productos más vendidos</h2>
-              <p>Distribución porcentual de ventas por producto</p>
+              <p>Resumen visual del comportamiento actual de ventas</p>
             </div>
-
             <button
               class="btn-refresh-panel"
               id="btnRecargarReportes"
@@ -191,32 +175,133 @@
         </div>
       </section>
 
+      <section class="estimaciones-section">
+        <div class="panel-card estimaciones-card">
+          <div class="panel-header">
+            <div>
+              <h2>Estimaciones</h2>
+              <p>
+                Proyección del producto más vendido usando ecuación diferencial
+                de crecimiento.
+              </p>
+            </div>
+            <div class="stock-badge stock-badge--gold" id="estimacionProducto">
+              Cargando...
+            </div>
+          </div>
+
+          <div id="estadoEstimaciones" class="chart-status">
+            Calculando proyección histórica del producto líder...
+          </div>
+
+          <div class="estimate-kpi-grid">
+            <article class="estimate-kpi">
+              <span>Rango analizado</span>
+              <strong id="estimacionRango">---</strong>
+              <small>Desde la venta activa más antigua hasta hoy</small>
+            </article>
+
+            <article class="estimate-kpi">
+              <span>Estimación a 1 día</span>
+              <strong id="estimacionDia">--</strong>
+              <small>Unidades probables</small>
+            </article>
+
+            <article class="estimate-kpi">
+              <span>Estimación a 1 semana</span>
+              <strong id="estimacionSemana">--</strong>
+              <small>Unidades probables</small>
+            </article>
+
+            <article class="estimate-kpi">
+              <span>Estimación a 1 mes</span>
+              <strong id="estimacionMes">--</strong>
+              <small>Unidades probables</small>
+            </article>
+          </div>
+
+          <div id="detalleEstimacion" class="estimate-detail-box">
+            <div class="empty-state">Esperando datos históricos...</div>
+          </div>
+
+          <div class="steps-title">
+            <h3>Procedimiento aplicado</h3>
+            <p>
+              El sistema sigue la estructura del ejemplo de ley de crecimiento
+              compartido por el usuario.
+            </p>
+          </div>
+
+          <div id="pasosEstimacion" class="steps-grid"></div>
+        </div>
+      </section>
+
       <section class="opiniones-section">
         <div class="panel-card opiniones-card">
           <div class="panel-header">
             <div>
               <h2>Opiniones</h2>
-              <p>Comentarios y sugerencias registradas por los usuarios</p>
+              <p>Registra observaciones para mejorar el módulo de reportes</p>
             </div>
-            <div class="stock-badge" id="contadorOpiniones">0 registradas</div>
+            <button id="btnExportarPdf" class="btn-refresh-panel" type="button">
+              <i class="bi bi-file-earmark-pdf-fill"></i>
+              Exportar PDF
+            </button>
           </div>
 
-          <div id="listaOpiniones" class="opiniones-grid">
-            <div class="empty-state">Cargando opiniones...</div>
+          <div class="opiniones-grid">
+            <div class="opinion-form-card">
+              <h3>Registrar opinión</h3>
+              <form id="formOpinion" class="opinion-form">
+                <div class="mb-3">
+                  <label for="opinionNombre" class="form-label">Nombre</label>
+                  <input
+                    type="text"
+                    id="opinionNombre"
+                    class="form-control"
+                    placeholder="Tu nombre"
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <label for="opinionSugerencia" class="form-label">
+                    Sugerencia
+                  </label>
+                  <textarea
+                    id="opinionSugerencia"
+                    class="form-control"
+                    rows="5"
+                    placeholder="Escribe una observación o propuesta..."
+                    required
+                  ></textarea>
+                </div>
+
+                <button type="submit" class="btn-opinion-submit">
+                  <i class="bi bi-send-fill"></i>
+                  Guardar opinión
+                </button>
+              </form>
+            </div>
+
+            <div class="opinion-list-card">
+              <h3>Listado de opiniones</h3>
+              <div id="listaOpiniones" class="opiniones-list">
+                <div class="empty-state">Cargando opiniones...</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
     </main>
 
-    <div id="footer-dinamico"></div>
+    <div id="footer-container"></div>
 
-    <script src="../js/footer.js"></script>
-    <script src="../js/headers.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-    
+    <script src="../js/headers.js"></script>
     <script src="../js/reportes.js"></script>
   </body>
 </html>
