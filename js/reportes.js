@@ -532,14 +532,24 @@ function formatearNumero5(valor) {
 function formatearFecha(fecha) {
     if (!fecha) return "---";
 
-    const fechaObj = new Date(fecha);
-    if (Number.isNaN(fechaObj.getTime())) return "---";
+    if (typeof fecha === "string") {
+        const soloFecha = fecha.trim().split("T")[0];
+        const partes = soloFecha.split("-");
 
-    return fechaObj.toLocaleDateString("es-MX", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-    });
+        if (partes.length === 3) {
+            const [anio, mes, dia] = partes;
+            return `${dia}/${mes}/${anio}`;
+        }
+    }
+
+    if (fecha instanceof Date && !Number.isNaN(fecha.getTime())) {
+        const anio = fecha.getFullYear();
+        const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+        const dia = String(fecha.getDate()).padStart(2, "0");
+        return `${dia}/${mes}/${anio}`;
+    }
+
+    return String(fecha);
 }
 
 function escapeHtml(texto) {
