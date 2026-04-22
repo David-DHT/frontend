@@ -319,7 +319,7 @@ function renderEstimaciones(data) {
 
     if (!productoBadge || !rango || !tiempoActivo || !valorActivo || !detalle) return;
 
-    if (!data || !data.producto || !data.estimaciones || !data.procedimiento || !data.puntos_modelo) {
+    if (!data || !data.producto || !data.estimaciones || !data.procedimiento) {
         productoBadge.textContent = "Sin datos";
         rango.textContent = "---";
         tiempoActivo.textContent = "---";
@@ -332,8 +332,17 @@ function renderEstimaciones(data) {
     const configTiempo = obtenerConfiguracionTiempo(data.estimaciones, tiempoEstimacionActivo);
     const unidadesRedondeadas = redondearUnidadesObservacion(configTiempo.valor);
 
-    productoBadge.textContent = data.producto.nombre_producto;
-    rango.textContent = `${formatearFecha(data.rango.fecha_minima_rango)} a ${formatearFecha(data.rango.fecha_limite_actual)}`;
+    productoBadge.textContent = data.producto.nombre_producto || "Sin datos";
+
+    const fechaInicio = data.rango?.fecha_minima_rango
+        ? formatearFecha(data.rango.fecha_minima_rango)
+        : "---";
+
+    const fechaFin = data.rango?.fecha_limite_actual
+        ? formatearFecha(data.rango.fecha_limite_actual)
+        : "---";
+
+    rango.textContent = `${fechaInicio} a ${fechaFin}`;
     tiempoActivo.textContent = configTiempo.etiqueta;
     valorActivo.textContent = formatearNumero5(configTiempo.valor);
 
@@ -341,29 +350,29 @@ function renderEstimaciones(data) {
         <div class="estimate-detail-grid estimate-detail-grid--five">
             <div>
                 <span>Producto líder</span>
-                <strong>${escapeHtml(data.producto.nombre_producto)}</strong>
+                <strong>${escapeHtml(data.producto.nombre_producto || "Sin datos")}</strong>
             </div>
             <div>
                 <span>Total vendido en el rango</span>
-                <strong>${formatearNumero(data.producto.total_vendido)}</strong>
+                <strong>${formatearNumero(data.producto.total_vendido || 0)}</strong>
             </div>
             <div>
                 <span>Valor de C</span>
-                <strong>${formatearNumero5(data.procedimiento.valor_C)}</strong>
+                <strong>${formatearNumero5(data.procedimiento.valor_C || 0)}</strong>
             </div>
             <div>
                 <span>Valor de k</span>
-                <strong>${formatearNumero5(data.procedimiento.valor_k)}</strong>
+                <strong>${formatearNumero5(data.procedimiento.valor_k || 0)}</strong>
             </div>
             <div>
                 <span>Valor de t</span>
-                <strong>${formatearNumero5(data.procedimiento.valor_t)}</strong>
+                <strong>${formatearNumero5(data.procedimiento.valor_t || 0)}</strong>
             </div>
         </div>
         <div class="estimate-observations">
             <h4>Observación</h4>
             <p>
-                Se espera que se vendan <strong>${formatearNumero(unidadesRedondeadas)}</strong>
+                Se espera tener de ventas totales <strong>${formatearNumero(unidadesRedondeadas)}</strong>
                 unidades durante <strong>${configTiempo.etiqueta.toLowerCase()}</strong>.
             </p>
         </div>
